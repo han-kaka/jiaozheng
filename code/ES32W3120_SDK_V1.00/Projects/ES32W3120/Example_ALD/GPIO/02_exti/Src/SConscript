@@ -1,0 +1,10 @@
+from building import *
+
+#add include path
+include_path = ['.\Src', '.\Inc']
+
+src = Glob('*.c')
+
+group = DefineGroup('app', src, depend = [''], CPPPATH = include_path)
+
+Return('group')

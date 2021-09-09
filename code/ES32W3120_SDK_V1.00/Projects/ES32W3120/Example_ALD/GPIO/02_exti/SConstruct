@@ -1,0 +1,55 @@
+import os
+import sys
+
+#ES32_SDK_ROOT: ES32_SDK根目录
+#PACK_ROOT: PACK包根目录(ES32Fxxx)
+#SCONSTRUCT_DIR: SConstruct文件所在目录
+
+SCONSTRUCT_DIR = os.getcwd()
+ES32_SDK_ROOT = ''
+PACK_ROOT = ""
+root=SCONSTRUCT_DIR.split('\\')
+
+#get ES32_SDK root
+for i in range(len(root)-1, -1, -1):
+    if('ES32_SDK' in root[i]):
+        sdk_i = i
+for i in range(0,sdk_i+1):
+    ES32_SDK_ROOT=ES32_SDK_ROOT+root[i]+'\\'
+
+#get project chip root   
+for i in range(0,len(root)-3):
+    PACK_ROOT=PACK_ROOT+root[i]+'\\'
+
+sys.path = sys.path + [os.path.join(ES32_SDK_ROOT, 'tools')]
+sys.path = sys.path + [os.path.join(PACK_ROOT, 'build_tools')]
+
+import esconfig
+from building import *
+
+#生成目标文件名
+TARGET = 'es32w3120.' + esconfig.TARGET_EXT
+
+env = Environment(tools = ['mingw'],
+	AS = esconfig.AS, ASFLAGS = esconfig.AFLAGS,
+	CC = esconfig.CC, CCFLAGS = esconfig.CFLAGS,
+	AR = esconfig.AR, ARFLAGS = '-rc',
+	LINK = esconfig.LINK, LINKFLAGS = esconfig.LFLAGS)
+
+env.PrependENVPath('PATH', esconfig.EXEC_PATH)
+
+if esconfig.PLATFORM == 'iar':
+	env.Replace(CCCOM = ['$CC $CCFLAGS $CPPFLAGS $_CPPDEFFLAGS $_CPPINCFLAGS -o $TARGET $SOURCES'])
+	env.Replace(ARFLAGS = [''])
+	env.Replace(LINKCOM = ['$LINK $SOURCES $LINKFLAGS -o $TARGET --map project.map'])
+
+#输出工程根目录
+Export('ES32_SDK_ROOT')
+Export('PACK_ROOT')
+Export('esconfig')
+
+# prepare building environment
+objs = PrepareBuilding(env, PACK_ROOT, has_libcpu=False)
+
+# make a building
+DoBuilding(TARGET, objs)

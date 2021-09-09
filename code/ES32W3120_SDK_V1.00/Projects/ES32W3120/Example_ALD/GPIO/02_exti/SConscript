@@ -1,0 +1,16 @@
+Import('ES32_SDK_ROOT')
+Import('PACK_ROOT')
+
+#save *.obj
+objdir = PACK_ROOT + '/build'
+objs = []
+
+#函数SConscript(dirs, variant_dir, duplicate),执行dirs目录下的SConscript文件,参数说明:
+#参数dirs: 指明SConscript文件路径
+#参数variant_dir: 指定生成的目标文件的存放路径
+#参数duplicate: 设定是否拷贝或链接源文件到variant_dir
+objs += SConscript(ES32_SDK_ROOT + '/Drivers/CMSIS/Device/EastSoft/ES32W3120/SConscript',variant_dir=objdir+'/CMSIS',duplicate=0)
+objs += SConscript(ES32_SDK_ROOT + '/Drivers/ALD/ES32W3120/SConscript',variant_dir=objdir+'/Libraries',duplicate=0)
+objs += SConscript('Src/SConscript',variant_dir=objdir+'/Src',duplicate=0)
+
+Return('objs')
