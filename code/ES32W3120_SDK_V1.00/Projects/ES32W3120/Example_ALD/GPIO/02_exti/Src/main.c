@@ -34,6 +34,12 @@
 #include "main.h"
 #include "eslog_init.h"
 
+#include "global.h"
+
+#include "bsp_system.h"
+
+#include "task_common.h"
+
 /** @addtogroup Projects_Examples_ALD
   * @{
   */
@@ -80,8 +86,31 @@ int main()
 
     ald_cmu_perh_clock_config(CMU_PERH_ALL, ENABLE);
 
+    
     log_init();
 
+    /* 初始化IO */
+    init_system();
+    /* 开启一些初始任务 */
+    start_init_task();
+    
+    while(1)
+    {
+//        if(1 == send_flag) {
+//            esapp_button(180, data);
+//            num++;
+//            data[2] = num >> 8;
+//            data[3] = num & 0xff;
+//            esble_msdelay(60);
+//        }
+
+        /* 主回路任务处理 */
+        while(g_Maintask)
+        {
+            uint8_t m_temp = ga_TaskMapTable[g_Maintask];
+            Task_Struct[m_temp].function(m_temp);
+        }
+    }
 
 //    gpio_init_t x;
 //    exti_init_t exti;
