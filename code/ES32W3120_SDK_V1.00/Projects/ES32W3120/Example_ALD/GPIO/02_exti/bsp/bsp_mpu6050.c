@@ -124,7 +124,7 @@ void i2c_init(void)
 
     while (g_rx_complete != 1);
     
-    ES_LOG_PRINT("mpu6050 id:%.2x", g_recv_temp);
+    ES_LOG_PRINT("mpu6050 id:%.2x\n", g_recv_temp);
 }
 
 

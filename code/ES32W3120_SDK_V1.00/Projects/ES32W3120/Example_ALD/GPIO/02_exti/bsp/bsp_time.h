@@ -35,7 +35,7 @@ typedef struct {
     
 } utc_time_t;
 
-//void time_init(void);
+void time_init(void);
 
 #endif
 

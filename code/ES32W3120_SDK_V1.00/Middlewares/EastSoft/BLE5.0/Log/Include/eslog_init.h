@@ -13,10 +13,10 @@
 #define ESLOG_DEFAULT_INIT() eslog_init()
 
 #if(BLE_LOG_RTT)
-#define ES_LOG_PRINT(...) 	SEGGER_RTT_printf(0,__VA_ARGS__)
+#define ES_LOG_PRINT(...)   SEGGER_RTT_printf(0,__VA_ARGS__)
 #endif
 #if(BLE_LOG_UART)
-#define ES_LOG_PRINT(...)	eslog_fprintf(__VA_ARGS__)
+#define ES_LOG_PRINT(...)   eslog_fprintf(__VA_ARGS__)
 #endif
 
 void eslog_init(void);

@@ -44,7 +44,7 @@ void start_init_task(void)
 //    motor_init();
 //    led_init();
     
-//    time_init();
+    time_init();
 }
 
 

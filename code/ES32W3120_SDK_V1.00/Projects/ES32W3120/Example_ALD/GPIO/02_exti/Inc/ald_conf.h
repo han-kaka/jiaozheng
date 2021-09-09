@@ -54,7 +54,7 @@
 /* #define ALD_RTC */
 /* #define ALD_SPI */
 #define ALD_SYSCFG
-/* #define ALD_TIMER */
+#define ALD_TIMER
 /* #define ALD_UART */
 /* #define ALD_WDT */
 /* #define ALD_TYPE */
