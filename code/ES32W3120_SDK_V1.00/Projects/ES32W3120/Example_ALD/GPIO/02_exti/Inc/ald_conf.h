@@ -35,7 +35,7 @@
 
 /* Includes ------------------------------------------------------------------ */
 
-/* #define ALD_ADC */
+#define ALD_ADC
 #define ALD_BKPC
 /* #define ALD_CALC */
 #define ALD_CMU
@@ -47,7 +47,7 @@
 #define ALD_I2C
 /* #define ALD_I2S */
 /* #define ALD_LPTIM */
-/* #define ALD_PIS */
+#define ALD_PIS
 #define ALD_PMU
 /* #define ALD_QSPI */
 /* #define ALD_RMU */

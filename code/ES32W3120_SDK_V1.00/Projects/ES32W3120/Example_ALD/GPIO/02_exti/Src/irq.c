@@ -31,6 +31,7 @@
 
 /* Includes ------------------------------------------------------------------ */
 #include "main.h"
+#include "eslog_init.h"
 
 /** @addtogroup Projects_Examples_ALD
   * @{
@@ -48,6 +49,8 @@
 extern i2c_handle_t g_h_i2c;
 extern timer_handle_t g_ad16c4t_init;
 extern uart_handle_t g_h_uart;
+extern adc_handle_t g_h_adc;
+extern uint32_t g_adc_result;
 
 /* Exported Constants -------------------------------------------------------- */
 
@@ -203,6 +206,19 @@ void UART0_IRQHandler(void)
 {
     ald_uart_irq_handler(&g_h_uart);
     return;
+}
+
+/**
+  * @brief ADC_IRQHandler.
+  * @param none
+  * @retval none
+  */
+void ADC_IRQHandler(void)
+{
+    /* Handle adc interrupt */
+    ald_adc_irq_handler(&g_h_adc);
+    g_adc_result = ald_adc_normal_get_value(&g_h_adc) * 3320 * 2 / 4096;
+    ES_LOG_PRINT("adc: %u mV\n", g_adc_result);
 }
 /**
   * @}

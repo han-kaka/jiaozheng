@@ -16,6 +16,8 @@
 void uart_init(void);
 
 void send_ble_data(uint8_t *tx_buf, uint8_t tx_len);
+
+void ble_test(void);
 #endif
 
 

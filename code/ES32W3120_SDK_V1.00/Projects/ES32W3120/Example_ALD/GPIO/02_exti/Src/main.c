@@ -80,9 +80,6 @@ static void log_init(void)
   */
 int main()
 {
-//    uint8_t data[2];
-//    uint16_t num = 0;
-    
     /* Initialize ALD */
     ald_cmu_init();
     /* Configure system clock */
@@ -100,18 +97,14 @@ int main()
     
     while(1)
     {
-//        num++;
-//        data[0] = num >> 8;
-//        data[1] = num & 0xff;
-//        send_ble_data(data, 2);
-//        ald_delay_ms(60);
-
         /* 主回路任务处理 */
         while(g_Maintask)
         {
             uint8_t m_temp = ga_TaskMapTable[g_Maintask];
             Task_Struct[m_temp].function(m_temp);
         }
+        
+        ble_test();
     }
 
 //    gpio_init_t x;

@@ -40,9 +40,9 @@ void start_init_task(void)
 //    i2c_init();
     uart_init();
 //    spi_init();
-//    adc_init();
-//    motor_init();
-//    led_init();
+    adc_init();
+    motor_init();
+    led_init();
     
     time_init();
 }

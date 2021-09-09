@@ -9,7 +9,7 @@
 #define ADC_CHANNEL5_GPIO_PORT      GPIOA
 #define ADC_CHANNEL5_PIN            GPIO_PIN_7
 
-//void adc_init(void);
+void adc_init(void);
 
 #endif
 

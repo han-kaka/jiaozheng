@@ -143,3 +143,16 @@ void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
 {
     ald_uart_send_by_it(&g_h_uart, tx_buf, tx_len);
 }
+
+void ble_test(void)
+{
+    uint8_t data[2];
+    static uint16_t num = 0;
+    
+    num++;
+    data[0] = num >> 8;
+    data[1] = num & 0xff;
+    send_ble_data(data, 2);
+    ald_delay_ms(60);
+}
+

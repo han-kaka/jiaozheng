@@ -22,7 +22,7 @@ utc_time_t utc_time;
 /* Private Function ---------------------------------------------------------- */
 
 /* Exported Variables -------------------------------------------------------- */
-//extern adc_handle_t g_h_adc;
+extern adc_handle_t g_h_adc;
 //extern uint8_t retry_cnt;
 
 /**
