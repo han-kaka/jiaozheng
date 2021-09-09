@@ -14,5 +14,7 @@ void led_init(void)
 
     ald_gpio_init(LED_RUN_PORT, LED_RUN_PIN, &x);
     ald_gpio_write_pin(LED_RUN_PORT, LED_RUN_PIN, 1);
+    
+    return;
 }
 

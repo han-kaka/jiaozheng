@@ -125,8 +125,41 @@ void i2c_init(void)
     while (g_rx_complete != 1);
     
     ES_LOG_PRINT("mpu6050 id:%.2x\n", g_recv_temp);
+    
+    return;
 }
 
+void MPU6050_init(void)
+{
+    gpio_init_t x;
+    exti_init_t exti;
+    
+    memset(&exti, 0, sizeof(exti));
+    memset(&x, 0, sizeof(x));
+    
+    x.mode = GPIO_MODE_INPUT;
+    x.odos = GPIO_PUSH_PULL;
+    x.pupd = GPIO_PUSH_DOWN;
+    x.odrv = GPIO_OUT_DRIVE_NORMAL;
+    x.flt  = GPIO_FILTER_DISABLE;
+    x.type = GPIO_TYPE_CMOS;
+    x.func = GPIO_FUNC_1;
+    ald_gpio_init(MPU6050_INT_PORT, MPU6050_INT_PIN, &x);
+    
+    exti.filter      = ENABLE;
+    exti.cks         = EXTI_FILTER_CLOCK_10K;
+    exti.filter_time = 10;
+    ald_gpio_exti_init(MPU6050_INT_PORT, MPU6050_INT_PIN, &exti);
+    
+    /* Clear interrupt flag */
+    ald_gpio_exti_clear_flag_status(MPU6050_INT_PIN);
+    /* Configure interrupt */
+    ald_gpio_exti_interrupt_config(MPU6050_INT_PIN, EXTI_TRIGGER_RISING_EDGE, ENABLE);
+
+    __NVIC_EnableIRQ(EXTI13_IRQn);
+    
+    return;
+}
 
 
 

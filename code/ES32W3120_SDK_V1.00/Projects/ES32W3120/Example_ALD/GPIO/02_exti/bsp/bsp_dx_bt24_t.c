@@ -137,11 +137,62 @@ void uart_init(void)
     ald_uart_tx_fifo_config(&g_h_uart, UART_TXFIFO_EMPTY);
 
     ald_uart_recv_by_it(&g_h_uart, g_rx_buf, 1);
+    
+    return;
+}
+
+void dx_bt24_t_init(void)
+{
+    gpio_init_t x;
+    exti_init_t exti;
+    
+    uart_init();
+    
+    memset(&exti, 0, sizeof(exti));
+    memset(&x, 0, sizeof(x));
+    
+    x.mode = GPIO_MODE_OUTPUT;
+    x.odos = GPIO_PUSH_PULL;
+    x.pupd = GPIO_PUSH_UP;
+    x.odrv = GPIO_OUT_DRIVE_NORMAL;
+    x.flt  = GPIO_FILTER_DISABLE;
+    x.type = GPIO_TYPE_CMOS;
+    x.func = GPIO_FUNC_1;
+
+    ald_gpio_init(BLE_REST_PORT, BLE_REST_PIN, &x);
+    ald_gpio_write_pin(BLE_REST_PORT, BLE_REST_PIN, 0);
+    ald_gpio_init(BLE_CONN_PORT, BLE_CONN_PIN, &x);
+    ald_gpio_write_pin(BLE_CONN_PORT, BLE_CONN_PIN, 1);
+    
+    x.mode = GPIO_MODE_INPUT;
+    x.odos = GPIO_PUSH_PULL;
+    x.pupd = GPIO_PUSH_DOWN;
+    x.odrv = GPIO_OUT_DRIVE_NORMAL;
+    x.flt  = GPIO_FILTER_DISABLE;
+    x.type = GPIO_TYPE_CMOS;
+    x.func = GPIO_FUNC_1;
+    ald_gpio_init(BLE_INT_PORT, BLE_INT_PIN, &x);
+    
+    exti.filter      = ENABLE;
+    exti.cks         = EXTI_FILTER_CLOCK_10K;
+    exti.filter_time = 10;
+    ald_gpio_exti_init(BLE_INT_PORT, BLE_INT_PIN, &exti);
+    
+    /* Clear interrupt flag */
+    ald_gpio_exti_clear_flag_status(BLE_INT_PIN);
+    /* Configure interrupt */
+    ald_gpio_exti_interrupt_config(BLE_INT_PIN, EXTI_TRIGGER_RISING_EDGE, ENABLE);
+
+    __NVIC_EnableIRQ(EXTI4_IRQn);
+    
+    return;
 }
 
 void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
 {
     ald_uart_send_by_it(&g_h_uart, tx_buf, tx_len);
+    
+    return;
 }
 
 void ble_test(void)
@@ -154,5 +205,7 @@ void ble_test(void)
     data[1] = num & 0xff;
     send_ble_data(data, 2);
     ald_delay_ms(60);
+    
+    return;
 }
 

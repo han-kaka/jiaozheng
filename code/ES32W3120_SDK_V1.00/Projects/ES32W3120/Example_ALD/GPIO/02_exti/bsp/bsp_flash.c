@@ -64,6 +64,8 @@ static void spi_pin_init(void)
 
     l_gpio.func = GPIO_FUNC_2;
     ald_gpio_init(SPI_MISO_PORT, SPI_MISO_PIN, &l_gpio);  /* 初始化PB14为MISO管脚 */
+    
+    return;
 }
 
 /**
@@ -125,6 +127,8 @@ void spi_init(void)
     
     id = flash_read_id();
     ES_LOG_PRINT("Manufacturer ID is %02x & Device ID is %02x %02x\n", (uint8_t)(id >> 16), (uint8_t)(id >> 8), (uint8_t)id);
+    
+    return;
 }
 
 ///**

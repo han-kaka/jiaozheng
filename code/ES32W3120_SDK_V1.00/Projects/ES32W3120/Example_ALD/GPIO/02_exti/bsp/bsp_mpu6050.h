@@ -11,6 +11,9 @@
 #define I2C1_SDA_PORT                          GPIOB
 #define I2C1_SDA_PIN                           GPIO_PIN_5      /* I2CSDA:PB5 */
 
+#define MPU6050_INT_PORT                       GPIOA
+#define MPU6050_INT_PIN                        GPIO_PIN_13
+
 void i2c_init(void);
 
 #endif

@@ -33,7 +33,7 @@ static void gpio_pin_config()
     x.flt  = GPIO_FILTER_DISABLE;
     x.type = GPIO_TYPE_CMOS;
     x.func = GPIO_FUNC_0;
-    ald_gpio_init(ADC_CHANNEL5_GPIO_PORT, ADC_CHANNEL5_PIN, &x);
+    ald_gpio_init(ADC_CHANNEL5_PORT, ADC_CHANNEL5_PIN, &x);
 
     return;
 }
@@ -74,4 +74,24 @@ void adc_init(void)
 
     /* Start normal convert, enable interrupt */
     ald_adc_normal_start_by_it(&g_h_adc);
+    
+    return;
+}
+
+void charge_init(void)
+{
+    gpio_init_t x;
+    memset(&x, 0x0, sizeof(gpio_init_t));
+
+    x.mode = GPIO_MODE_INPUT;
+    x.odos = GPIO_PUSH_PULL;
+    x.pupd = GPIO_PUSH_DOWN;
+    x.odrv = GPIO_OUT_DRIVE_NORMAL;
+    x.flt  = GPIO_FILTER_DISABLE;
+    x.type = GPIO_TYPE_CMOS;
+    x.func = GPIO_FUNC_1;
+    ald_gpio_init(CHARGE_G_PORT, CHARGE_G_PIN, &x);
+    ald_gpio_init(CHARGE_Y_PORT, CHARGE_Y_PIN, &x);
+    
+    return;
 }

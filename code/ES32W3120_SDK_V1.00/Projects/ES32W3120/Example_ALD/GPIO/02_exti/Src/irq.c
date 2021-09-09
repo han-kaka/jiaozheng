@@ -151,13 +151,21 @@ void SysTick_Handler(void)
 }
 
 /**
-  * @brief  EXTI6 IRQ handler
+  * @brief  EXTI13 IRQ handler
   * @retval None
   */
-void EXTI6_IRQHandler()
+void EXTI13_IRQHandler()
 {
-//    ald_gpio_exti_clear_flag_status(GPIO_PIN_6);
-//    ald_gpio_toggle_pin(GPIOA, GPIO_PIN_7);
+
+}
+
+/**
+  * @brief  EXTI13 IRQ handler
+  * @retval None
+  */
+void EXTI4_IRQHandler()
+{
+
 }
 
 #ifdef ALD_DMA

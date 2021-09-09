@@ -32,19 +32,24 @@ void init_system(void)
     ststem_state.wxid[1] = 0x02;
     ststem_state.wxid[2] = 0x03;
     ststem_state.wxid[3] = 0x04;
+    
+    return;
 }
 
 
 void start_init_task(void)
 {
 //    i2c_init();
-    uart_init();
+    dx_bt24_t_init();
 //    spi_init();
     adc_init();
+    charge_init();
     motor_init();
     led_init();
     
     time_init();
+    
+    return;
 }
 
 
