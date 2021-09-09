@@ -52,7 +52,7 @@
 /* #define ALD_QSPI */
 /* #define ALD_RMU */
 /* #define ALD_RTC */
-/* #define ALD_SPI */
+#define ALD_SPI
 #define ALD_SYSCFG
 #define ALD_TIMER
 #define ALD_UART
