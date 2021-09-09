@@ -1,4 +1,4 @@
-#include "bsp_mp6050.h"
+#include "bsp_mpu6050.h"
 #include "bsp_dx_bt24_t.h"
 #include "bsp_flash.h"
 #include "bsp_power.h"
@@ -37,7 +37,7 @@ void init_system(void)
 
 void start_init_task(void)
 {
-//    i2c_init();
+    i2c_init();
 //    uart_init();
 //    spi_init();
 //    adc_init();

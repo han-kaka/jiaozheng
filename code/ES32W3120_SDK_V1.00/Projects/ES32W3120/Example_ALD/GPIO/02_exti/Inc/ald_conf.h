@@ -41,10 +41,10 @@
 #define ALD_CMU
 /* #define ALD_CRC */
 /* #define ALD_DAC */
-/* #define ALD_DMA */
+#define ALD_DMA
 /* #define ALD_FLASH */
 #define ALD_GPIO
-/* #define ALD_I2C */
+#define ALD_I2C
 /* #define ALD_I2S */
 /* #define ALD_LPTIM */
 /* #define ALD_PIS */

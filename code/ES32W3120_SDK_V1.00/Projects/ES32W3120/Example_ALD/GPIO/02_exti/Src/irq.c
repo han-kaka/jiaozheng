@@ -40,14 +40,17 @@
   * @{
   */
 
-/* Private Macros ------------------------------------------------------------ */
-/* Private Variables --------------------------------------------------------- */
-/* Public Variables ---------------------------------------------------------- */
-/* Private Constants --------------------------------------------------------- */
+/* Exported Types ------------------------------------------------------------ */
 
-/* Private function prototypes ----------------------------------------------- */
+/* Exported Macros ----------------------------------------------------------- */
 
-/* Private Function ---------------------------------------------------------- */
+/* Exported Variables -------------------------------------------------------- */
+
+extern i2c_handle_t g_h_i2c;
+
+/* Exported Constants -------------------------------------------------------- */
+
+/* Exported Functions -------------------------------------------------------- */
 
 /**
   * @brief  NMI IRQ handler
@@ -163,6 +166,24 @@ void DMA_Handler(void)
     ald_dma_irq_handler();
 }
 #endif /* ALD_DMA */
+
+/**
+  * @brief  I2c Event IRQ handler
+  * @retval None
+  */
+void I2C1_EV_IRQHandler(void)
+{
+    ald_i2c_ev_irq_handler(&g_h_i2c);
+}
+
+/**
+  * @brief  I2c Error IRQ handler
+  * @retval None
+  */
+void I2C1_ERR_IRQHandler(void)
+{
+    ald_i2c_er_irq_handler(&g_h_i2c);
+}
 /**
   * @}
   */
