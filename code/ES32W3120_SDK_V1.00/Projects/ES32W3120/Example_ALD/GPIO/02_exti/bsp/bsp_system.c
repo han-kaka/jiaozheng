@@ -37,8 +37,8 @@ void init_system(void)
 
 void start_init_task(void)
 {
-    i2c_init();
-//    uart_init();
+//    i2c_init();
+    uart_init();
 //    spi_init();
 //    adc_init();
 //    motor_init();

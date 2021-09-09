@@ -85,7 +85,7 @@ typedef struct {
     
 } ble_data_t;
 
-//int ble_data_decode(void);
+int ble_data_decode(void);
 
 #endif
 

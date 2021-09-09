@@ -86,16 +86,16 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
 //        /* Start normal convert, enable interrupt */
 //        ald_adc_normal_start_by_it(&g_h_adc);
     }
-//    
-//    if(1 == time_flg.uart_timeout_flg){
-//        time_cnt.uart_timeout_cnt++;
-//        if(2 <= time_cnt.uart_timeout_cnt){
-//            time_cnt.uart_timeout_cnt = 0;
-//            time_flg.uart_timeout_flg = 0;
-//            set_task(BLUETOOTH, DATA_DECODE);
-//        }
-//    }
-//    
+    
+    if(1 == time_flg.uart_timeout_flg){
+        time_cnt.uart_timeout_cnt++;
+        if(2 <= time_cnt.uart_timeout_cnt){
+            time_cnt.uart_timeout_cnt = 0;
+            time_flg.uart_timeout_flg = 0;
+            set_task(BLUETOOTH, DATA_DECODE);
+        }
+    }
+
 //    //ble 连上后延迟100ms发送请求包
 //    if(1 == time_flg.wxid_req_flg){
 //        time_cnt.wxid_req_cnt++;

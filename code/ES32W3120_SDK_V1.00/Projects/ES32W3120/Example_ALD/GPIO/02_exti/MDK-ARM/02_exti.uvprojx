@@ -10,20 +10,19 @@
       <TargetName>target</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
-          <Device>ES32W3120NK</Device>
+          <Device>ESW3120NQ</Device>
           <Vendor>Eastsoft</Vendor>
-          <PackID>Eastsoft.ES32_DFP.1.0.9</PackID>
+          <PackID>Eastsoft.ES32_DFP.1.0.8</PackID>
           <PackURL>http://www.essemi.com</PackURL>
           <Cpu>IRAM(0x20000000,0x00010000) IROM(0x00000000,0x00080000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0ES32W3120 -FS00 -FL080000 -FP0($$Device:ES32W3120NK$Flash\ES32W3120.flm))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0ESW3120 -FS00 -FL080000 -FP0($$Device:ESW3120NQ$Flash\ESW3120.flm))</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:ES32W3120NK$Device\Include\es32w3120.h</RegisterFile>
+          <RegisterFile>$$Device:ESW3120NQ$Device\Include\esw3120.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -33,7 +32,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:ES32W3120NK$SVD\ES32W3120.svd</SFDFile>
+          <SFDFile>$$Device:ESW3120NQ$SVD\ESW3120.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -184,7 +183,6 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
-            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -325,7 +323,6 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
-            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -338,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>USE_ASSERT</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\..\..\Drivers\CMSIS\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\EastSoft\ES32W3120\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\EastSoft\ES32W3120\Include\ES32W3120;..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include;..\Src;..\Inc</IncludePath>
+              <IncludePath>..\..\..\..\..\..\Drivers\CMSIS\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\EastSoft\ES32W3120\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\EastSoft\ES32W3120\Include\ES32W3120;..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include;..\Src;..\Inc;..\..\..\..\..\..\Middlewares\Third_Party\RTT;..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Include;..\app;..\bsp;..\task</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -380,6 +377,251 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>app</GroupName>
+          <Files>
+            <File>
+              <FileName>irq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\irq.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\main.h</FilePath>
+            </File>
+            <File>
+              <FileName>global.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\global.h</FilePath>
+            </File>
+            <File>
+              <FileName>ald_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\ald_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\sdk_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_ble.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app_ble.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_ble.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\app\app_ble.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_common.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\app\app_common.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>bsp</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_common.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_common.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_dx_bt24_t.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_dx_bt24_t.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_dx_bt24_t.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_dx_bt24_t.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_led.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_motor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_motor.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_power.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_power.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_power.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_power.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_system.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_system.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_system.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_time.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_time.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_time.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_mpu6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_mpu6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\bsp\bsp_mpu6050.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>task</GroupName>
+          <Files>
+            <File>
+              <FileName>task_bluetooth.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_bluetooth.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_bluetooth.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_bluetooth.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_common.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_common.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_communicate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_communicate.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_communicate.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_communicate.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_control.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_measure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_measure.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_measure.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_measure.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_mem_read.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_mem_read.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_mem_read.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_mem_read.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_mem_write.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_mem_write.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_mem_write.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_mem_write.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_other.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_other.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_other.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_other.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_safeguard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\task_safeguard.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_safeguard.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\task\task_safeguard.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>startup</GroupName>
           <Files>
             <File>
@@ -417,20 +659,45 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Source\utils.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>app</GroupName>
-          <Files>
             <File>
-              <FileName>irq.c</FileName>
+              <FileName>ald_i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\irq.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Source\ald_i2c.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>ald_i2c.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include\ald_i2c.h</FilePath>
+            </File>
+            <File>
+              <FileName>ald_dma.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\main.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Source\ald_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>ald_dma.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include\ald_dma.h</FilePath>
+            </File>
+            <File>
+              <FileName>ald_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Source\ald_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>ald_timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include\ald_timer.h</FilePath>
+            </File>
+            <File>
+              <FileName>ald_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Source\ald_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>ald_uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include\ald_uart.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -441,6 +708,61 @@
               <FileName>ReadMe.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\ReadMe.txt</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>eslog</GroupName>
+          <Files>
+            <File>
+              <FileName>eslog_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Source\eslog_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>eslog_printf_format.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Source\eslog_printf_format.c</FilePath>
+            </File>
+            <File>
+              <FileName>eslog_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Source\eslog_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>eslog_init.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Include\eslog_init.h</FilePath>
+            </File>
+            <File>
+              <FileName>eslog_printf_format.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Include\eslog_printf_format.h</FilePath>
+            </File>
+            <File>
+              <FileName>eslog_uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Include\eslog_uart.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>RTT</GroupName>
+          <Files>
+            <File>
+              <FileName>SEGGER_RTT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\Third_Party\RTT\SEGGER_RTT.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT_printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\Third_Party\RTT\SEGGER_RTT_printf.c</FilePath>
+            </File>
+            <File>
+              <FileName>SEGGER_RTT_Syscalls_KEIL.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middlewares\Third_Party\RTT\SEGGER_RTT_Syscalls_KEIL.c</FilePath>
             </File>
           </Files>
         </Group>

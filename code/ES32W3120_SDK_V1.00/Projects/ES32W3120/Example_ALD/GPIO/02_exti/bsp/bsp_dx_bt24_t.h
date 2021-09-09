@@ -13,9 +13,9 @@
 
 #define UARTX           UART0
 
-//void uart_init(void);
-//void send_ble_data(void);
+void uart_init(void);
 
+void send_ble_data(uint8_t *tx_buf, uint8_t tx_len);
 #endif
 
 

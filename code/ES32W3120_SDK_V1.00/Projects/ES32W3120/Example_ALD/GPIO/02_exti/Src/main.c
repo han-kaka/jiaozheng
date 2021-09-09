@@ -40,6 +40,8 @@
 
 #include "task_common.h"
 
+#include "bsp_dx_bt24_t.h"
+
 /** @addtogroup Projects_Examples_ALD
   * @{
   */
@@ -78,6 +80,9 @@ static void log_init(void)
   */
 int main()
 {
+//    uint8_t data[2];
+//    uint16_t num = 0;
+    
     /* Initialize ALD */
     ald_cmu_init();
     /* Configure system clock */
@@ -86,7 +91,6 @@ int main()
 
     ald_cmu_perh_clock_config(CMU_PERH_ALL, ENABLE);
 
-    
     log_init();
 
     /* 初始化IO */
@@ -96,13 +100,11 @@ int main()
     
     while(1)
     {
-//        if(1 == send_flag) {
-//            esapp_button(180, data);
-//            num++;
-//            data[2] = num >> 8;
-//            data[3] = num & 0xff;
-//            esble_msdelay(60);
-//        }
+//        num++;
+//        data[0] = num >> 8;
+//        data[1] = num & 0xff;
+//        send_ble_data(data, 2);
+//        ald_delay_ms(60);
 
         /* 主回路任务处理 */
         while(g_Maintask)
