@@ -143,6 +143,16 @@ void SysTick_Handler(void)
     return;
 }
 
+/**
+  * @brief  EXTI6 IRQ handler
+  * @retval None
+  */
+void EXTI6_IRQHandler()
+{
+//    ald_gpio_exti_clear_flag_status(GPIO_PIN_6);
+//    ald_gpio_toggle_pin(GPIOA, GPIO_PIN_7);
+}
+
 #ifdef ALD_DMA
 /**
   * @brief  DMA IRQ#66 handler
