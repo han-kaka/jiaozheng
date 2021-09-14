@@ -2,6 +2,7 @@
 #define __BSP_FLASH_H
 
 #include "ald_conf.h"
+#include "md_conf.h"
 
 #include "bsp_common.h"
 

@@ -133,8 +133,58 @@ void spi_init(void)
 
 void init_system_info(void)
 {
+    /* 从片内 flash 中读取相关数据 */
     
-    
+        uint32_t data_buf_word[32];
+    uint8_t data_buf_byte[32];
+    uint32_t iap_flag;
+
+    /* Configure system clock */
+    md_cmu_pll1_config(32);
+    md_cmu_clock_config(MD_CMU_CLOCK_PLL1, 48000000);
+    /* Initialize SysTick Interrupt */
+    md_init_1ms_tick();
+
+    /* Enable ALL peripheral */
+    SYSCFG_UNLOCK();
+    md_cmu_enable_perh_all();
+    SYSCFG_LOCK();
+
+    __disable_irq();
+
+    do
+    {
+        iap_flag = FALSE;
+
+        /* Double words write testing */
+        if (IAP_PAGEERASE(0x10000, IAP_FREQUENCE_48M) == RESET) /* Erase page 64 */
+            break;
+
+        /* Write 0x12345678 to 0x10000 and write 0x87654321 to 0x10004 */
+        if (IAP_DWORDPROGRAM(0x10000, 0x12345678, 0x87654321, IAP_FREQUENCE_48M) == RESET) /* Write 0x12345678 to 0x10000 */
+            break;
+
+        memcpy((void *)data_buf_word, (void *)0x10000, 8);  /* read 0x10000 and 0x10004 */
+
+        if ((data_buf_word[0] != 0x12345678) || (data_buf_word[1] != 0x87654321))
+            break;
+
+        /* Multiple words write testing */
+        memset((void *)data_buf_byte, 0x55, 32 * 4);
+
+        /* Write data_buf to 0x10000 */
+        if (IAP_FASTPROGRAM(0x10000, data_buf_byte, 32 * 4, AUTO_ERASE_TRUE, IAP_FREQUENCE_48M) == RESET)
+            break;
+
+        if (memcmp((void *)0x10000, (void *)data_buf_byte, 32 * 4) != RESET)
+            break;
+
+        iap_flag = TRUE;
+        break;
+    }
+    while (0);
+
+    __enable_irq();
 }
 
 ///**

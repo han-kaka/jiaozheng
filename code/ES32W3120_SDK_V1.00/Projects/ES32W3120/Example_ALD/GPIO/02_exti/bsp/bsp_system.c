@@ -33,12 +33,12 @@ void init_system(void)
     
     /* 初始化设备信息 */
     init_system_info();
-    ststem_state.wxid[0] = 0xff;
-    ststem_state.wxid[1] = 0xff;
-    ststem_state.wxid[2] = 0xff;
-    ststem_state.wxid[3] = 0xff;
+//    ststem_state.wxid[0] = 0xff;
+//    ststem_state.wxid[1] = 0xff;
+//    ststem_state.wxid[2] = 0xff;
+//    ststem_state.wxid[3] = 0xff;
     
-//    set_task(SG, SHUTDOWN_MODE);
+    set_task(SG, SHUTDOWN_MODE);
 
     return;
 }

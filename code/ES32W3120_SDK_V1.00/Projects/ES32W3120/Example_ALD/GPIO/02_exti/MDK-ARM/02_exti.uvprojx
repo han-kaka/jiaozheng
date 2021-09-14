@@ -732,6 +732,31 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>md</GroupName>
+          <Files>
+            <File>
+              <FileName>md_cmu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\MD\ES32W3120\Source\md_cmu.c</FilePath>
+            </File>
+            <File>
+              <FileName>md_cmu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\MD\ES32W3120\Include\md_cmu.h</FilePath>
+            </File>
+            <File>
+              <FileName>md_utils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\MD\ES32W3120\Source\md_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>md_utils.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\MD\ES32W3120\Include\md_utils.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>doc</GroupName>
           <Files>
             <File>

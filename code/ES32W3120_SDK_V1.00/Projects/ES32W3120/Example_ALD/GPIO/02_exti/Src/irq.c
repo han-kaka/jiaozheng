@@ -156,7 +156,8 @@ void SysTick_Handler(void)
   */
 void EXTI13_IRQHandler()
 {
-    __NVIC_DisableIRQ(EXTI13_IRQn);
+//    __NVIC_DisableIRQ(EXTI13_IRQn);
+    ald_gpio_exti_clear_flag_status(GPIO_PIN_13);
 }
 
 /**
@@ -165,7 +166,8 @@ void EXTI13_IRQHandler()
   */
 void EXTI4_IRQHandler()
 {
-    __NVIC_DisableIRQ(EXTI4_IRQn);
+//    __NVIC_DisableIRQ(EXTI4_IRQn);
+    ald_gpio_exti_clear_flag_status(GPIO_PIN_4);
 }
 
 #ifdef ALD_DMA
