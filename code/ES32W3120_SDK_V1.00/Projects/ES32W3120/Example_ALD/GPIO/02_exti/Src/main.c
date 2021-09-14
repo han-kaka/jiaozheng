@@ -104,7 +104,7 @@ int main()
             Task_Struct[m_temp].function(m_temp);
         }
         
-        ble_test();
+//        ble_test();
     }
 }
 

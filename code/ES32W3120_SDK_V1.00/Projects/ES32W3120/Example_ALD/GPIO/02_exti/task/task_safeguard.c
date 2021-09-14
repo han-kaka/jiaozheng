@@ -14,13 +14,25 @@ uint8_t sg_task(uint8_t prio)
         m_SYS_SubTask_prio = ga_TaskMapTable[ga_Subtask[prio]];
         switch(m_SYS_SubTask_prio)
         {
-            case NORMAL_MODE:
+            case SHUTDOWN_MODE:
             {
 
             }
                 break;
             
             case LOW_POWER_MODE:
+            {
+
+            }
+                break;
+            
+            case ADV_MODE:
+            {
+
+            }
+                break;
+            
+            case CONNECT_MODE:
             {
 
             }

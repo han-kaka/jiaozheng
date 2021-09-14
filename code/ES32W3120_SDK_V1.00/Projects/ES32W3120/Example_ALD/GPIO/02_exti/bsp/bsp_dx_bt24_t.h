@@ -14,7 +14,7 @@
 #define BLE_REST_PORT             GPIOA
 #define BLE_REST_PIN              GPIO_PIN_9
 #define BLE_CONN_PORT             GPIOA
-#define BLE_CONN_PIN              GPIO_PIN_11
+#define BLE_CONN_PIN              GPIO_PIN_6
 #define BLE_INT_PORT              GPIOA
 #define BLE_INT_PIN               GPIO_PIN_4
 

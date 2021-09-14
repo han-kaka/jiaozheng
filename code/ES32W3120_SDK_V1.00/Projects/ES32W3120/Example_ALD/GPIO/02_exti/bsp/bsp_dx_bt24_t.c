@@ -8,7 +8,7 @@
 /* Public Variables ---------------------------------------------------------- */
 uart_handle_t g_h_uart;
 uint8_t g_rx_buf[20];
-uint8_t g_rx_len = sizeof(g_rx_buf);
+uint8_t g_rx_len = 0;
 uint8_t g_tx_buf[256];
 uint8_t g_tx_len;
 
@@ -90,7 +90,7 @@ static void uart_recv_complete(uart_handle_t *arg)
 //    }
 //    else
 //    {
-//        if (s_i >= g_rx_len) {
+//        if (s_i >= 20) {
 //            s_i = 0;
 //        }
 
@@ -99,16 +99,15 @@ static void uart_recv_complete(uart_handle_t *arg)
 
 //    return;
 
-    static uint8_t s_i;
     time_cnt.uart_timeout_cnt = 0;
     time_flg.uart_timeout_flg = 1;
-    s_i++;
+    g_rx_len++;
 
-    if (s_i >= g_rx_len) {
-        s_i = 0;
+    if (20 <= g_rx_len) {
+        g_rx_len = 0;
     }
     
-    ald_uart_recv_by_it(&g_h_uart, g_rx_buf + s_i, 1);
+    ald_uart_recv_by_it(&g_h_uart, g_rx_buf + g_rx_len, 1);
 
     return;
 }
@@ -136,6 +135,7 @@ void uart_init(void)
     ald_uart_rx_fifo_config(&g_h_uart, UART_RXFIFO_1BYTE);
     ald_uart_tx_fifo_config(&g_h_uart, UART_TXFIFO_EMPTY);
 
+    g_rx_len = 0;
     ald_uart_recv_by_it(&g_h_uart, g_rx_buf, 1);
     
     return;
@@ -182,7 +182,7 @@ void dx_bt24_t_init(void)
     ald_gpio_exti_clear_flag_status(BLE_INT_PIN);
     /* Configure interrupt */
     ald_gpio_exti_interrupt_config(BLE_INT_PIN, EXTI_TRIGGER_RISING_EDGE, ENABLE);
-
+    
     __NVIC_EnableIRQ(EXTI4_IRQn);
     
     return;
@@ -190,6 +190,13 @@ void dx_bt24_t_init(void)
 
 void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
 {
+    uint8_t i = 0;
+    for(i=0; i<tx_len; i++)
+    {
+        ES_LOG_PRINT("%.2x", tx_buf[i]);
+    }
+    ES_LOG_PRINT("\n");
+    
     ald_uart_send_by_it(&g_h_uart, tx_buf, tx_len);
     
     return;

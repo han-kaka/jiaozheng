@@ -131,6 +131,12 @@ void spi_init(void)
     return;
 }
 
+void init_system_info(void)
+{
+    
+    
+}
+
 ///**
 //  * @brief  transmit an amount of data in blocking mode.
 //  * @param  addr: Specific address which to be write.

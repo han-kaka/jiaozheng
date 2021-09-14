@@ -23,6 +23,7 @@ utc_time_t utc_time;
 
 /* Exported Variables -------------------------------------------------------- */
 extern adc_handle_t g_h_adc;
+extern uint8_t g_rx_len;
 //extern uint8_t retry_cnt;
 
 /**
@@ -92,6 +93,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         if(2 <= time_cnt.uart_timeout_cnt){
             time_cnt.uart_timeout_cnt = 0;
             time_flg.uart_timeout_flg = 0;
+            g_rx_len = 0;
             set_task(BLUETOOTH, DATA_DECODE);
         }
     }

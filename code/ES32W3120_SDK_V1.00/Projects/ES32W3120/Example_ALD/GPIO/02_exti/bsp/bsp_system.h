@@ -8,7 +8,7 @@
 typedef enum {
     E_SHUTDOWN_MODE  = 0,
     E_LOW_POWER_MODE = 1,
-    E_WAIE_CONN_MODE = 2,
+    E_ADV_MODE       = 2,
     E_CONNECT_MODE   = 3,
 
     E_MODE_MAX,

@@ -156,7 +156,7 @@ void SysTick_Handler(void)
   */
 void EXTI13_IRQHandler()
 {
-
+    __NVIC_DisableIRQ(EXTI13_IRQn);
 }
 
 /**
@@ -165,7 +165,7 @@ void EXTI13_IRQHandler()
   */
 void EXTI4_IRQHandler()
 {
-
+    __NVIC_DisableIRQ(EXTI4_IRQn);
 }
 
 #ifdef ALD_DMA

@@ -38,7 +38,7 @@ uint8_t bluetooth_task(uint8_t prio)
 //    RTT_PRINTF("BlueTooth_Task\r\n");
 
     uint8_t m_SYS_SubTask_prio=0;
-
+//    uint8_t i = 0;
 //    uint8_t tx_temp[20];
     
     while(ga_Subtask[prio])
@@ -48,9 +48,19 @@ uint8_t bluetooth_task(uint8_t prio)
         {
             case DATA_DECODE:
             {
-//                memcpy(ble_rx_buf, g_rx_buf, 20);
-//                memset(g_rx_buf, 0x00, 20);
-//                ble_data_decode();
+//                for(i=0; i<20; i++)
+//                {
+//                    ES_LOG_PRINT("%.2x", g_rx_buf[i]);
+//                }
+//                ES_LOG_PRINT("\n");
+//                
+//                ble_tx_buf[0] = 0x99;
+//                memcpy(ble_tx_buf+1, g_rx_buf, 20);
+//                memset(g_rx_buf, 0, 20);
+//                send_ble_data(ble_tx_buf, 21);
+                memcpy(ble_rx_buf, g_rx_buf, 20);
+                memset(g_rx_buf, 0, 20);
+                ble_data_decode();
             }
                 break;
             
@@ -91,7 +101,6 @@ uint8_t bluetooth_task(uint8_t prio)
 //                time_cnt.wait_wxid_cnt = 0;
 //                time_flg.wait_wxid_flg = 1;
 //                retry_cnt++;
-                
             }
                 break;
             

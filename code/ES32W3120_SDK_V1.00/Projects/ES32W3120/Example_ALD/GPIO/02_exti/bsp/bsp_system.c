@@ -7,6 +7,10 @@
 #include "bsp_led.h"
 #include "bsp_system.h"
 
+#include "app_common.h"
+
+#include "task_common.h"
+
 /* Private Macros ------------------------------------------------------------ */
 
 /* Private Variables --------------------------------------------------------- */
@@ -25,14 +29,17 @@ system_state_t ststem_state;
 
 void init_system(void)
 { 
-    ststem_state.system_mode = E_WAIE_CONN_MODE;
+    ststem_state.system_mode = E_SHUTDOWN_MODE;
     
-    /* 初始化wxid */
-    ststem_state.wxid[0] = 0x01;
-    ststem_state.wxid[1] = 0x02;
-    ststem_state.wxid[2] = 0x03;
-    ststem_state.wxid[3] = 0x04;
+    /* 初始化设备信息 */
+    init_system_info();
+    ststem_state.wxid[0] = 0xff;
+    ststem_state.wxid[1] = 0xff;
+    ststem_state.wxid[2] = 0xff;
+    ststem_state.wxid[3] = 0xff;
     
+//    set_task(SG, SHUTDOWN_MODE);
+
     return;
 }
 

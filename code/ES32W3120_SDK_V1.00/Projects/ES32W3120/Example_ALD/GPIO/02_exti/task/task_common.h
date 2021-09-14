@@ -22,8 +22,10 @@
 #define TASK7                         other_task
 
 #define SG                            0                             //系统主任务0 
-#define NORMAL_MODE                   0                             //普通模式
+#define SHUTDOWN_MODE                 0                             //关机模式
 #define LOW_POWER_MODE                1                             //低功耗模式
+#define ADV_MODE                      2                             //广播模式
+#define CONNECT_MODE                  3                             //连接模式
 
 #define CONTROL                       1                             //控制任务1
 #define MOTOR_START                   0                             //马达开始震动

@@ -16,7 +16,15 @@
 #define SPI_MISO_PORT                         GPIOB
 #define SPI_MISO_PIN                          GPIO_PIN_14
 
+typedef struct {
+    uint8_t shake_fre;
+    uint8_t wxid[4];
+    
+} system_info_t;
+
 void spi_init(void);
+
+void init_system_info(void);
 
 //md_status_t flash_write(uint32_t addr, char *buf, uint8_t size);
 

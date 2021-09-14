@@ -699,6 +699,36 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include\ald_uart.h</FilePath>
             </File>
+            <File>
+              <FileName>ald_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Source\ald_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>ald_adc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include\ald_adc.h</FilePath>
+            </File>
+            <File>
+              <FileName>ald_pis.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Source\ald_pis.c</FilePath>
+            </File>
+            <File>
+              <FileName>ald_pis.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include\ald_pis.h</FilePath>
+            </File>
+            <File>
+              <FileName>ald_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Source\ald_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>ald_spi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include\ald_spi.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

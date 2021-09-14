@@ -1,5 +1,6 @@
 #include "bsp_time.h"
 #include "bsp_system.h"
+#include "bsp_dx_bt24_t.h"
 
 #include "app_ble.h"
 #include "app_common.h"
@@ -23,7 +24,7 @@ uint8_t ble_tx_len;
 
 /* Exported Variables -------------------------------------------------------- */
 extern utc_time_t utc_time;;
-//extern system_state_t ststem_state;
+extern system_state_t ststem_state;
 //extern timer_cnt_t time_cnt;
 //extern timer_flg_t time_flg;
 //extern uint8_t retry_cnt;
@@ -36,7 +37,7 @@ int ble_data_decode(void)
     uint8_t i = 0;
     int ret = 0;
     data_utc_t *data_utc = NULL;
-//    data_wxid_t *data_wxid = NULL;
+    data_wxid_t *data_wxid = NULL;
     
     if(20 != data_len){
         return -1;
@@ -104,7 +105,7 @@ int ble_data_decode(void)
         
         case SET_DATA_CMD:
             switch(ble_data->address){
-                case SET_FREQUENCY:
+                case SET_SHAKE_FRE:
                     break;
                 
                 default:
@@ -116,6 +117,34 @@ int ble_data_decode(void)
         case READ_STATE_CMD:
             switch(ble_data->address){
                 case STATE_INFO:
+                    memset(ble_tx_buf, 0, 20);
+                    ble_tx_buf[0] = 0xaa;
+                    ble_tx_buf[1] = 0x13;
+                    ble_tx_buf[2] = 0xd4;
+                    ble_tx_buf[3] = 0x01;
+                    ble_tx_buf[4] = 0x15;
+                    ble_tx_buf[5] = 0x0a;
+                    ble_tx_buf[6] = 0x00;
+                    ble_tx_buf[7] = 0xfb;
+                    ble_tx_buf[8] = 0x9d;
+                    ble_tx_buf[9] = 0xa2;
+                    ble_tx_buf[10] = 0x5e;
+                    ble_tx_buf[11] = 0xdf;
+                    ble_tx_buf[12] = 0xdc;
+                    ble_tx_buf[13] = 0xeb;
+                    ble_tx_buf[14] = 0x15;
+                    ble_tx_buf[15] = 0x09;
+                    ble_tx_buf[16] = 0x03;
+                    ble_tx_buf[17] = 0x04;
+                    ble_tx_buf[18] = 0x1a;
+                
+                    sum = 0;
+                    for(i=0; i<19; i++){
+                        sum += ble_tx_buf[i];
+                    }
+                    ble_tx_buf[19] = sum;
+                    
+                    send_ble_data(ble_tx_buf, 20);
                     break;
                 
                 case STATE_SCAN:
@@ -130,6 +159,34 @@ int ble_data_decode(void)
         case READ_DATA_CMD:
             switch(ble_data->address){
                 case DATA_MONITOR_DATA:
+                    memset(ble_tx_buf, 0, 20);
+                    ble_tx_buf[0] = 0xaa;
+                    ble_tx_buf[1] = 0x13;
+                    ble_tx_buf[2] = 0xd5;
+                    ble_tx_buf[3] = 0x01;
+                    ble_tx_buf[4] = 0x03;
+                    ble_tx_buf[5] = 0x66;
+                    ble_tx_buf[6] = 0xff;
+                    ble_tx_buf[7] = 0xae;
+                    ble_tx_buf[8] = 0x40;
+                    ble_tx_buf[9] = 0xd4;
+                    ble_tx_buf[10] = 0x15;
+                    ble_tx_buf[11] = 0x08;
+                    ble_tx_buf[12] = 0x18;
+                    ble_tx_buf[13] = 0x11;
+                    ble_tx_buf[14] = 0x18;
+                    ble_tx_buf[15] = 0x1c;
+                    ble_tx_buf[16] = 0x22;
+                    ble_tx_buf[17] = 0x02;
+                    ble_tx_buf[18] = 0x30;
+                
+                    sum = 0;
+                    for(i=0; i<19; i++){
+                        sum += ble_tx_buf[i];
+                    }
+                    ble_tx_buf[19] = sum;
+                    
+                    send_ble_data(ble_tx_buf, 20);
                     break;
                 
                 case DATA_UTC:
@@ -160,9 +217,9 @@ int ble_data_decode(void)
             }
             break;
             
-//        case WXID_CMD:
-//            switch(ble_data->address){
-//                case WXID_WRITE:
+        case WXID_CMD:
+            switch(ble_data->address){
+                case WXID_WRITE:
 //                    //重置重发机制
 //                    time_cnt.wait_wxid_cnt = 0;
 //                    time_flg.wait_wxid_flg = 0;
@@ -194,14 +251,61 @@ int ble_data_decode(void)
 //                            set_task(CONTROL, BLE_DISCON);  //主动断开ble连接
 //                        }
 //                    }
-//                    
-//                    break;
-//                
-//                default:
-//                    ret = -1;
-//                    break;
-//            }
-//            break;
+                    
+                    data_wxid = (data_wxid_t *)ble_data->data;
+                    if(0xff == ststem_state.wxid[0] && 0xff == ststem_state.wxid[1] && 0xff == ststem_state.wxid[2] && 0xff == ststem_state.wxid[3]){
+                        memcpy(ststem_state.wxid, data_wxid, 4);
+                        
+                        memset(ble_tx_buf, 0, 20);
+                        ble_tx_buf[0] = 0xaa;
+                        ble_tx_buf[1] = 0x13;
+                        ble_tx_buf[2] = 0xd9;
+                        ble_tx_buf[3] = 0x03;
+                        
+                        sum = 0;
+                        for(i=0; i<19; i++){
+                            sum += ble_tx_buf[i];
+                        }
+                        ble_tx_buf[19] = sum;
+                    }
+                    else{
+                        if(ststem_state.wxid[0] == data_wxid->wxid_0 && ststem_state.wxid[1] == data_wxid->wxid_1 && ststem_state.wxid[2] == data_wxid->wxid_2 && ststem_state.wxid[3] == data_wxid->wxid_3){
+                            memset(ble_tx_buf, 0, 20);
+                            ble_tx_buf[0] = 0xaa;
+                            ble_tx_buf[1] = 0x13;
+                            ble_tx_buf[2] = 0xd9;
+                            ble_tx_buf[3] = 0x03;
+                            
+                            sum = 0;
+                            for(i=0; i<19; i++){
+                                sum += ble_tx_buf[i];
+                            }
+                            ble_tx_buf[19] = sum;
+                        }
+                        else{
+                            memset(ble_tx_buf, 0, 20);
+                            ble_tx_buf[0] = 0xaa;
+                            ble_tx_buf[1] = 0x13;
+                            ble_tx_buf[2] = 0xd9;
+                            ble_tx_buf[3] = 0x03;
+                            ble_tx_buf[4] = 0x01;
+                            
+                            sum = 0;
+                            for(i=0; i<19; i++){
+                                sum += ble_tx_buf[i];
+                            }
+                            ble_tx_buf[19] = sum;
+                        }
+                    }
+                    send_ble_data(ble_tx_buf, 20);
+                    
+                    break;
+                
+                default:
+                    ret = -1;
+                    break;
+            }
+            break;
             
         default:
             ret = -1;

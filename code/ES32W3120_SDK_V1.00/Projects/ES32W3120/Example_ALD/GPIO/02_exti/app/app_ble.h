@@ -32,7 +32,7 @@
 #define SEND_FLASH_DATA_FINISH      0x02  //下位机通知上位机数据已经传输完毕
 #define SEND_FLASH_DATA_DELETE      0x03  //上位机通知下位机可以删除数据
 
-#define SET_FREQUENCY               0x01  //震动提醒频率
+#define SET_SHAKE_FRE               0x01  //震动提醒频率
 
 #define STATE_INFO                  0x01  //当前电量、内存、当前提醒设置状态、设备序列号
 #define STATE_SCAN                  0x02  //上位机当前是否处于扫描界面
