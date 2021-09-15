@@ -2,6 +2,18 @@
 
 #define MPU_ADDR    0x68
 
+#define MPU_PWR_MGMT1_REG 0x6b
+#define MPU_PWR_MGMT2_REG 0x6c
+#define MPU_INT_EN_REG 0x38
+#define MPU_USER_CTRL_REG 0x6a
+#define MPU_FIFO_EN_REG 0x23
+#define MPU_INTBP_CFG_REG 0x37
+#define MPU_DEVICE_ID_REG 0x75
+#define MPU_GYRO_CFG_REG 0x1b
+#define MPU_ACCEL_CFG_REG 0x1c
+#define MPU_CFG_REG 0x1a
+#define MPU_SAMPLE_RATE_REG 0x19
+
 /* Private Macros ------------------------------------------------------------ */
 
 /* Private Variables --------------------------------------------------------- */
@@ -76,6 +88,133 @@ void master_rx_complete(i2c_handle_t *arg)
     return;
 }
 
+static void iic_write_byte(uint8_t reg, uint8_t data)
+{
+    uint8_t g_send_temp[2];
+    
+    g_send_temp[0] = reg;
+    g_send_temp[1] = data;
+    
+    /* send data by interrupt */
+    g_tx_complete = 0;
+    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, g_send_temp, 2);
+    
+    return;
+}
+
+static uint8_t iic_read_byte(uint8_t reg)
+{
+    uint8_t g_send_temp = reg;
+    uint8_t g_recv_temp = 0;
+    
+    /* send data by interrupt */
+    g_tx_complete = 0;
+    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, &g_send_temp, 1);
+
+    while (g_tx_complete != 1);
+    
+    /* recv data by interrupt */
+    g_rx_complete = 0;
+    ald_i2c_master_recv_by_it(&g_h_i2c, MPU_ADDR<<1, &g_recv_temp, 1);
+
+    while (g_rx_complete != 1);
+    
+    return g_recv_temp;
+}
+
+static void iic_write_len(uint8_t reg, uint8_t len, uint8_t *buf)
+{
+    uint8_t g_send_temp[32];
+    uint8_t i = 0;
+    
+    g_send_temp[0] = reg;
+    for(i=0; i<len; i++)
+    {
+        g_send_temp[1+i] = buf[i];
+    }
+    
+    /* send data by interrupt */
+    g_tx_complete = 0;
+    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, g_send_temp, 1+i);
+    
+    return;
+}
+
+static void iic_read_len(uint8_t reg, uint8_t len, uint8_t *buf)
+{
+    uint8_t g_send_temp = reg;
+    
+    /* send data by interrupt */
+    g_tx_complete = 0;
+    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, &g_send_temp, 1);
+
+    while (g_tx_complete != 1);
+    
+    /* recv data by interrupt */
+    g_rx_complete = 0;
+    ald_i2c_master_recv_by_it(&g_h_i2c, MPU_ADDR<<1, buf, len);
+
+    while (g_rx_complete != 1);
+    
+    return;
+}
+
+static void mpu_set_gyro_fsr(uint8_t fsr)
+{
+    iic_write_byte(MPU_GYRO_CFG_REG, fsr<<3);
+    return;
+}
+
+static void mpu_set_accel_fsr(uint8_t fsr)
+{
+    iic_write_byte(MPU_ACCEL_CFG_REG, fsr<<3);
+    return;
+}
+
+static void mpu_set_lpf(uint16_t lpf)
+{
+    uint8_t data=0;
+    if(lpf>=188){
+        data=1;
+    }
+    else if(lpf>=98){
+        data=2;
+    }
+    else if(lpf>=42){
+        data=2;
+    }
+    else if(lpf>=42){
+        data=3;
+    }
+    else if(lpf>=20){
+        data=4;
+    }
+    else if(lpf>=10){
+        data=5;
+    }
+    else{
+        data=6;
+    }
+    
+    iic_write_byte(MPU_CFG_REG, data);
+    return;
+}
+
+static void mpu_set_rate(uint16_t rate)
+{
+    uint8_t data;
+    if(rate>1000){
+        rate = 1000;
+    }
+    if(rate<4){
+        rate = 4;
+    }
+    data = 1000/rate - 1;
+    iic_write_byte(MPU_SAMPLE_RATE_REG, data);
+    mpu_set_lpf(rate/2);
+    return;
+}
+
 /**
   * @brief  i2c_init
   * @retval None
@@ -111,38 +250,13 @@ void i2c_init(void)
     MODIFY_REG(I2C1->FCON, I2C_FCON_RXFTH_MSK, (0 << I2C_FCON_RXFTH_POSS));
     MODIFY_REG(I2C1->FCON, I2C_FCON_TXFTH_MSK, (0 << I2C_FCON_TXFTH_POSS));
 
-    mpu6050_id = iic_read_byte(0x75);
+    mpu6050_id = iic_read_byte(MPU_DEVICE_ID_REG);
     ES_LOG_PRINT("mpu6050 id:%.2x\n", mpu6050_id);
     
     return;
 }
 
-void iic_write_byte(uint8_t reg, uint8_t data)
-{
-    
-}
-
-uint8_t iic_read_byte(uint8_t reg)
-{
-    uint8_t g_send_temp = reg;
-    uint8_t g_recv_temp = 0;
-    
-    /* send data by interrupt */
-    g_tx_complete = 0;
-    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, &g_send_temp, 1);
-
-    while (g_tx_complete != 1);
-    
-    /* recv data by interrupt */
-    g_rx_complete = 0;
-    ald_i2c_master_recv_by_it(&g_h_i2c, MPU_ADDR<<1, &g_recv_temp, 1);
-
-    while (g_rx_complete != 1);
-    
-    return g_recv_temp;
-}
-
-void MPU6050_init(void)
+void mpu6050_init(void)
 {
     gpio_init_t x;
     exti_init_t exti;
@@ -183,10 +297,36 @@ void MPU6050_init(void)
     
     i2c_init();
     
+    mpu6050_set();
+    
     return;
 }
 
+void mpu6050_set(void)
+{
+    iic_write_byte(MPU_PWR_MGMT1_REG,0X80);//复位MPU6050
+    ald_delay_ms(100);
+    iic_write_byte(MPU_PWR_MGMT1_REG,0X00);//唤醒MPU6050
+    
+    mpu_set_gyro_fsr(3); //陀螺仪传感器, 2000dps
+    mpu_set_accel_fsr(0); //加速度传感器, 2g
+    mpu_set_rate(50); //设置采样频率50HZ
+    iic_write_byte(MPU_INT_EN_REG,0x00); //关闭所有中断
+    iic_write_byte(MPU_USER_CTRL_REG,0x00);//I2C主模式关闭
+    iic_write_byte(MPU_FIFO_EN_REG,0x00);//关闭FIFO
+    iic_write_byte(MPU_INTBP_CFG_REG,0x80);//INT引脚低电平有效
+    
+    if(MPU_ADDR == iic_read_byte(MPU_DEVICE_ID_REG)){
+        iic_write_byte(MPU_PWR_MGMT1_REG,0x01);//设置CLKSEL,PLL X 为参考
+        iic_write_byte(MPU_PWR_MGMT2_REG,0x00);//加速度陀螺仪都工作
+        mpu_set_rate(50); //设置采样频率50HZ
+        ES_LOG_PRINT("mpu6050_set ok\n");
+    }
+    else{
+        ES_LOG_PRINT("mpu6050_set err\n");
+    }
 
+}
 
 
 

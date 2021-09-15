@@ -18,12 +18,9 @@
 
 void i2c_init(void);
 
-void iic_write_byte(uint8_t reg, uint8_t data);
+void mpu6050_init(void);
 
-uint8_t iic_read_byte(uint8_t reg);
-
-void MPU6050_init(void);
-
+void mpu6050_set(void);
 #endif
 
 

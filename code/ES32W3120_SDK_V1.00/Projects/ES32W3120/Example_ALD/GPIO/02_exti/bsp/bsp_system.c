@@ -40,7 +40,7 @@ void init_system(void)
 
 void start_init_task(void)
 {
-    MPU6050_init();
+    mpu6050_init();
     dx_bt24_t_init();
 //    spi_init();
     adc_init();
