@@ -16,6 +16,7 @@ typedef enum {
 
 typedef struct {
     system_mode_e system_mode;
+    uint8_t shake_fre;
     uint8_t wxid[4];
     
 } system_state_t;

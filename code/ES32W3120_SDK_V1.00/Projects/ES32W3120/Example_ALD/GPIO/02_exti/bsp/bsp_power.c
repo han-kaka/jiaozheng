@@ -6,7 +6,7 @@
 adc_handle_t g_h_adc;
 adc_nch_conf_t g_nch_config;
 //adc_ich_conf_t g_ich_config;
-uint32_t g_adc_result;
+uint32_t g_adc_result = 0;
 
 /* Public Variables ---------------------------------------------------------- */
 

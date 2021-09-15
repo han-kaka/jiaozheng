@@ -1,3 +1,5 @@
+#include "bsp_system.h"
+
 #include "task_common.h"
 #include "task_safeguard.h"
 
@@ -28,7 +30,8 @@ uint8_t sg_task(uint8_t prio)
             
             case ADV_MODE:
             {
-
+                /* 开启一些初始任务 */
+                start_init_task();
             }
                 break;
             

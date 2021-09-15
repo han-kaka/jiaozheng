@@ -13,8 +13,16 @@
 
 #define MPU6050_INT_PORT                       GPIOA
 #define MPU6050_INT_PIN                        GPIO_PIN_13
+#define PWR_6050_PORT                          GPIOB
+#define PWR_6050_PIN                           GPIO_PIN_10
 
 void i2c_init(void);
+
+void iic_write_byte(uint8_t reg, uint8_t data);
+
+uint8_t iic_read_byte(uint8_t reg);
+
+void MPU6050_init(void);
 
 #endif
 

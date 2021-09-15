@@ -26,27 +26,21 @@ system_state_t ststem_state;
 
 /* Exported Variables -------------------------------------------------------- */
 
-
 void init_system(void)
 { 
-    ststem_state.system_mode = E_SHUTDOWN_MODE;
+    ststem_state.system_mode = E_ADV_MODE;
     
     /* 初始化设备信息 */
-    init_system_info();
-//    ststem_state.wxid[0] = 0xff;
-//    ststem_state.wxid[1] = 0xff;
-//    ststem_state.wxid[2] = 0xff;
-//    ststem_state.wxid[3] = 0xff;
+    init_system_info(&ststem_state);
     
-    set_task(SG, SHUTDOWN_MODE);
+    set_task(SG, ADV_MODE);
 
     return;
 }
 
-
 void start_init_task(void)
 {
-//    i2c_init();
+    MPU6050_init();
     dx_bt24_t_init();
 //    spi_init();
     adc_init();

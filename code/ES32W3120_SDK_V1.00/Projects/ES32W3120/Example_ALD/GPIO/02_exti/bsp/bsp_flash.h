@@ -4,6 +4,7 @@
 #include "ald_conf.h"
 #include "md_conf.h"
 
+#include "bsp_system.h"
 #include "bsp_common.h"
 
 //-----------¸÷IO¶¨Òå--------------------------
@@ -20,12 +21,13 @@
 typedef struct {
     uint8_t shake_fre;
     uint8_t wxid[4];
+    uint8_t reserve[123];
     
 } system_info_t;
 
 void spi_init(void);
 
-void init_system_info(void);
+void init_system_info(system_state_t *ststem_state);
 
 //md_status_t flash_write(uint32_t addr, char *buf, uint8_t size);
 

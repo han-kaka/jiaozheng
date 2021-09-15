@@ -7,9 +7,9 @@
 /* Private Variables --------------------------------------------------------- */
 
 /* Public Variables ---------------------------------------------------------- */
-uint8_t g_recv_buf[8];
+uint8_t g_recv_buf[8] = {0};
 uint8_t g_recv_len = sizeof(g_recv_buf);
-uint8_t g_send_buf[8];
+uint8_t g_send_buf[8] = {0};
 uint8_t g_send_len = sizeof(g_send_buf);
 volatile uint8_t g_rx_complete;
 volatile uint8_t g_tx_complete;
@@ -82,8 +82,7 @@ void master_rx_complete(i2c_handle_t *arg)
   */
 void i2c_init(void)
 {
-    uint8_t g_send_temp = 0x75;
-    uint8_t g_recv_temp = 0;
+    uint8_t mpu6050_id = 0;
     
     /* Initialize i2c pin */
     i2c_pin_init();
@@ -112,6 +111,22 @@ void i2c_init(void)
     MODIFY_REG(I2C1->FCON, I2C_FCON_RXFTH_MSK, (0 << I2C_FCON_RXFTH_POSS));
     MODIFY_REG(I2C1->FCON, I2C_FCON_TXFTH_MSK, (0 << I2C_FCON_TXFTH_POSS));
 
+    mpu6050_id = iic_read_byte(0x75);
+    ES_LOG_PRINT("mpu6050 id:%.2x\n", mpu6050_id);
+    
+    return;
+}
+
+void iic_write_byte(uint8_t reg, uint8_t data)
+{
+    
+}
+
+uint8_t iic_read_byte(uint8_t reg)
+{
+    uint8_t g_send_temp = reg;
+    uint8_t g_recv_temp = 0;
+    
     /* send data by interrupt */
     g_tx_complete = 0;
     ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, &g_send_temp, 1);
@@ -124,9 +139,7 @@ void i2c_init(void)
 
     while (g_rx_complete != 1);
     
-    ES_LOG_PRINT("mpu6050 id:%.2x\n", g_recv_temp);
-    
-    return;
+    return g_recv_temp;
 }
 
 void MPU6050_init(void)
@@ -136,6 +149,16 @@ void MPU6050_init(void)
     
     memset(&exti, 0, sizeof(exti));
     memset(&x, 0, sizeof(x));
+    
+    x.mode = GPIO_MODE_OUTPUT;
+    x.odos = GPIO_PUSH_PULL;
+    x.pupd = GPIO_PUSH_UP;
+    x.odrv = GPIO_OUT_DRIVE_NORMAL;
+    x.flt  = GPIO_FILTER_DISABLE;
+    x.type = GPIO_TYPE_CMOS;
+    x.func = GPIO_FUNC_1;
+    ald_gpio_init(PWR_6050_PORT, PWR_6050_PIN, &x);
+    ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 1);
     
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
@@ -156,7 +179,9 @@ void MPU6050_init(void)
     /* Configure interrupt */
     ald_gpio_exti_interrupt_config(MPU6050_INT_PIN, EXTI_TRIGGER_RISING_EDGE, ENABLE);
 
-    __NVIC_EnableIRQ(EXTI13_IRQn);
+//    __NVIC_EnableIRQ(EXTI13_IRQn);
+    
+    i2c_init();
     
     return;
 }

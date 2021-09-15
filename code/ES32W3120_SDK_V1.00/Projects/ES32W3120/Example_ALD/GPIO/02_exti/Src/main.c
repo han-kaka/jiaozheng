@@ -92,8 +92,8 @@ int main()
 
     /* 初始化IO */
     init_system();
-    /* 开启一些初始任务 */
-    start_init_task();
+//    /* 开启一些初始任务 */
+//    start_init_task();
     
     while(1)
     {

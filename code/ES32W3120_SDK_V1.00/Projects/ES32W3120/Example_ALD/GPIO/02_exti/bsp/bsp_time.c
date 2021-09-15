@@ -11,9 +11,9 @@
 /* Public Variables ---------------------------------------------------------- */
 timer_handle_t g_ad16c4t_init;
 timer_clock_config_t g_ad16c4t_clock_config;
-timer_cnt_t time_cnt;
-timer_flg_t time_flg;
-utc_time_t utc_time;
+timer_cnt_t time_cnt = {0};
+timer_flg_t time_flg = {0};
+utc_time_t utc_time = {0};
 
 /* Private Constants --------------------------------------------------------- */
 

@@ -7,9 +7,9 @@
 
 /* Public Variables ---------------------------------------------------------- */
 uart_handle_t g_h_uart;
-uint8_t g_rx_buf[20];
+uint8_t g_rx_buf[20] = {0};
 uint8_t g_rx_len = 0;
-uint8_t g_tx_buf[256];
+uint8_t g_tx_buf[256] = {0};
 uint8_t g_tx_len;
 
 /* Private Constants --------------------------------------------------------- */

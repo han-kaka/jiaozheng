@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>USE_ASSERT</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\..\..\Drivers\CMSIS\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\EastSoft\ES32W3120\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\EastSoft\ES32W3120\Include\ES32W3120;..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include;..\Src;..\Inc;..\..\..\..\..\..\Middlewares\Third_Party\RTT;..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Include;..\app;..\bsp;..\task</IncludePath>
+              <IncludePath>..\..\..\..\..\..\Drivers\CMSIS\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\EastSoft\ES32W3120\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\EastSoft\ES32W3120\Include\ES32W3120;..\..\..\..\..\..\Drivers\ALD\ES32W3120\Include;..\Src;..\Inc;..\..\..\..\..\..\Middlewares\Third_Party\RTT;..\..\..\..\..\..\Middlewares\EastSoft\BLE5.0\Log\Include;..\app;..\bsp;..\task;..\..\..\..\..\..\Drivers\MD\ES32W3120\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

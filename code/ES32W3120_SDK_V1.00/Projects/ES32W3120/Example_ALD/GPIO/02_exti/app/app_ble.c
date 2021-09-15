@@ -253,7 +253,7 @@ int ble_data_decode(void)
 //                    }
                     
                     data_wxid = (data_wxid_t *)ble_data->data;
-                    if(0xff == ststem_state.wxid[0] && 0xff == ststem_state.wxid[1] && 0xff == ststem_state.wxid[2] && 0xff == ststem_state.wxid[3]){
+                    if(0x00 == ststem_state.wxid[0] && 0x00 == ststem_state.wxid[1] && 0x00 == ststem_state.wxid[2] && 0x00 == ststem_state.wxid[3]){
                         memcpy(ststem_state.wxid, data_wxid, 4);
                         
                         memset(ble_tx_buf, 0, 20);
