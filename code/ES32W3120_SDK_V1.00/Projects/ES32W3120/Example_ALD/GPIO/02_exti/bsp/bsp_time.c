@@ -1,5 +1,6 @@
 #include "bsp_time.h"
 #include "bsp_power.h"
+#include "bsp_system.h"
 
 #include "task_common.h"
 #include "app_common.h"
@@ -24,6 +25,7 @@ utc_time_t utc_time = {0};
 /* Exported Variables -------------------------------------------------------- */
 extern adc_handle_t g_h_adc;
 extern uint8_t g_rx_len;
+extern system_state_t ststem_state;
 //extern uint8_t retry_cnt;
 
 /**
@@ -95,6 +97,15 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
             time_flg.uart_timeout_flg = 0;
             g_rx_len = 0;
             set_task(BLUETOOTH, DATA_DECODE);
+        }
+    }
+    
+    if(1 == time_flg.mpu6050_data_flg){
+        time_cnt.mpu6050_data_cnt++;
+        if(5 <= time_cnt.uart_timeout_cnt){
+            time_cnt.mpu6050_data_cnt = 0;
+            time_flg.mpu6050_data_flg = 0;
+            set_task(MEASURE, IMU_DATA);
         }
     }
 

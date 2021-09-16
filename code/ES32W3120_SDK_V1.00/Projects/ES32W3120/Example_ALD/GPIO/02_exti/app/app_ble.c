@@ -23,10 +23,10 @@ uint8_t ble_tx_len;
 /* Private Function ---------------------------------------------------------- */
 
 /* Exported Variables -------------------------------------------------------- */
-extern utc_time_t utc_time;;
+extern utc_time_t utc_time;
 extern system_state_t ststem_state;
-//extern timer_cnt_t time_cnt;
-//extern timer_flg_t time_flg;
+extern timer_cnt_t time_cnt;
+extern timer_flg_t time_flg;
 //extern uint8_t retry_cnt;
 
 int ble_data_decode(void)
@@ -159,34 +159,9 @@ int ble_data_decode(void)
         case READ_DATA_CMD:
             switch(ble_data->address){
                 case DATA_MONITOR_DATA:
-                    memset(ble_tx_buf, 0, 20);
-                    ble_tx_buf[0] = 0xaa;
-                    ble_tx_buf[1] = 0x13;
-                    ble_tx_buf[2] = 0xd5;
-                    ble_tx_buf[3] = 0x01;
-                    ble_tx_buf[4] = 0x03;
-                    ble_tx_buf[5] = 0x66;
-                    ble_tx_buf[6] = 0xff;
-                    ble_tx_buf[7] = 0xae;
-                    ble_tx_buf[8] = 0x40;
-                    ble_tx_buf[9] = 0xd4;
-                    ble_tx_buf[10] = 0x15;
-                    ble_tx_buf[11] = 0x08;
-                    ble_tx_buf[12] = 0x18;
-                    ble_tx_buf[13] = 0x11;
-                    ble_tx_buf[14] = 0x18;
-                    ble_tx_buf[15] = 0x1c;
-                    ble_tx_buf[16] = 0x22;
-                    ble_tx_buf[17] = 0x02;
-                    ble_tx_buf[18] = 0x30;
-                
-                    sum = 0;
-                    for(i=0; i<19; i++){
-                        sum += ble_tx_buf[i];
-                    }
-                    ble_tx_buf[19] = sum;
-                    
-                    send_ble_data(ble_tx_buf, 20);
+                    time_flg.mpu6050_data_flg = 1;
+                    time_cnt.mpu6050_data_cnt = 0;
+
                     break;
                 
                 case DATA_UTC:
@@ -220,38 +195,6 @@ int ble_data_decode(void)
         case WXID_CMD:
             switch(ble_data->address){
                 case WXID_WRITE:
-//                    //重置重发机制
-//                    time_cnt.wait_wxid_cnt = 0;
-//                    time_flg.wait_wxid_flg = 0;
-//                    retry_cnt = 0;
-//                
-//                    data_wxid = (data_wxid_t *)ble_data->data;
-//                    if(ststem_state.wxid[0] == 0xff && ststem_state.wxid[1] == 0xff && ststem_state.wxid[2] == 0xff && ststem_state.wxid[3] == 0xff){
-//                        //保存wxid置flash中
-//                        ststem_state.wxid[0] = data_wxid->wxid_0;
-//                        ststem_state.wxid[1] = data_wxid->wxid_1;
-//                        ststem_state.wxid[2] = data_wxid->wxid_2;
-//                        ststem_state.wxid[3] = data_wxid->wxid_3;
-//                        set_task(MEM_WRITE, FLASH_WXID_WRITE);
-//                    }
-//                    else{
-//                        if(ststem_state.wxid[0] == data_wxid->wxid_0 && ststem_state.wxid[1] == data_wxid->wxid_1 && ststem_state.wxid[2] == data_wxid->wxid_2 && ststem_state.wxid[3] == data_wxid->wxid_3){
-//                            if(BIND_FLG != data_wxid->bind_flg){
-//                                set_task(CONTROL, BLE_DISCON);  //主动断开ble连接
-//                                
-//                                //重置flash中的wxid
-//                                ststem_state.wxid[0] = 0xff;
-//                                ststem_state.wxid[1] = 0xff;
-//                                ststem_state.wxid[2] = 0xff;
-//                                ststem_state.wxid[3] = 0xff;
-//                                set_task(MEM_WRITE, FLASH_WXID_WRITE);
-//                            }
-//                        }
-//                        else{
-//                            set_task(CONTROL, BLE_DISCON);  //主动断开ble连接
-//                        }
-//                    }
-                    
                     data_wxid = (data_wxid_t *)ble_data->data;
                     if(0x00 == ststem_state.wxid[0] && 0x00 == ststem_state.wxid[1] && 0x00 == ststem_state.wxid[2] && 0x00 == ststem_state.wxid[3]){
                         memcpy(ststem_state.wxid, data_wxid, 4);

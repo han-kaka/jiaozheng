@@ -163,6 +163,8 @@ void dx_bt24_t_init(void)
     ald_gpio_write_pin(BLE_REST_PORT, BLE_REST_PIN, 0);
     ald_gpio_init(BLE_CONN_PORT, BLE_CONN_PIN, &x);
     ald_gpio_write_pin(BLE_CONN_PORT, BLE_CONN_PIN, 1);
+    ald_gpio_init(PWR_BT_PORT, PWR_BT_PIN, &x);
+    ald_gpio_write_pin(PWR_BT_PORT, PWR_BT_PIN, 0);
     
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;

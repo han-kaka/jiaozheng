@@ -13,6 +13,7 @@
 #define MPU_ACCEL_CFG_REG 0x1c
 #define MPU_CFG_REG 0x1a
 #define MPU_SAMPLE_RATE_REG 0x19
+#define MPU_ACCEL_XOUTH_REG 0x3b
 
 /* Private Macros ------------------------------------------------------------ */
 
@@ -32,15 +33,6 @@ i2c_handle_t g_h_i2c;
 /* Private function prototypes ----------------------------------------------- */
 
 /* Private Function ---------------------------------------------------------- */
-
-///**
-//  * @brief  delay some time.
-//  * @retval None.
-//  */
-//static void delay(int i)
-//{
-//    while (i--) ;
-//}
 
 /**
   * @brief  Initializate pin of i2c module.
@@ -99,6 +91,8 @@ static void iic_write_byte(uint8_t reg, uint8_t data)
     g_tx_complete = 0;
     ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, g_send_temp, 2);
     
+    while (g_tx_complete != 1);
+    
     return;
 }
 
@@ -136,6 +130,8 @@ static void iic_write_len(uint8_t reg, uint8_t len, uint8_t *buf)
     /* send data by interrupt */
     g_tx_complete = 0;
     ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, g_send_temp, 1+i);
+    
+    while (g_tx_complete != 1);
     
     return;
 }
@@ -215,11 +211,12 @@ static void mpu_set_rate(uint16_t rate)
     return;
 }
 
+
 /**
   * @brief  i2c_init
   * @retval None
   */
-void i2c_init(void)
+static void i2c_init(void)
 {
     uint8_t mpu6050_id = 0;
     
@@ -254,6 +251,16 @@ void i2c_init(void)
     ES_LOG_PRINT("mpu6050 id:%.2x\n", mpu6050_id);
     
     return;
+}
+
+void mpu_get_accelerometer(uint16_t *ax, uint16_t *ay, uint16_t *az)
+{
+    uint8_t buf[6] = {0};
+    iic_read_len(MPU_ACCEL_XOUTH_REG, 6, buf);
+    
+    *ax = ((uint16_t)buf[0] << 8)|buf[1];
+    *ay = ((uint16_t)buf[2] << 8)|buf[3];
+    *az = ((uint16_t)buf[4] << 8)|buf[5];
 }
 
 void mpu6050_init(void)
@@ -304,28 +311,39 @@ void mpu6050_init(void)
 
 void mpu6050_set(void)
 {
-    iic_write_byte(MPU_PWR_MGMT1_REG,0X80);//复位MPU6050
+    uint8_t mpu6050_id = 0;
+    uint16_t ax = 0;
+    uint16_t ay = 0;
+    uint16_t az = 0;
+    
+    iic_write_byte(MPU_PWR_MGMT1_REG, 0x80);//复位MPU6050
     ald_delay_ms(100);
-    iic_write_byte(MPU_PWR_MGMT1_REG,0X00);//唤醒MPU6050
+    iic_write_byte(MPU_PWR_MGMT1_REG, 0x00);//唤醒MPU6050
     
     mpu_set_gyro_fsr(3); //陀螺仪传感器, 2000dps
     mpu_set_accel_fsr(0); //加速度传感器, 2g
     mpu_set_rate(50); //设置采样频率50HZ
-    iic_write_byte(MPU_INT_EN_REG,0x00); //关闭所有中断
-    iic_write_byte(MPU_USER_CTRL_REG,0x00);//I2C主模式关闭
-    iic_write_byte(MPU_FIFO_EN_REG,0x00);//关闭FIFO
-    iic_write_byte(MPU_INTBP_CFG_REG,0x80);//INT引脚低电平有效
+    iic_write_byte(MPU_INT_EN_REG, 0x00); //关闭所有中断
+    iic_write_byte(MPU_USER_CTRL_REG, 0x00);//I2C主模式关闭
+    iic_write_byte(MPU_FIFO_EN_REG, 0x00);//关闭FIFO
+    iic_write_byte(MPU_INTBP_CFG_REG, 0x80);//INT引脚低电平有效
     
-    if(MPU_ADDR == iic_read_byte(MPU_DEVICE_ID_REG)){
-        iic_write_byte(MPU_PWR_MGMT1_REG,0x01);//设置CLKSEL,PLL X 为参考
-        iic_write_byte(MPU_PWR_MGMT2_REG,0x00);//加速度陀螺仪都工作
+    mpu6050_id = iic_read_byte(MPU_DEVICE_ID_REG);
+    ES_LOG_PRINT("mpu6050 id:%.2x\n", mpu6050_id);
+    
+    if(MPU_ADDR == mpu6050_id){
+        iic_write_byte(MPU_PWR_MGMT1_REG, 0x01);//设置CLKSEL,PLL X 为参考
+        iic_write_byte(MPU_PWR_MGMT2_REG, 0x00);//加速度陀螺仪都工作
         mpu_set_rate(50); //设置采样频率50HZ
         ES_LOG_PRINT("mpu6050_set ok\n");
+        ald_delay_ms(100);
+        mpu_get_accelerometer(&ax, &ay, &az);
+        ES_LOG_PRINT("ax:%u, ay:%u, az:%u\n", ax, ay, az);
+        
     }
     else{
         ES_LOG_PRINT("mpu6050_set err\n");
     }
-
 }
 
 

@@ -34,7 +34,6 @@ void init_system(void)
     init_system_info(&ststem_state);
     
     set_task(SG, ADV_MODE);
-
     return;
 }
 

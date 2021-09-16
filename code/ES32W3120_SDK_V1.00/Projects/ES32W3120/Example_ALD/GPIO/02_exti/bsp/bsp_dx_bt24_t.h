@@ -18,6 +18,9 @@
 #define BLE_INT_PORT              GPIOA
 #define BLE_INT_PIN               GPIO_PIN_4
 
+#define PWR_BT_PORT               GPIOB
+#define PWR_BT_PIN                GPIO_PIN_9
+
 #define UARTX                     UART0
 
 void uart_init(void);

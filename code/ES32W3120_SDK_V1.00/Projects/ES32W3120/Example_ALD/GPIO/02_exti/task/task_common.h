@@ -33,7 +33,7 @@
 #define BLE_DISCON                    2                             //断开蓝牙连接
 
 #define MEASURE                       2                             //测量任务2
-#define READ_6050_DATA                0                             //读取6050数据
+#define IMU_DATA                      0                             //读取6050数据
 #define BATT_VOL                      1                             //测量电池电压
 
 #define MEM_READ                      3                             //flash读取任务3
