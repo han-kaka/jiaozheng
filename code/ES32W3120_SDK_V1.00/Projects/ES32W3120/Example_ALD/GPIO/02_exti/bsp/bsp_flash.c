@@ -1,4 +1,5 @@
 #include "bsp_flash.h"
+#include "bsp_system.h"
 
 //#define FLASH_CS_SET() (md_gpio_write_pin(SPI_NSS_PORT, SPI_NSS_PIN, 1));
 //#define FLASH_CS_CLR() (md_gpio_write_pin(SPI_NSS_PORT, SPI_NSS_PIN, 0));
@@ -28,6 +29,9 @@ uint8_t g_flash_id[4] = {0};
 /* Private function prototypes ----------------------------------------------- */
 
 /* Private Function ---------------------------------------------------------- */
+
+/* Exported Variables -------------------------------------------------------- */
+extern system_state_t ststem_state;
 
 ///**
 //  * @brief  delay some time.
@@ -157,6 +161,30 @@ void init_system_info(system_state_t *ststem_state)
     ststem_state->wxid[3] = system_info.wxid[3];
 }
 
+void save_system_info(void)
+{
+    /* 保存数据至片内 flash */
+    system_info_t system_info = {0};
+    
+    system_info.shake_fre = ststem_state.shake_fre;
+    system_info.wxid[0] = ststem_state.wxid[0];
+    system_info.wxid[1] = ststem_state.wxid[1];
+    system_info.wxid[2] = ststem_state.wxid[2];
+    system_info.wxid[3] = ststem_state.wxid[3];
+    
+    __disable_irq();
+
+    if (IAP_FASTPROGRAM(DATA_ADDRESS, (uint8_t *)&system_info, 128, AUTO_ERASE_TRUE, IAP_FREQUENCE_48M) != RESET){
+        ES_LOG_PRINT("read data success\n");
+        ES_LOG_PRINT("shake_fre: %u\n", system_info.shake_fre);
+        ES_LOG_PRINT("wxid[0]: %u, wxid[1]: %u, wxid[2]: %u, wxid[3]: %u, \n", system_info.wxid[0], system_info.wxid[1], system_info.wxid[2], system_info.wxid[3]);
+    }
+    else{
+        ES_LOG_PRINT("read data fail\n");
+    }
+    __enable_irq();
+}
+
 void flash_init(void)
 {
     gpio_init_t x;
@@ -173,7 +201,7 @@ void flash_init(void)
     ald_gpio_init(PWR_FLASH_PORT, PWR_FLASH_PIN, &x);
     ald_gpio_write_pin(PWR_FLASH_PORT, PWR_FLASH_PIN, 0);
 
-    spi_init();
+//    spi_init();
 }
 
 ///**

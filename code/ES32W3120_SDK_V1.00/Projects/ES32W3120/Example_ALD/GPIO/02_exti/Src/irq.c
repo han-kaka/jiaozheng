@@ -32,6 +32,11 @@
 /* Includes ------------------------------------------------------------------ */
 #include "main.h"
 #include "eslog_init.h"
+#include "bsp_dx_bt24_t.h"
+
+#include "app_common.h"
+
+#include "task_common.h"
 
 /** @addtogroup Projects_Examples_ALD
   * @{
@@ -166,8 +171,16 @@ void EXTI13_IRQHandler()
   */
 void EXTI4_IRQHandler()
 {
-//    __NVIC_DisableIRQ(EXTI4_IRQn);
     ald_gpio_exti_clear_flag_status(GPIO_PIN_4);
+    
+    if(1 == ald_gpio_read_pin(BLE_INT_PORT, BLE_INT_PIN))
+    {
+        set_task(SG, CONNECT_MODE);
+    }
+    else
+    {
+        set_task(SG, ADV_MODE);
+    }
 }
 
 #ifdef ALD_DMA

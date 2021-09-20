@@ -5,10 +5,25 @@
 #include "task_common.h"
 #include "task_safeguard.h"
 
+/* Private Macros ------------------------------------------------------------ */
+
+/* Private Variables --------------------------------------------------------- */
+
+/* Public Variables ---------------------------------------------------------- */
+
+/* Private Constants --------------------------------------------------------- */
+
+/* Private function prototypes ----------------------------------------------- */
+
+/* Private Function ---------------------------------------------------------- */
+
+/* Exported Variables -------------------------------------------------------- */
+extern system_state_t ststem_state;
+
 uint8_t sg_task(uint8_t prio)
 {
     uint8_t m_SYS_SubTask_prio=0;
-
+    
     ES_LOG_PRINT("sg_task\n");
     
     while(ga_Subtask[prio])
@@ -30,14 +45,17 @@ uint8_t sg_task(uint8_t prio)
             
             case ADV_MODE:
             {
-                /* 开启一些初始任务 */
+                ststem_state.system_mode = E_ADV_MODE;
+                ststem_state.system_flg.imu_data_flg = 0;
+                
+                /* 开启一些广播模式下的初始任务 */
                 start_init_task();
             }
                 break;
             
             case CONNECT_MODE:
             {
-
+                ststem_state.system_mode = E_CONNECT_MODE;
             }
                 break;
             

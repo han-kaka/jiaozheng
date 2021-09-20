@@ -27,10 +27,7 @@ system_state_t ststem_state;
 /* Exported Variables -------------------------------------------------------- */
 
 void init_system(void)
-{ 
-    ststem_state.system_mode = E_ADV_MODE;
-    ststem_state.system_flg.imu_data_flg = 0;
-    
+{
     /* 初始化设备信息 */
     init_system_info(&ststem_state);
     

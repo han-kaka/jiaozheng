@@ -48,10 +48,8 @@
 #define WXID_REQ                      2                             //向小程序请求wxid
 
 #define MEM_WRITE                     6                             //flash存储任务6
-#define FLASH_DELETE                  0                             //保存数据至flash中
-#define FLASH_WRITE                   1                             //保存数据至flash中
-#define FLASH_WXID_WRITE              2                             //更新flsh中的wxid
-
+#define WRITE_SYSTEM_INFO             0                             //保存系统信息至内部 flash
+#define FLASH_DELETE                  1                             //删除外部 flash 中的数据
 #define OTHER                         7                             //其他任务7
 
 

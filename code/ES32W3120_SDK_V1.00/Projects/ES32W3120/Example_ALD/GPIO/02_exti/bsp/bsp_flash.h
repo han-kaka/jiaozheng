@@ -32,6 +32,7 @@ void flash_init(void);
 
 void init_system_info(system_state_t *ststem_state);
 
+void save_system_info(void);
 //md_status_t flash_write(uint32_t addr, char *buf, uint8_t size);
 
 //md_status_t flash_read(uint32_t addr, char *buf, uint16_t size);

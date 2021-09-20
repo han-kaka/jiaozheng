@@ -1,3 +1,5 @@
+#include "bsp_flash.h"
+
 #include "app_common.h"
 
 #include "task_common.h"
@@ -14,9 +16,9 @@ uint8_t mem_write_task(uint8_t prio)
         m_SYS_SubTask_prio = ga_TaskMapTable[ga_Subtask[prio]];
         switch(m_SYS_SubTask_prio)
         {
-            case FLASH_WRITE:
+            case WRITE_SYSTEM_INFO:
             {
-
+                save_system_info();
             }
                 break;
             

@@ -178,12 +178,12 @@ void dx_bt24_t_init(void)
     exti.filter      = ENABLE;
     exti.cks         = EXTI_FILTER_CLOCK_10K;
     exti.filter_time = 10;
-    ald_gpio_exti_init(GPIOA, GPIO_PIN_4, &exti);
+    ald_gpio_exti_init(BLE_INT_PORT, BLE_INT_PIN, &exti);
     
     /* Clear interrupt flag */
-    ald_gpio_exti_clear_flag_status(GPIO_PIN_4);
+    ald_gpio_exti_clear_flag_status(BLE_INT_PIN);
     /* Configure interrupt */
-    ald_gpio_exti_interrupt_config(GPIO_PIN_4, EXTI_TRIGGER_RISING_EDGE, ENABLE);
+    ald_gpio_exti_interrupt_config(BLE_INT_PIN, EXTI_TRIGGER_BOTH_EDGE, ENABLE);
     
     __NVIC_EnableIRQ(EXTI4_IRQn);
     

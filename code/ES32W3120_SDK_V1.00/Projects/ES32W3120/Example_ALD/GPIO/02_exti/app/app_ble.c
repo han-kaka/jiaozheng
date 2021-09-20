@@ -194,8 +194,10 @@ int ble_data_decode(void)
             switch(ble_data->address){
                 case WXID_WRITE:
                     data_wxid = (data_wxid_t *)ble_data->data;
-                    if(0x00 == ststem_state.wxid[0] && 0x00 == ststem_state.wxid[1] && 0x00 == ststem_state.wxid[2] && 0x00 == ststem_state.wxid[3]){
+                    if((0x00 == ststem_state.wxid[0] && 0x00 == ststem_state.wxid[1] && 0x00 == ststem_state.wxid[2] && 0x00 == ststem_state.wxid[3]) ||
+                        (0xff == ststem_state.wxid[0] && 0xff == ststem_state.wxid[1] && 0xff == ststem_state.wxid[2] && 0xff == ststem_state.wxid[3])){   //Î´°ó¶¨×´Ì¬
                         memcpy(ststem_state.wxid, data_wxid, 4);
+                        set_task(MEM_WRITE, WRITE_SYSTEM_INFO);
                         
                         memset(ble_tx_buf, 0, 20);
                         ble_tx_buf[0] = 0xaa;
@@ -210,7 +212,7 @@ int ble_data_decode(void)
                         ble_tx_buf[19] = sum;
                     }
                     else{
-                        if(ststem_state.wxid[0] == data_wxid->wxid_0 && ststem_state.wxid[1] == data_wxid->wxid_1 && ststem_state.wxid[2] == data_wxid->wxid_2 && ststem_state.wxid[3] == data_wxid->wxid_3){
+                        if(ststem_state.wxid[0] == data_wxid->wxid_0 && ststem_state.wxid[1] == data_wxid->wxid_1 && ststem_state.wxid[2] == data_wxid->wxid_2 && ststem_state.wxid[3] == data_wxid->wxid_3){   //ÒÑ°ó¶¨×´Ì¬
                             memset(ble_tx_buf, 0, 20);
                             ble_tx_buf[0] = 0xaa;
                             ble_tx_buf[1] = 0x13;
