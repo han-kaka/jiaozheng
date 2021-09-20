@@ -159,9 +159,7 @@ int ble_data_decode(void)
         case READ_DATA_CMD:
             switch(ble_data->address){
                 case DATA_MONITOR_DATA:
-                    time_flg.mpu6050_data_flg = 1;
-                    time_cnt.mpu6050_data_cnt = 0;
-
+                    ststem_state.system_flg.imu_data_flg = 1;
                     break;
                 
                 case DATA_UTC:

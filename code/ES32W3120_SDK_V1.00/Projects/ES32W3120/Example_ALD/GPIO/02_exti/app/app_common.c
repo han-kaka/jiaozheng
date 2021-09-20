@@ -1,5 +1,5 @@
 #include "app_common.h"
-#include <stdlib.h>
+
 #include "task_common.h"
 
 //Sys_Flag_Type                           Sys_Flag_Struct = {.reserved = 0,}; 

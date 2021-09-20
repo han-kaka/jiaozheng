@@ -300,7 +300,7 @@ void mpu6050_init(void)
     /* Configure interrupt */
     ald_gpio_exti_interrupt_config(MPU6050_INT_PIN, EXTI_TRIGGER_RISING_EDGE, ENABLE);
 
-//    __NVIC_EnableIRQ(EXTI13_IRQn);
+    __NVIC_DisableIRQ(EXTI13_IRQn);
     
     i2c_init();
     

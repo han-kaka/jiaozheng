@@ -7,7 +7,7 @@
 
 //-----------¸÷IO¶¨Òå--------------------------
 #define LED_RUN_PORT                               GPIOB
-#define LED_RUN_PIN                                GPIO_PIN_3
+#define LED_RUN_PIN                                GPIO_PIN_6
 
 void led_init(void);
 

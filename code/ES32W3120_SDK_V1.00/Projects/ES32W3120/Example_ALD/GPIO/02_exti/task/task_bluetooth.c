@@ -35,11 +35,11 @@ extern timer_flg_t time_flg;
 
 uint8_t bluetooth_task(uint8_t prio)
 {
-//    RTT_PRINTF("BlueTooth_Task\r\n");
-
     uint8_t m_SYS_SubTask_prio=0;
 //    uint8_t i = 0;
 //    uint8_t tx_temp[20];
+    
+    ES_LOG_PRINT("bluetooth_task\n");
     
     while(ga_Subtask[prio])
     { 

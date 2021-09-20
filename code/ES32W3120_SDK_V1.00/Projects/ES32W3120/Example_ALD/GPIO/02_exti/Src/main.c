@@ -37,10 +37,10 @@
 #include "global.h"
 
 #include "bsp_system.h"
+#include "bsp_dx_bt24_t.h"
 
 #include "task_common.h"
 
-#include "bsp_dx_bt24_t.h"
 
 /** @addtogroup Projects_Examples_ALD
   * @{

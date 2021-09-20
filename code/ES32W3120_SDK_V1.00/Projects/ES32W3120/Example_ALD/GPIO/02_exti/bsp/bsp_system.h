@@ -15,11 +15,18 @@ typedef enum {
 }system_mode_e;
 
 typedef struct {
+    uint8_t imu_data_flg      :1;
+    uint8_t reserve_flag      :7;
+    
+}system_flg_t;
+
+typedef struct {
     system_mode_e system_mode;
     uint8_t shake_fre;
     uint8_t wxid[4];
+    system_flg_t system_flg;
     
-} system_state_t;
+}system_state_t;
 
 void start_init_task(void);
 void init_system(void);

@@ -1,14 +1,14 @@
+#include "app_common.h"
+
 #include "task_common.h"
 #include "task_communicate.h"
 
-#include "app_common.h"
-
 uint8_t comm_task(uint8_t prio)
 {
-//    RTT_PRINTF("COMM_Task\r\n");
-
     uint8_t m_SYS_SubTask_prio=0;
-
+    
+    ES_LOG_PRINT("comm_task\n");
+    
     while(ga_Subtask[prio])
     {   
         m_SYS_SubTask_prio = ga_TaskMapTable[ga_Subtask[prio]];

@@ -18,6 +18,9 @@
 #define SPI_MISO_PORT                         GPIOB
 #define SPI_MISO_PIN                          GPIO_PIN_14
 
+#define PWR_FLASH_PORT                        GPIOB
+#define PWR_FLASH_PIN                         GPIO_PIN_15
+
 typedef struct {
     uint8_t shake_fre;
     uint8_t wxid[4];
@@ -25,7 +28,7 @@ typedef struct {
     
 } system_info_t;
 
-void spi_init(void);
+void flash_init(void);
 
 void init_system_info(system_state_t *ststem_state);
 

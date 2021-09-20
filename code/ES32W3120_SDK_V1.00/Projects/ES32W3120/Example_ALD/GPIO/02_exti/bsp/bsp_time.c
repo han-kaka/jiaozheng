@@ -2,8 +2,10 @@
 #include "bsp_power.h"
 #include "bsp_system.h"
 
-#include "task_common.h"
 #include "app_common.h"
+
+#include "task_common.h"
+
 
 /* Private Macros ------------------------------------------------------------ */
 
@@ -100,11 +102,10 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         }
     }
     
-    if(1 == time_flg.mpu6050_data_flg){
+    if((E_ADV_MODE == ststem_state.system_mode) || (E_CONNECT_MODE == ststem_state.system_mode)){
         time_cnt.mpu6050_data_cnt++;
         if(5 <= time_cnt.uart_timeout_cnt){
             time_cnt.mpu6050_data_cnt = 0;
-            time_flg.mpu6050_data_flg = 0;
             set_task(MEASURE, IMU_DATA);
         }
     }

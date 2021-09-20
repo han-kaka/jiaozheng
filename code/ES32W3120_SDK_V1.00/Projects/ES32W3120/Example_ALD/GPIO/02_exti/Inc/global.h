@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "eslog_init.h"
 

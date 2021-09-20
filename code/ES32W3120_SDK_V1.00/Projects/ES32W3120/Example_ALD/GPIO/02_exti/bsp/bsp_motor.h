@@ -7,7 +7,7 @@
 
 //-----------¸÷IO¶¨Òå--------------------------
 #define MOTOR_CTR_PORT                             GPIOA
-#define MOTOR_CTR_PIN                              GPIO_PIN_15
+#define MOTOR_CTR_PIN                              GPIO_PIN_12
 
 void motor_init(void);
 

@@ -108,7 +108,7 @@ static uint32_t flash_read_id(void)
     return ((g_flash_id[0] << 16) | (g_flash_id[1] << 8) | (g_flash_id[2]));  /* 制造商ID flash_id[0]和设备ID flash_id[1:2] */
 }
 
-void spi_init(void)
+static void spi_init(void)
 {
     uint32_t id;
     
@@ -155,6 +155,25 @@ void init_system_info(system_state_t *ststem_state)
     ststem_state->wxid[1] = system_info.wxid[1];
     ststem_state->wxid[2] = system_info.wxid[2];
     ststem_state->wxid[3] = system_info.wxid[3];
+}
+
+void flash_init(void)
+{
+    gpio_init_t x;
+    
+    memset(&x, 0, sizeof(x));
+    
+    x.mode = GPIO_MODE_OUTPUT;
+    x.odos = GPIO_PUSH_PULL;
+    x.pupd = GPIO_PUSH_UP;
+    x.odrv = GPIO_OUT_DRIVE_NORMAL;
+    x.flt  = GPIO_FILTER_DISABLE;
+    x.type = GPIO_TYPE_CMOS;
+    x.func = GPIO_FUNC_1;
+    ald_gpio_init(PWR_FLASH_PORT, PWR_FLASH_PIN, &x);
+    ald_gpio_write_pin(PWR_FLASH_PORT, PWR_FLASH_PIN, 0);
+
+    spi_init();
 }
 
 ///**

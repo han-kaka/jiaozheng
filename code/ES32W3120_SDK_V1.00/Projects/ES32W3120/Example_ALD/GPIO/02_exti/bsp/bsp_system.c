@@ -29,6 +29,7 @@ system_state_t ststem_state;
 void init_system(void)
 { 
     ststem_state.system_mode = E_ADV_MODE;
+    ststem_state.system_flg.imu_data_flg = 0;
     
     /* 初始化设备信息 */
     init_system_info(&ststem_state);
@@ -41,7 +42,7 @@ void start_init_task(void)
 {
     mpu6050_init();
     dx_bt24_t_init();
-//    spi_init();
+    flash_init();
     adc_init();
     charge_init();
     motor_init();

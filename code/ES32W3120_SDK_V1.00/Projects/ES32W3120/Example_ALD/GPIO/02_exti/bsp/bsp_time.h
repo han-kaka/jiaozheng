@@ -16,14 +16,13 @@ typedef struct {
     uint16_t wait_wxid_cnt;
     uint8_t mpu6050_data_cnt;
     
-} timer_cnt_t;
+}timer_cnt_t;
 
 typedef struct {
     uint8_t uart_timeout_flg  :1;
     uint8_t wxid_req_flg      :1;
     uint8_t wait_wxid_flg     :1;
-    uint8_t mpu6050_data_flg  :1;
-    uint8_t reserve_flag      :4;
+    uint8_t reserve_flag      :5;
     
 } timer_flg_t;
 
@@ -36,7 +35,7 @@ typedef struct {
     uint8_t utc_s;
     uint8_t utc_5ms;
     
-} utc_time_t;
+}utc_time_t;
 
 void time_init(void);
 
