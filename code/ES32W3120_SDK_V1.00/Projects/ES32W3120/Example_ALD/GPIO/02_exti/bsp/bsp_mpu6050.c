@@ -279,7 +279,7 @@ void mpu6050_init(void)
     x.type = GPIO_TYPE_CMOS;
     x.func = GPIO_FUNC_1;
     ald_gpio_init(PWR_6050_PORT, PWR_6050_PIN, &x);
-    ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 1);
+    ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 0);
     
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
