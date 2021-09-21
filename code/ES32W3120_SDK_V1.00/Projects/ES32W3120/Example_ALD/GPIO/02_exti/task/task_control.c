@@ -14,24 +14,6 @@ uint8_t contrl_task(uint8_t prio)
         m_SYS_SubTask_prio= ga_TaskMapTable[ga_Subtask[prio]];
         switch(m_SYS_SubTask_prio)
         {
-            case MOTOR_START:
-            {
-
-            }
-                break;
-            
-            case MOTOR_STOP:
-            {
-
-            }
-                break;
-            
-            case BLE_DISCON:
-            {
-                //主动断开ble连接
-            }
-                break;
-            
             default:
                 break;
         }

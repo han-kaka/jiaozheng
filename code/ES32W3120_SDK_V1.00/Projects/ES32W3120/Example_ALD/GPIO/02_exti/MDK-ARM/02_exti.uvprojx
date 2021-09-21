@@ -429,6 +429,16 @@
               <FileType>5</FileType>
               <FilePath>..\app\app_common.h</FilePath>
             </File>
+            <File>
+              <FileName>app_calculate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app_calculate.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_calculate.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\app\app_calculate.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

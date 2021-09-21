@@ -1,5 +1,7 @@
 #include "bsp_flash.h"
 #include "bsp_system.h"
+#include "bsp_time.h"
+#include "bsp_dx_bt24_t.h"
 
 //#define FLASH_CS_SET() (md_gpio_write_pin(SPI_NSS_PORT, SPI_NSS_PIN, 1));
 //#define FLASH_CS_CLR() (md_gpio_write_pin(SPI_NSS_PORT, SPI_NSS_PIN, 0));
@@ -31,16 +33,8 @@ uint8_t g_flash_id[4] = {0};
 /* Private Function ---------------------------------------------------------- */
 
 /* Exported Variables -------------------------------------------------------- */
-extern system_state_t ststem_state;
-
-///**
-//  * @brief  delay some time.
-//  * @retval None.
-//  */
-//static void delay(int i)
-//{
-//    while (i--) ;
-//}
+extern system_state_t system_state;
+extern utc_time_t utc_time;
 
 /**
   * @brief  Initializate spi flash pin
@@ -137,7 +131,7 @@ static void spi_init(void)
     return;
 }
 
-void init_system_info(system_state_t *ststem_state)
+void init_system_info(system_state_t *system_state)
 {
     /* 从片内 flash 中读取相关数据 */
     system_info_t system_info = {0};
@@ -154,11 +148,11 @@ void init_system_info(system_state_t *ststem_state)
     }
     __enable_irq();
     
-    ststem_state->shake_fre = system_info.shake_fre;
-    ststem_state->wxid[0] = system_info.wxid[0];
-    ststem_state->wxid[1] = system_info.wxid[1];
-    ststem_state->wxid[2] = system_info.wxid[2];
-    ststem_state->wxid[3] = system_info.wxid[3];
+    system_state->shake_fre = system_info.shake_fre;
+    system_state->wxid[0] = system_info.wxid[0];
+    system_state->wxid[1] = system_info.wxid[1];
+    system_state->wxid[2] = system_info.wxid[2];
+    system_state->wxid[3] = system_info.wxid[3];
 }
 
 void save_system_info(void)
@@ -166,11 +160,11 @@ void save_system_info(void)
     /* 保存数据至片内 flash */
     system_info_t system_info = {0};
     
-    system_info.shake_fre = ststem_state.shake_fre;
-    system_info.wxid[0] = ststem_state.wxid[0];
-    system_info.wxid[1] = ststem_state.wxid[1];
-    system_info.wxid[2] = ststem_state.wxid[2];
-    system_info.wxid[3] = ststem_state.wxid[3];
+    system_info.shake_fre = system_state.shake_fre;
+    system_info.wxid[0] = system_state.wxid[0];
+    system_info.wxid[1] = system_state.wxid[1];
+    system_info.wxid[2] = system_state.wxid[2];
+    system_info.wxid[3] = system_state.wxid[3];
     
     __disable_irq();
 
@@ -202,6 +196,44 @@ void flash_init(void)
     ald_gpio_write_pin(PWR_FLASH_PORT, PWR_FLASH_PIN, 0);
 
 //    spi_init();
+}
+
+void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
+{
+    uint8_t save_data_temp[20];
+    uint8_t sum = 0;
+    uint8_t i = 0;
+    
+    memset(save_data_temp, 0, 20);
+    save_data_temp[0] = 0xaa;
+    save_data_temp[1] = 0x13;
+    save_data_temp[2] = 0xd5;
+    save_data_temp[3] = 0x01;
+    save_data_temp[4] = ax >> 8;
+    save_data_temp[5] = ax & 0xff;
+    save_data_temp[6] = ay >> 8;
+    save_data_temp[7] = ay & 0xff;
+    save_data_temp[8] = az >> 8;
+    save_data_temp[9] = az & 0xff;
+    save_data_temp[10] = utc_time.utc_y;
+    save_data_temp[11] = utc_time.utc_m;
+    save_data_temp[12] = utc_time.utc_d;
+    save_data_temp[13] = utc_time.utc_h;
+    save_data_temp[14] = utc_time.utc_f;
+    save_data_temp[15] = utc_time.utc_s;
+    save_data_temp[16] = 0;
+    save_data_temp[17] = 0;
+    save_data_temp[18] = 0;
+
+    sum = 0;
+    for(i=0; i<19; i++){
+        sum += save_data_temp[i];
+    }
+    save_data_temp[19] = sum;
+    
+    if(1 == system_state.system_flg.imu_data_flg){
+        send_ble_data(save_data_temp, 20);
+    }
 }
 
 ///**

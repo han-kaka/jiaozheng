@@ -1,4 +1,20 @@
 #include "bsp_motor.h"
+#include "bsp_system.h"
+
+/* Private Macros ------------------------------------------------------------ */
+
+/* Private Variables --------------------------------------------------------- */
+
+/* Public Variables ---------------------------------------------------------- */
+
+/* Private Constants --------------------------------------------------------- */
+
+/* Private function prototypes ----------------------------------------------- */
+
+/* Private Function ---------------------------------------------------------- */
+
+/* Exported Variables -------------------------------------------------------- */
+extern system_state_t system_state;
 
 void motor_init(void)
 {
@@ -13,6 +29,26 @@ void motor_init(void)
     x.func = GPIO_FUNC_1;
 
     ald_gpio_init(MOTOR_CTR_PORT, MOTOR_CTR_PIN, &x);
-    ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
+    ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
 }
+
+void motor_start(void)
+{
+    if(0x00 == system_state.shake_fre){
+        ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
+    }
+    else if(0x01 == system_state.shake_fre){
+        ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
+    }
+    else if(0x02 == system_state.shake_fre){
+        ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
+    }
+}
+
+void motor_stop(void)
+{
+    ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
+}
+
+
 

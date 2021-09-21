@@ -27,7 +27,7 @@ utc_time_t utc_time = {0};
 /* Exported Variables -------------------------------------------------------- */
 extern adc_handle_t g_h_adc;
 extern uint8_t g_rx_len;
-extern system_state_t ststem_state;
+extern system_state_t system_state;
 //extern uint8_t retry_cnt;
 
 /**
@@ -102,12 +102,24 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         }
     }
     
-    if((E_ADV_MODE == ststem_state.system_mode) || (E_CONNECT_MODE == ststem_state.system_mode)){
-        time_cnt.mpu6050_data_cnt++;
-        if(5 <= time_cnt.uart_timeout_cnt){
-            time_cnt.mpu6050_data_cnt = 0;
-            set_task(MEASURE, IMU_DATA);
+    if((E_ADV_MODE == system_state.system_mode) || (E_CONNECT_MODE == system_state.system_mode)){
+        if(1 == system_state.system_flg.mpu6050_init_flg){
+            time_cnt.mpu6050_data_cnt++;
+            if(5 <= time_cnt.mpu6050_data_cnt){
+                time_cnt.mpu6050_data_cnt = 0;
+                set_task(MEASURE, ACCE_DATA);
+            }
         }
+        if(1 == system_state.system_flg.adc_init_flg){
+            time_cnt.adc_check_cnt++;
+            if(1800 <= time_cnt.adc_check_cnt){
+                time_cnt.adc_check_cnt = 0;
+                /* Start normal convert, enable interrupt */
+                ald_adc_normal_start_by_it(&g_h_adc);
+            }
+        }
+        
+        
     }
 
 //    //ble 连上后延迟100ms发送请求包

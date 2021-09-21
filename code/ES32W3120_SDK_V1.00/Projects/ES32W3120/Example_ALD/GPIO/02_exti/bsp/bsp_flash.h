@@ -30,9 +30,12 @@ typedef struct {
 
 void flash_init(void);
 
-void init_system_info(system_state_t *ststem_state);
+void init_system_info(system_state_t *system_state);
 
 void save_system_info(void);
+
+void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az);
+
 //md_status_t flash_write(uint32_t addr, char *buf, uint8_t size);
 
 //md_status_t flash_read(uint32_t addr, char *buf, uint16_t size);

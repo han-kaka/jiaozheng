@@ -1,11 +1,11 @@
 #include "bsp_power.h"
+#include "bsp_system.h"
 
 /* Private Macros ------------------------------------------------------------ */
 
 /* Private Variables --------------------------------------------------------- */
 adc_handle_t g_h_adc;
 adc_nch_conf_t g_nch_config;
-//adc_ich_conf_t g_ich_config;
 uint32_t g_adc_result = 0;
 
 /* Public Variables ---------------------------------------------------------- */
@@ -16,6 +16,8 @@ uint32_t g_adc_result = 0;
 
 /* Private Function ---------------------------------------------------------- */
 
+/* Exported Variables -------------------------------------------------------- */
+extern system_state_t system_state;
 /**
   * @brief  Configure the ADC Pins.
   * @param  None
@@ -74,6 +76,8 @@ void adc_init(void)
 
     /* Start normal convert, enable interrupt */
     ald_adc_normal_start_by_it(&g_h_adc);
+    
+    system_state.system_flg.adc_init_flg = 1;
     
     return;
 }

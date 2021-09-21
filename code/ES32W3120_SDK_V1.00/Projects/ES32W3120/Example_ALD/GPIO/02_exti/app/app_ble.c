@@ -24,7 +24,7 @@ uint8_t ble_tx_len;
 
 /* Exported Variables -------------------------------------------------------- */
 extern utc_time_t utc_time;
-extern system_state_t ststem_state;
+extern system_state_t system_state;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
 //extern uint8_t retry_cnt;
@@ -106,6 +106,7 @@ int ble_data_decode(void)
         case SET_DATA_CMD:
             switch(ble_data->address){
                 case SET_SHAKE_FRE:
+                    system_state.shake_fre = ble_data->data[0];
                     break;
                 
                 default:
@@ -159,7 +160,7 @@ int ble_data_decode(void)
         case READ_DATA_CMD:
             switch(ble_data->address){
                 case DATA_MONITOR_DATA:
-                    ststem_state.system_flg.imu_data_flg = 1;
+                    system_state.system_flg.imu_data_flg = 1;
                     break;
                 
                 case DATA_UTC:
@@ -194,9 +195,9 @@ int ble_data_decode(void)
             switch(ble_data->address){
                 case WXID_WRITE:
                     data_wxid = (data_wxid_t *)ble_data->data;
-                    if((0x00 == ststem_state.wxid[0] && 0x00 == ststem_state.wxid[1] && 0x00 == ststem_state.wxid[2] && 0x00 == ststem_state.wxid[3]) ||
-                        (0xff == ststem_state.wxid[0] && 0xff == ststem_state.wxid[1] && 0xff == ststem_state.wxid[2] && 0xff == ststem_state.wxid[3])){   //Î´°ó¶¨×´Ì¬
-                        memcpy(ststem_state.wxid, data_wxid, 4);
+                    if((0x00 == system_state.wxid[0] && 0x00 == system_state.wxid[1] && 0x00 == system_state.wxid[2] && 0x00 == system_state.wxid[3]) ||
+                        (0xff == system_state.wxid[0] && 0xff == system_state.wxid[1] && 0xff == system_state.wxid[2] && 0xff == system_state.wxid[3])){   //Î´°ó¶¨×´Ì¬
+                        memcpy(system_state.wxid, data_wxid, 4);
                         set_task(MEM_WRITE, WRITE_SYSTEM_INFO);
                         
                         memset(ble_tx_buf, 0, 20);
@@ -212,7 +213,7 @@ int ble_data_decode(void)
                         ble_tx_buf[19] = sum;
                     }
                     else{
-                        if(ststem_state.wxid[0] == data_wxid->wxid_0 && ststem_state.wxid[1] == data_wxid->wxid_1 && ststem_state.wxid[2] == data_wxid->wxid_2 && ststem_state.wxid[3] == data_wxid->wxid_3){   //ÒÑ°ó¶¨×´Ì¬
+                        if(system_state.wxid[0] == data_wxid->wxid_0 && system_state.wxid[1] == data_wxid->wxid_1 && system_state.wxid[2] == data_wxid->wxid_2 && system_state.wxid[3] == data_wxid->wxid_3){   //ÒÑ°ó¶¨×´Ì¬
                             memset(ble_tx_buf, 0, 20);
                             ble_tx_buf[0] = 0xaa;
                             ble_tx_buf[1] = 0x13;

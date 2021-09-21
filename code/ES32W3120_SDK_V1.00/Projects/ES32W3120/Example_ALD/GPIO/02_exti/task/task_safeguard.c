@@ -18,7 +18,7 @@
 /* Private Function ---------------------------------------------------------- */
 
 /* Exported Variables -------------------------------------------------------- */
-extern system_state_t ststem_state;
+extern system_state_t system_state;
 
 uint8_t sg_task(uint8_t prio)
 {
@@ -45,8 +45,8 @@ uint8_t sg_task(uint8_t prio)
             
             case ADV_MODE:
             {
-                ststem_state.system_mode = E_ADV_MODE;
-                ststem_state.system_flg.imu_data_flg = 0;
+                system_state.system_mode = E_ADV_MODE;
+                system_state.system_flg.imu_data_flg = 0;
                 
                 /* 开启一些广播模式下的初始任务 */
                 start_init_task();
@@ -55,7 +55,7 @@ uint8_t sg_task(uint8_t prio)
             
             case CONNECT_MODE:
             {
-                ststem_state.system_mode = E_CONNECT_MODE;
+                system_state.system_mode = E_CONNECT_MODE;
             }
                 break;
             

@@ -15,8 +15,13 @@ typedef enum {
 }system_mode_e;
 
 typedef struct {
-    uint8_t imu_data_flg      :1;
-    uint8_t reserve_flag      :7;
+    uint8_t imu_data_flg          :1;
+    uint8_t mpu6050_init_flg      :1;
+    uint8_t flash_init_flg        :1;
+    uint8_t dx_bt24_t_init_flg    :1;
+    uint8_t adc_init_flg          :1;
+    
+    uint8_t reserve_flag          :3;
     
 }system_flg_t;
 

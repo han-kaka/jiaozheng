@@ -1,4 +1,6 @@
 #include "bsp_mpu6050.h"
+#include "bsp_time.h"
+#include "bsp_system.h"
 
 #define MPU_ADDR    0x68
 
@@ -34,6 +36,9 @@ i2c_handle_t g_h_i2c;
 
 /* Private Function ---------------------------------------------------------- */
 
+/* Exported Variables -------------------------------------------------------- */
+extern timer_cnt_t time_cnt;
+extern system_state_t system_state;
 /**
   * @brief  Initializate pin of i2c module.
   * @retval None
@@ -305,6 +310,10 @@ void mpu6050_init(void)
     i2c_init();
     
     mpu6050_set();
+    
+    time_cnt.mpu6050_data_cnt = 0;
+    
+    system_state.system_flg.mpu6050_init_flg = 1;
     
     return;
 }

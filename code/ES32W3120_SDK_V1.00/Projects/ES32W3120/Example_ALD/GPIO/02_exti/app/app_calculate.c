@@ -1,22 +1,14 @@
-#include "bsp_mpu6050.h"
-#include "bsp_dx_bt24_t.h"
-#include "bsp_flash.h"
-#include "bsp_power.h"
-#include "bsp_time.h"
+#include <math.h>
+
 #include "bsp_motor.h"
-#include "bsp_led.h"
-#include "bsp_system.h"
 
-#include "app_common.h"
-
-#include "task_common.h"
+#include "app_calculate.h"
 
 /* Private Macros ------------------------------------------------------------ */
 
 /* Private Variables --------------------------------------------------------- */
 
 /* Public Variables ---------------------------------------------------------- */
-system_state_t system_state;
 
 /* Private Constants --------------------------------------------------------- */
 
@@ -26,29 +18,24 @@ system_state_t system_state;
 
 /* Exported Variables -------------------------------------------------------- */
 
-void init_system(void)
+void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
 {
-    /* 初始化设备信息 */
-    init_system_info(&system_state);
+    uint16_t data[3] = {0};
     
-    set_task(SG, ADV_MODE);
-    return;
+    /* 角度算法 */
+    data[1] = -atan(ay / ax) * 180 / 3.14;
+    data[0] = atan(az / sqrtf(ax * ax + ay * ay)) * 180 / 3.14;
+    data[2] = acos(ax / sqrtf(ax * ax + ay * ay + az * az)) * 180 / 3.14;
+    
+    if(65 >= data[2]){
+        if((20 <= data[0]) || (20 <= data[1])){
+            motor_start();  //超过阈值，震动提醒
+        }
+        else{
+            motor_stop();   //关闭提醒
+        }
+    }
+    else{
+        
+    }
 }
-
-void start_init_task(void)
-{
-    mpu6050_init();
-    dx_bt24_t_init();
-    flash_init();
-    adc_init();
-    charge_init();
-    motor_init();
-    led_init();
-    
-    time_init();
-    
-    return;
-}
-
-
-

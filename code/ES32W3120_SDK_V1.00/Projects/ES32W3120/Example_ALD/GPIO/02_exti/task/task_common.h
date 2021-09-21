@@ -28,12 +28,9 @@
 #define CONNECT_MODE                  3                             //连接模式
 
 #define CONTROL                       1                             //控制任务1
-#define MOTOR_START                   0                             //马达开始震动
-#define MOTOR_STOP                    1                             //马达停止
-#define BLE_DISCON                    2                             //断开蓝牙连接
 
 #define MEASURE                       2                             //测量任务2
-#define IMU_DATA                      0                             //读取6050数据
+#define ACCE_DATA                     0                             //读取6050数据
 #define BATT_VOL                      1                             //测量电池电压
 
 #define MEM_READ                      3                             //flash读取任务3
