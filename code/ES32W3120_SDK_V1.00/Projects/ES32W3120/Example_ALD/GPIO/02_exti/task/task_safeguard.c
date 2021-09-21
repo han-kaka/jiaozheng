@@ -47,15 +47,18 @@ uint8_t sg_task(uint8_t prio)
             {
                 system_state.system_mode = E_ADV_MODE;
                 system_state.system_flg.imu_data_flg = 0;
+                /* 蓝灯闪烁 */
                 
-                /* 开启一些广播模式下的初始任务 */
-                start_init_task();
+//                /* 开启一些广播模式下的初始任务 */
+//                start_init_task();
             }
                 break;
             
             case CONNECT_MODE:
             {
                 system_state.system_mode = E_CONNECT_MODE;
+                
+                /* 蓝灯常亮 */
             }
                 break;
             

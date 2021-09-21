@@ -128,6 +128,8 @@ static void spi_init(void)
     id = flash_read_id();
     ES_LOG_PRINT("Manufacturer ID is %02x & Device ID is %02x %02x\n", (uint8_t)(id >> 16), (uint8_t)(id >> 8), (uint8_t)id);
     
+    system_state.system_flg.flash_init_flg = 1;
+    
     return;
 }
 
@@ -155,8 +157,9 @@ void init_system_info(system_state_t *system_state)
     system_state->wxid[3] = system_info.wxid[3];
 }
 
-void save_system_info(void)
+int save_system_info(void)
 {
+    int res = 0;
     /* 保存数据至片内 flash */
     system_info_t system_info = {0};
     
@@ -168,15 +171,30 @@ void save_system_info(void)
     
     __disable_irq();
 
-    if (IAP_FASTPROGRAM(DATA_ADDRESS, (uint8_t *)&system_info, 128, AUTO_ERASE_TRUE, IAP_FREQUENCE_48M) != RESET){
-        ES_LOG_PRINT("read data success\n");
-        ES_LOG_PRINT("shake_fre: %u\n", system_info.shake_fre);
-        ES_LOG_PRINT("wxid[0]: %u, wxid[1]: %u, wxid[2]: %u, wxid[3]: %u, \n", system_info.wxid[0], system_info.wxid[1], system_info.wxid[2], system_info.wxid[3]);
-    }
-    else{
-        ES_LOG_PRINT("read data fail\n");
-    }
+    do
+    {
+        /* Double words write testing */
+        if (IAP_PAGEERASE(DATA_ADDRESS, IAP_FREQUENCE_48M) == RESET){    /* Erase page 64 */
+            ES_LOG_PRINT("IAP_PAGEERASE fail\n");
+            res = -1;
+            break;
+        }
+        
+        /* Write data_buf to 0x20000 */
+        if (IAP_FASTPROGRAM(DATA_ADDRESS, (uint8_t *)&system_info, 128, AUTO_ERASE_TRUE, IAP_FREQUENCE_48M) == RESET){
+            ES_LOG_PRINT("IAP_FASTPROGRAM fail\n");
+            res = -1;
+            break;
+        }
+        else{
+            ES_LOG_PRINT("IAP_FASTPROGRAM success\n");
+        }
+        
+    }while (0);
+    
     __enable_irq();
+    
+    return res;
 }
 
 void flash_init(void)

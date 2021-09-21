@@ -27,6 +27,7 @@ extern utc_time_t utc_time;
 extern system_state_t system_state;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
+extern uint32_t g_adc_result;
 //extern uint8_t retry_cnt;
 
 int ble_data_decode(void)
@@ -38,7 +39,8 @@ int ble_data_decode(void)
     int ret = 0;
     data_utc_t *data_utc = NULL;
     data_wxid_t *data_wxid = NULL;
-    
+    uint32_t chipid = 0;
+     
     if(20 != data_len){
         return -1;
     }
@@ -118,27 +120,29 @@ int ble_data_decode(void)
         case READ_STATE_CMD:
             switch(ble_data->address){
                 case STATE_INFO:
+                    chipid = ald_mcu_get_chipid();
+                
                     memset(ble_tx_buf, 0, 20);
                     ble_tx_buf[0] = 0xaa;
                     ble_tx_buf[1] = 0x13;
                     ble_tx_buf[2] = 0xd4;
                     ble_tx_buf[3] = 0x01;
-                    ble_tx_buf[4] = 0x15;
+                    ble_tx_buf[4] = (g_adc_result - 2600) * 100 / 4200;
                     ble_tx_buf[5] = 0x0a;
-                    ble_tx_buf[6] = 0x00;
-                    ble_tx_buf[7] = 0xfb;
-                    ble_tx_buf[8] = 0x9d;
-                    ble_tx_buf[9] = 0xa2;
-                    ble_tx_buf[10] = 0x5e;
-                    ble_tx_buf[11] = 0xdf;
-                    ble_tx_buf[12] = 0xdc;
-                    ble_tx_buf[13] = 0xeb;
-                    ble_tx_buf[14] = 0x15;
-                    ble_tx_buf[15] = 0x09;
-                    ble_tx_buf[16] = 0x03;
-                    ble_tx_buf[17] = 0x04;
-                    ble_tx_buf[18] = 0x1a;
-                
+                    ble_tx_buf[6] = system_state.shake_fre;
+                    ble_tx_buf[7] = chipid & 0xff;
+                    ble_tx_buf[8] = (chipid >> 8) & 0xff;
+                    ble_tx_buf[9] = (chipid >> 16) & 0xff;
+                    ble_tx_buf[10] = chipid & 0xff;
+                    ble_tx_buf[11] = (chipid >> 8) & 0xff;
+                    ble_tx_buf[12] = (chipid >> 16) & 0xff;
+                    ble_tx_buf[13] = 0x00;
+                    ble_tx_buf[14] = 0x00;
+                    ble_tx_buf[15] = 0x00;
+                    ble_tx_buf[16] = 0x00;
+                    ble_tx_buf[17] = 0x00;
+                    ble_tx_buf[18] = 0x00;
+                    
                     sum = 0;
                     for(i=0; i<19; i++){
                         sum += ble_tx_buf[i];

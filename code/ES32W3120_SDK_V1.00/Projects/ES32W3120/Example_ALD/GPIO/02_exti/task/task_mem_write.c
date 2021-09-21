@@ -18,7 +18,9 @@ uint8_t mem_write_task(uint8_t prio)
         {
             case WRITE_SYSTEM_INFO:
             {
-                save_system_info();
+                if(0 != save_system_info()){
+                    return false;
+                }
             }
                 break;
             

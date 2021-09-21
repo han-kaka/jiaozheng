@@ -1,5 +1,6 @@
 #include "bsp_dx_bt24_t.h"
 #include "bsp_time.h"
+#include "bsp_system.h"
 
 /* Private Macros ------------------------------------------------------------ */
 
@@ -9,8 +10,6 @@
 uart_handle_t g_h_uart;
 uint8_t g_rx_buf[20] = {0};
 uint8_t g_rx_len = 0;
-uint8_t g_tx_buf[256] = {0};
-uint8_t g_tx_len;
 
 /* Private Constants --------------------------------------------------------- */
 
@@ -21,6 +20,7 @@ uint8_t g_tx_len;
 /* Exported Variables -------------------------------------------------------- */
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
+extern system_state_t system_state;
 
 /**
   * @brief  Init UART pin
@@ -168,7 +168,7 @@ void dx_bt24_t_init(void)
     
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
-    x.pupd = GPIO_PUSH_DOWN;
+    x.pupd = GPIO_PUSH_UP_DOWN;
     x.odrv = GPIO_OUT_DRIVE_NORMAL;
     x.flt  = GPIO_FILTER_DISABLE;
     x.type = GPIO_TYPE_CMOS;
@@ -187,12 +187,16 @@ void dx_bt24_t_init(void)
     
     __NVIC_EnableIRQ(EXTI4_IRQn);
     
+    system_state.system_flg.dx_bt24_t_init_flg = 1;
+    
     return;
 }
 
 void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
 {
     uint8_t i = 0;
+    
+    ES_LOG_PRINT("send data: ");
     for(i=0; i<tx_len; i++)
     {
         ES_LOG_PRINT("%.2x", tx_buf[i]);
@@ -200,6 +204,8 @@ void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
     ES_LOG_PRINT("\n");
     
     ald_uart_send_by_it(&g_h_uart, tx_buf, tx_len);
+    
+    ald_delay_ms(10);
     
     return;
 }

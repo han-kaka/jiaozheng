@@ -31,21 +31,35 @@ void init_system(void)
     /* 初始化设备信息 */
     init_system_info(&system_state);
     
+    memset(&system_state.system_flg, 0, sizeof(system_state.system_flg));
+
     set_task(SG, ADV_MODE);
+    
+    /* 开启一些广播模式下的初始任务 */
+    start_init_task();
+    
+    time_init();
+    
     return;
 }
 
 void start_init_task(void)
 {
-    mpu6050_init();
-    dx_bt24_t_init();
-    flash_init();
-    adc_init();
+    if(1 != system_state.system_flg.mpu6050_init_flg){
+        mpu6050_init();
+    }
+    if(1 != system_state.system_flg.dx_bt24_t_init_flg){
+        dx_bt24_t_init();
+    }
+    if(1 != system_state.system_flg.flash_init_flg){
+        flash_init();
+    }
+    if(1 != system_state.system_flg.adc_init_flg){
+        adc_init();
+    }
     charge_init();
     motor_init();
     led_init();
-    
-    time_init();
     
     return;
 }

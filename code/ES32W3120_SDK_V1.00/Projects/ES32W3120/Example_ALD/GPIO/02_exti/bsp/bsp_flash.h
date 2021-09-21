@@ -32,7 +32,7 @@ void flash_init(void);
 
 void init_system_info(system_state_t *system_state);
 
-void save_system_info(void);
+int save_system_info(void);
 
 void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az);
 

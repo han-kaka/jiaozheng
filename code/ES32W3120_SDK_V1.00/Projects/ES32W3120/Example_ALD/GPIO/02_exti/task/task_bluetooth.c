@@ -26,9 +26,6 @@ uint8_t retry_cnt = 0;
 /* Exported Variables -------------------------------------------------------- */
 extern uint8_t g_rx_buf[20];
 extern uint8_t ble_rx_buf[20];
-extern uint8_t g_tx_buf[256];
-extern uint8_t ble_tx_buf[256];
-extern uint8_t g_tx_len;
 extern uint8_t ble_tx_len;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
@@ -36,7 +33,7 @@ extern timer_flg_t time_flg;
 uint8_t bluetooth_task(uint8_t prio)
 {
     uint8_t m_SYS_SubTask_prio=0;
-//    uint8_t i = 0;
+    uint8_t i = 0;
 //    uint8_t tx_temp[20];
     
     ES_LOG_PRINT("bluetooth_task\n");
@@ -48,11 +45,12 @@ uint8_t bluetooth_task(uint8_t prio)
         {
             case DATA_DECODE:
             {
-//                for(i=0; i<20; i++)
-//                {
-//                    ES_LOG_PRINT("%.2x", g_rx_buf[i]);
-//                }
-//                ES_LOG_PRINT("\n");
+                ES_LOG_PRINT("receive data: ");
+                for(i=0; i<20; i++)
+                {
+                    ES_LOG_PRINT("%.2x", g_rx_buf[i]);
+                }
+                ES_LOG_PRINT("\n");
 //                
 //                ble_tx_buf[0] = 0x99;
 //                memcpy(ble_tx_buf+1, g_rx_buf, 20);

@@ -20,8 +20,9 @@ typedef struct {
     uint8_t flash_init_flg        :1;
     uint8_t dx_bt24_t_init_flg    :1;
     uint8_t adc_init_flg          :1;
-    
-    uint8_t reserve_flag          :3;
+    uint8_t motor_start_flg       :1;
+    uint8_t charging_flg          :1;
+    uint8_t charge_comp_flg       :1;
     
 }system_flg_t;
 

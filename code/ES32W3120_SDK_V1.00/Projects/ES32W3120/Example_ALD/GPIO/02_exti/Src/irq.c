@@ -32,7 +32,10 @@
 /* Includes ------------------------------------------------------------------ */
 #include "main.h"
 #include "eslog_init.h"
+
 #include "bsp_dx_bt24_t.h"
+#include "bsp_system.h"
+#include "bsp_power.h"
 
 #include "app_common.h"
 
@@ -56,6 +59,8 @@ extern timer_handle_t g_ad16c4t_init;
 extern uart_handle_t g_h_uart;
 extern adc_handle_t g_h_adc;
 extern uint32_t g_adc_result;
+extern system_state_t system_state;
+
 
 /* Exported Constants -------------------------------------------------------- */
 
@@ -166,20 +171,50 @@ void EXTI13_IRQHandler()
 }
 
 /**
-  * @brief  EXTI13 IRQ handler
+  * @brief  EXTI4 IRQ handler
   * @retval None
   */
 void EXTI4_IRQHandler()
 {
     ald_gpio_exti_clear_flag_status(GPIO_PIN_4);
     
-    if(1 == ald_gpio_read_pin(BLE_INT_PORT, BLE_INT_PIN))
-    {
+    if(1 == ald_gpio_read_pin(BLE_INT_PORT, BLE_INT_PIN)){
         set_task(SG, CONNECT_MODE);
     }
-    else
-    {
+    else{
         set_task(SG, ADV_MODE);
+    }
+}
+
+/**
+  * @brief  EXTI3 IRQ handler
+  * @retval None
+  */
+void EXTI3_IRQHandler()
+{
+    ald_gpio_exti_clear_flag_status(GPIO_PIN_3);
+    
+    if(1 == ald_gpio_read_pin(CHARGE_G_PORT, CHARGE_G_PIN)){
+        system_state.system_flg.charge_comp_flg = 0;
+    }
+    else{
+        system_state.system_flg.charge_comp_flg = 1;
+    }
+}
+
+/**
+  * @brief  EXTI2 IRQ handler
+  * @retval None
+  */
+void EXTI2_IRQHandler()
+{
+    ald_gpio_exti_clear_flag_status(GPIO_PIN_2);
+    
+    if(1 == ald_gpio_read_pin(CHARGE_Y_PORT, CHARGE_Y_PIN)){
+        system_state.system_flg.charging_flg = 0;
+    }
+    else{
+        system_state.system_flg.charging_flg = 1;
     }
 }
 

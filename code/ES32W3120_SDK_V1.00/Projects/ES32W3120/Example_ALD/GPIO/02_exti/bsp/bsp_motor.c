@@ -34,19 +34,25 @@ void motor_init(void)
 
 void motor_start(void)
 {
+    system_state.system_flg.motor_start_flg = 1;
+    
     if(0x00 == system_state.shake_fre){
-        ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
+        /* 不震动 */
     }
     else if(0x01 == system_state.shake_fre){
+        /* 低频震动 */
         ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
     }
     else if(0x02 == system_state.shake_fre){
+        /* 高频震动 */
         ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
     }
 }
 
 void motor_stop(void)
 {
+    system_state.system_flg.motor_start_flg = 0;
+    
     ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
 }
 

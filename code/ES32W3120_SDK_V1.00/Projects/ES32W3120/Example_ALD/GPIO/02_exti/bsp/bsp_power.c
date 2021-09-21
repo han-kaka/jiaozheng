@@ -1,5 +1,7 @@
 #include "bsp_power.h"
 #include "bsp_system.h"
+#include "bsp_time.h"
+
 
 /* Private Macros ------------------------------------------------------------ */
 
@@ -18,6 +20,8 @@ uint32_t g_adc_result = 0;
 
 /* Exported Variables -------------------------------------------------------- */
 extern system_state_t system_state;
+extern timer_cnt_t time_cnt;
+
 /**
   * @brief  Configure the ADC Pins.
   * @param  None
@@ -77,6 +81,8 @@ void adc_init(void)
     /* Start normal convert, enable interrupt */
     ald_adc_normal_start_by_it(&g_h_adc);
     
+    time_cnt.adc_check_cnt = 0;
+    
     system_state.system_flg.adc_init_flg = 1;
     
     return;
@@ -85,17 +91,39 @@ void adc_init(void)
 void charge_init(void)
 {
     gpio_init_t x;
+    exti_init_t exti;
+    
+    memset(&exti, 0, sizeof(exti));
     memset(&x, 0x0, sizeof(gpio_init_t));
 
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
-    x.pupd = GPIO_PUSH_DOWN;
+    x.pupd = GPIO_PUSH_UP_DOWN;
     x.odrv = GPIO_OUT_DRIVE_NORMAL;
     x.flt  = GPIO_FILTER_DISABLE;
     x.type = GPIO_TYPE_CMOS;
     x.func = GPIO_FUNC_1;
     ald_gpio_init(CHARGE_G_PORT, CHARGE_G_PIN, &x);
     ald_gpio_init(CHARGE_Y_PORT, CHARGE_Y_PIN, &x);
+    
+    exti.filter      = ENABLE;
+    exti.cks         = EXTI_FILTER_CLOCK_10K;
+    exti.filter_time = 10;
+    ald_gpio_exti_init(CHARGE_G_PORT, CHARGE_G_PIN, &exti);
+    ald_gpio_exti_init(CHARGE_Y_PORT, CHARGE_Y_PIN, &exti);
+    
+    /* Clear interrupt flag */
+    ald_gpio_exti_clear_flag_status(CHARGE_G_PIN);
+    /* Configure interrupt */
+    ald_gpio_exti_interrupt_config(CHARGE_G_PIN, EXTI_TRIGGER_BOTH_EDGE, ENABLE);
+
+/* Clear interrupt flag */
+    ald_gpio_exti_clear_flag_status(CHARGE_Y_PIN);
+    /* Configure interrupt */
+    ald_gpio_exti_interrupt_config(CHARGE_Y_PIN, EXTI_TRIGGER_BOTH_EDGE, ENABLE);
+
+    __NVIC_EnableIRQ(EXTI2_IRQn);
+    __NVIC_EnableIRQ(EXTI3_IRQn);
     
     return;
 }
