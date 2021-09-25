@@ -51,9 +51,9 @@ void start_init_task(void)
     if(1 != system_state.system_flg.dx_bt24_t_init_flg){
         dx_bt24_t_init();
     }
-//    if(1 != system_state.system_flg.flash_init_flg){
-//        flash_init();
-//    }
+    if(1 != system_state.system_flg.flash_init_flg){
+        flash_init();
+    }
     if(1 != system_state.system_flg.adc_init_flg){
         adc_init();
     }

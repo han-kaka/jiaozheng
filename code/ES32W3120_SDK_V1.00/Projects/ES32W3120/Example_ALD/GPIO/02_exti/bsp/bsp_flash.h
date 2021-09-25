@@ -18,7 +18,7 @@
 #define SPI_MISO_PORT                         GPIOB
 #define SPI_MISO_PIN                          GPIO_PIN_14
 
-#define PWR_FLASH_PORT                        GPIOB
+#define PWR_FLASH_PORT                        GPIOA
 #define PWR_FLASH_PIN                         GPIO_PIN_15
 
 typedef struct {

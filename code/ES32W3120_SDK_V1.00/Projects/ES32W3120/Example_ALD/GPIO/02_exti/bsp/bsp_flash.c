@@ -213,7 +213,7 @@ void flash_init(void)
     ald_gpio_init(PWR_FLASH_PORT, PWR_FLASH_PIN, &x);
     ald_gpio_write_pin(PWR_FLASH_PORT, PWR_FLASH_PIN, 0);
 
-//    spi_init();
+    spi_init();
 }
 
 void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)

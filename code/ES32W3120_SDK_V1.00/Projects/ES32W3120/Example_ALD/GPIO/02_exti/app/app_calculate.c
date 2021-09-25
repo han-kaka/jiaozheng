@@ -35,7 +35,6 @@ void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
             motor_start();  //超过阈值，震动提醒
         }
         else{
-            
             if(1 == system_state.system_flg.motor_start_flg){
                 motor_stop();   //关闭提醒
             }

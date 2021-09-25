@@ -29,7 +29,7 @@ void motor_init(void)
     x.func = GPIO_FUNC_1;
 
     ald_gpio_init(MOTOR_CTR_PORT, MOTOR_CTR_PIN, &x);
-    ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
+    ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
 }
 
 void motor_start(void)
@@ -41,11 +41,11 @@ void motor_start(void)
     }
     else if(0x01 == system_state.shake_fre){
         /* µÍÆµÕð¶¯ */
-        ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
+        ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
     }
     else if(0x02 == system_state.shake_fre){
         /* ¸ßÆµÕð¶¯ */
-        ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
+        ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
     }
 }
 
@@ -53,7 +53,7 @@ void motor_stop(void)
 {
     system_state.system_flg.motor_start_flg = 0;
     
-    ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
+    ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
 }
 
 

@@ -146,8 +146,6 @@ void dx_bt24_t_init(void)
     gpio_init_t x;
     exti_init_t exti;
     
-    uart_init();
-    
     memset(&exti, 0, sizeof(exti));
     memset(&x, 0, sizeof(x));
     
@@ -186,6 +184,8 @@ void dx_bt24_t_init(void)
     ald_gpio_exti_interrupt_config(BLE_INT_PIN, EXTI_TRIGGER_BOTH_EDGE, ENABLE);
     
     __NVIC_EnableIRQ(EXTI4_IRQn);
+    
+    uart_init();
     
     system_state.system_flg.dx_bt24_t_init_flg = 1;
     

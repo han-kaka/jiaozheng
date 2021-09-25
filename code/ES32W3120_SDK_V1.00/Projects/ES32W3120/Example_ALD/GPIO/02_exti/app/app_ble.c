@@ -127,7 +127,7 @@ int ble_data_decode(void)
                     ble_tx_buf[1] = 0x13;
                     ble_tx_buf[2] = 0xd4;
                     ble_tx_buf[3] = 0x01;
-                    ble_tx_buf[4] = (g_adc_result - 2600) * 100 / 4200;
+                    ble_tx_buf[4] = (g_adc_result - 2900) * 100 / 4200;
                     ble_tx_buf[5] = 0x0a;
                     ble_tx_buf[6] = system_state.shake_fre;
                     ble_tx_buf[7] = chipid & 0xff;

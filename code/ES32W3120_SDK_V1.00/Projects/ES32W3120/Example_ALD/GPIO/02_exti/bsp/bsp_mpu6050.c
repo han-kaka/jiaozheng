@@ -266,6 +266,8 @@ void mpu_get_accelerometer(uint16_t *ax, uint16_t *ay, uint16_t *az)
     *ax = ((uint16_t)buf[0] << 8)|buf[1];
     *ay = ((uint16_t)buf[2] << 8)|buf[3];
     *az = ((uint16_t)buf[4] << 8)|buf[5];
+    
+    ES_LOG_PRINT("ax:%.4x, ay:%.4x, az:%.4x,\n", *ax, *ay, *az);
 }
 
 void mpu6050_init(void)
