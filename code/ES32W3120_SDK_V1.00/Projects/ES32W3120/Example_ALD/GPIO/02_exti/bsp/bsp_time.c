@@ -1,6 +1,7 @@
 #include "bsp_time.h"
 #include "bsp_power.h"
 #include "bsp_system.h"
+#include "bsp_led.h"
 
 #include "app_common.h"
 
@@ -118,10 +119,19 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
                 ald_adc_normal_start_by_it(&g_h_adc);
             }
         }
-        
-        
     }
 
+    if(1 == time_flg.led_twinkle_flg){
+        time_cnt.led_twinkle_cnt++;
+        if(50 == time_cnt.led_twinkle_cnt){
+            ald_gpio_write_pin(LED_RUN_PORT, LED_RUN_PIN, 1);
+        }
+        else if(100 == time_cnt.led_twinkle_cnt){
+            time_cnt.led_twinkle_cnt = 0;
+            ald_gpio_write_pin(LED_RUN_PORT, LED_RUN_PIN, 0);
+        }
+    }
+    
 //    //ble 连上后延迟100ms发送请求包
 //    if(1 == time_flg.wxid_req_flg){
 //        time_cnt.wxid_req_cnt++;

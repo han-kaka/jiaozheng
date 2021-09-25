@@ -1,4 +1,5 @@
 #include "bsp_system.h"
+#include "bsp_led.h"
 
 #include "app_common.h"
 
@@ -48,6 +49,7 @@ uint8_t sg_task(uint8_t prio)
                 system_state.system_mode = E_ADV_MODE;
                 system_state.system_flg.imu_data_flg = 0;
                 /* 蓝灯闪烁 */
+                led_twinkle();
                 
 //                /* 开启一些广播模式下的初始任务 */
 //                start_init_task();
@@ -59,6 +61,7 @@ uint8_t sg_task(uint8_t prio)
                 system_state.system_mode = E_CONNECT_MODE;
                 
                 /* 蓝灯常亮 */
+                led_open();
             }
                 break;
             
