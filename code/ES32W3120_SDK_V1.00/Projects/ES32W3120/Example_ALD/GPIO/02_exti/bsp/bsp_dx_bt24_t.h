@@ -23,6 +23,8 @@
 
 #define UARTX                     UART0
 
+#define UART_RX_BUF_LEN           30
+
 void uart_init(void);
 
 void dx_bt24_t_init(void);

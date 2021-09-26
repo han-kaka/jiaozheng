@@ -24,11 +24,12 @@ uint8_t retry_cnt = 0;
 /* Private Function ---------------------------------------------------------- */
 
 /* Exported Variables -------------------------------------------------------- */
-extern uint8_t g_rx_buf[20];
-extern uint8_t ble_rx_buf[20];
+extern uint8_t g_rx_buf[UART_RX_BUF_LEN];
+extern uint8_t ble_rx_buf[UART_RX_BUF_LEN];
 extern uint8_t ble_tx_len;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
+extern uint8_t g_rx_len;
 
 uint8_t bluetooth_task(uint8_t prio)
 {
@@ -46,18 +47,18 @@ uint8_t bluetooth_task(uint8_t prio)
             case DATA_DECODE:
             {
                 ES_LOG_PRINT("receive data: ");
-                for(i=0; i<20; i++)
+                for(i=0; i<g_rx_len; i++)
                 {
                     ES_LOG_PRINT("%.2x", g_rx_buf[i]);
                 }
                 ES_LOG_PRINT("\n");
 //                
 //                ble_tx_buf[0] = 0x99;
-//                memcpy(ble_tx_buf+1, g_rx_buf, 20);
-//                memset(g_rx_buf, 0, 20);
+//                memcpy(ble_tx_buf+1, g_rx_buf, UART_RX_BUF_LEN);
+//                memset(g_rx_buf, 0, UART_RX_BUF_LEN);
 //                send_ble_data(ble_tx_buf, 21);
-                memcpy(ble_rx_buf, g_rx_buf, 20);
-                memset(g_rx_buf, 0, 20);
+                memcpy(ble_rx_buf, g_rx_buf, UART_RX_BUF_LEN);
+                memset(g_rx_buf, 0, UART_RX_BUF_LEN);
                 ble_data_decode();
             }
                 break;

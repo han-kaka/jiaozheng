@@ -12,7 +12,7 @@
 /* Private Variables --------------------------------------------------------- */
 
 /* Public Variables ---------------------------------------------------------- */
-uint8_t ble_rx_buf[20];
+uint8_t ble_rx_buf[UART_RX_BUF_LEN];
 uint8_t ble_tx_buf[256];
 uint8_t ble_tx_len;
 
@@ -39,7 +39,6 @@ int ble_data_decode(void)
     int ret = 0;
     data_utc_t *data_utc = NULL;
     data_wxid_t *data_wxid = NULL;
-    uint32_t chipid = 0;
      
     if(20 != data_len){
         return -1;
@@ -120,8 +119,6 @@ int ble_data_decode(void)
         case READ_STATE_CMD:
             switch(ble_data->address){
                 case STATE_INFO:
-                    chipid = ald_mcu_get_chipid();
-                
                     memset(ble_tx_buf, 0, 20);
                     ble_tx_buf[0] = 0xaa;
                     ble_tx_buf[1] = 0x13;
@@ -130,12 +127,12 @@ int ble_data_decode(void)
                     ble_tx_buf[4] = (g_adc_result - 2900) * 100 / 4200;
                     ble_tx_buf[5] = 0x0a;
                     ble_tx_buf[6] = system_state.shake_fre;
-                    ble_tx_buf[7] = chipid & 0xff;
-                    ble_tx_buf[8] = (chipid >> 8) & 0xff;
-                    ble_tx_buf[9] = (chipid >> 16) & 0xff;
-                    ble_tx_buf[10] = chipid & 0xff;
-                    ble_tx_buf[11] = (chipid >> 8) & 0xff;
-                    ble_tx_buf[12] = (chipid >> 16) & 0xff;
+                    ble_tx_buf[7] = system_state.ble_addr[0];
+                    ble_tx_buf[8] = system_state.ble_addr[1];
+                    ble_tx_buf[9] = system_state.ble_addr[2];
+                    ble_tx_buf[10] = system_state.ble_addr[3];
+                    ble_tx_buf[11] = system_state.ble_addr[4];
+                    ble_tx_buf[12] = system_state.ble_addr[5];
                     ble_tx_buf[13] = 0x00;
                     ble_tx_buf[14] = 0x00;
                     ble_tx_buf[15] = 0x00;

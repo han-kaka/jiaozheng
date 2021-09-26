@@ -25,7 +25,8 @@ typedef struct {
     uint8_t wxid_req_flg      :1;
     uint8_t wait_wxid_flg     :1;
     uint8_t led_twinkle_flg   :1;
-    uint8_t reserve_flag      :4;
+    uint8_t at_cmd_flg        :1;
+    uint8_t reserve_flag      :3;
     
 } timer_flg_t;
 

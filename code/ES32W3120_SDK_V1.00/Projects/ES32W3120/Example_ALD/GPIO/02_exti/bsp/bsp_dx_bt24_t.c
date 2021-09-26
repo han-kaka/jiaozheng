@@ -8,7 +8,7 @@
 
 /* Public Variables ---------------------------------------------------------- */
 uart_handle_t g_h_uart;
-uint8_t g_rx_buf[20] = {0};
+uint8_t g_rx_buf[UART_RX_BUF_LEN] = {0};
 uint8_t g_rx_len = 0;
 
 /* Private Constants --------------------------------------------------------- */
@@ -145,6 +145,11 @@ void dx_bt24_t_init(void)
 {
     gpio_init_t x;
     exti_init_t exti;
+    char tx_buf_temp[20] = "AT+LADDR\r\n";
+    uint8_t i = 0;
+    char *p = NULL;
+    uint8_t high = 0;
+    uint8_t low = 0;
     
     memset(&exti, 0, sizeof(exti));
     memset(&x, 0, sizeof(x));
@@ -187,6 +192,28 @@ void dx_bt24_t_init(void)
     
     uart_init();
     
+    time_flg.at_cmd_flg = 0;
+    ald_uart_send_by_it(&g_h_uart, (uint8_t *)tx_buf_temp, 10);
+    while (time_flg.at_cmd_flg != 1);
+    ES_LOG_PRINT("receive data: ");
+    for(i=0; i<g_rx_len; i++)
+    {
+        ES_LOG_PRINT("%c", g_rx_buf[i]);
+    }
+    ES_LOG_PRINT("\n");
+    
+    p = strstr((const char*)g_rx_buf, "+LADDR=<");
+    if(p != NULL){
+        for(i=0; i<6; i++)
+        {
+            high = ((*p > '9') && ((*p <= 'F') || (*p <= 'f'))) ? *p - 48 - 7 : *p - 48;
+            p++;
+            low = (*p > '9' && ((*p <= 'F') || (*p <= 'f'))) ? *p - 48 - 7 : *p - 48;
+            p++;
+            system_state.ble_addr[i] = ((high & 0x0f) << 4 | (low & 0x0f));
+        }
+    }
+    memset(g_rx_buf, 0, UART_RX_BUF_LEN);
     system_state.system_flg.dx_bt24_t_init_flg = 1;
     
     return;

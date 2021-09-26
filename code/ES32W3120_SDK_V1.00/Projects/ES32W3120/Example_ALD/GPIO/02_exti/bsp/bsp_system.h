@@ -31,6 +31,7 @@ typedef struct {
     uint8_t shake_fre;
     uint8_t wxid[4];
     system_flg_t system_flg;
+    uint8_t ble_addr[6];
     
 }system_state_t;
 
