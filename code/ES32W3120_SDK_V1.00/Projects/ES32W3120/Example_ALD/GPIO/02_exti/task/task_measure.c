@@ -2,7 +2,6 @@
 #include "bsp_dx_bt24_t.h"
 #include "bsp_time.h"
 #include "bsp_system.h"
-#include "bsp_flash.h"
 
 #include "app_common.h"
 #include "app_ble.h"
@@ -46,8 +45,6 @@ uint8_t measure_task(uint8_t prio)
             {
                 mpu_get_accelerometer(&ax, &ay, &az);
                 calculate_accelerometer(ax, ay, az);
-                save_accelerometer(ax, ay, az);
-                
             }
                 break;
             

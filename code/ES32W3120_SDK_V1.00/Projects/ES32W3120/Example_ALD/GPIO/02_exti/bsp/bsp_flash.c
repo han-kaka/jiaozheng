@@ -249,6 +249,8 @@ void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     }
     save_data_temp[19] = sum;
     
+    /* 保存至外部flash */
+    
     if(1 == system_state.system_flg.imu_data_flg){
         send_ble_data(save_data_temp, 20);
     }

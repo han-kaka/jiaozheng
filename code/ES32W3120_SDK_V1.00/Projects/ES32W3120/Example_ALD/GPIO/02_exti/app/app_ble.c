@@ -4,6 +4,7 @@
 
 #include "app_ble.h"
 #include "app_common.h"
+#include "app_calculate.h"
 
 #include "task_common.h"
 
@@ -28,6 +29,10 @@ extern system_state_t system_state;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
 extern uint32_t g_adc_result;
+extern uint8_t mpu6050_timeout;
+extern uint8_t *calibrate_data_p;
+extern uint16_t calibrate_packet_cnt;
+
 //extern uint8_t retry_cnt;
 
 int ble_data_decode(void)
@@ -150,6 +155,40 @@ int ble_data_decode(void)
                     break;
                 
                 case STATE_SCAN:
+                    if(0x00 == ble_data->data[0]){
+                        system_state.system_flg.calibrate_mode_flg = 0;
+                        system_state.system_flg.calibrate_key_flg = 0;
+                        
+                        time_cnt.calibrate_timeout_cnt = 0;
+                        time_flg.calibrate_flg = 0;
+                        
+                        time_cnt.mpu6050_data_cnt = 0;
+                        mpu6050_timeout = MPU6050_NORMAL_TIMEOUT;
+                        
+                        calibrate_packet_cnt = 0;
+                        free(calibrate_data_p);
+                    }
+                    else{
+                        system_state.system_flg.calibrate_mode_flg = 1;
+                        
+                        time_cnt.mpu6050_data_cnt = 0;
+                        mpu6050_timeout = MPU6050_CALIBRATE_TIMEOUT;
+                    }
+                    
+                    memset(ble_tx_buf, 0, 20);
+                    ble_tx_buf[0] = 0xaa;
+                    ble_tx_buf[1] = 0x13;
+                    ble_tx_buf[2] = 0xc1;
+                    ble_tx_buf[3] = 0x02;
+                    ble_tx_buf[4] = 0x01;
+                    
+                    sum = 0;
+                    for(i=0; i<19; i++){
+                        sum += ble_tx_buf[i];
+                    }
+                    ble_tx_buf[19] = sum;
+                    
+                    send_ble_data(ble_tx_buf, 20);
                     break;
                 
                 default:
@@ -161,7 +200,9 @@ int ble_data_decode(void)
         case READ_DATA_CMD:
             switch(ble_data->address){
                 case DATA_MONITOR_DATA:
-                    system_state.system_flg.imu_data_flg = 1;
+                    if(0x00 == ble_data->data[0]){
+                        system_state.system_flg.imu_data_flg = 1;
+                    }
                     break;
                 
                 case DATA_UTC:

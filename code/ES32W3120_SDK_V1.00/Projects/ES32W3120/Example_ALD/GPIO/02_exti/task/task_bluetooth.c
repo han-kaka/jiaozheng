@@ -3,9 +3,11 @@
 
 #include "bsp_dx_bt24_t.h"
 #include "bsp_time.h"
+#include "bsp_system.h"
 
 #include "app_ble.h"
 #include "app_common.h"
+#include "app_calculate.h"
 
 #include "task_bluetooth.h"
 #include "task_common.h"
@@ -30,11 +32,18 @@ extern uint8_t ble_tx_len;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
 extern uint8_t g_rx_len;
+extern system_state_t system_state;
+extern uint8_t mpu6050_timeout;
+extern uint8_t *calibrate_data_p;
+extern uint16_t calibrate_packet_cnt;
+
 
 uint8_t bluetooth_task(uint8_t prio)
 {
     uint8_t m_SYS_SubTask_prio=0;
     uint8_t i = 0;
+    uint8_t ble_send_temp[20];
+    uint8_t sum = 0;
 //    uint8_t tx_temp[20];
     
     ES_LOG_PRINT("bluetooth_task\n");
@@ -63,17 +72,117 @@ uint8_t bluetooth_task(uint8_t prio)
             }
                 break;
             
-            case RET_ACK:
+            case CALIBRATE_START:
             {
-//                memcpy(g_tx_buf, ble_tx_buf, ble_tx_len);
-//                memset(ble_tx_buf, 0x00, 256);
-//                g_tx_len = ble_tx_len;
-//                send_ble_data();
+                calibrate_packet_cnt = 0;
+                if(NULL == calibrate_data_p){
+                    calibrate_data_p = (uint8_t *)malloc(15 * 50 * 20);
+                }
+
+                time_cnt.calibrate_timeout_cnt = 0;
+                time_flg.calibrate_flg = 1;
+                
+                system_state.system_flg.calibrate_key_flg = 1;
+
+                memset(ble_send_temp, 0, 20);
+                ble_send_temp[0] = 0xaa;
+                ble_send_temp[1] = 0x13;
+                ble_send_temp[2] = 0xc2;
+                ble_send_temp[3] = 0x02;
+                
+                sum = 0;
+                for(i=0; i<19; i++){
+                    sum += ble_send_temp[i];
+                }
+                ble_send_temp[19] = sum;
+                
+                send_ble_data(ble_send_temp, 20);
             }
                 break;
             
-            case WXID_REQ:
+            case CALIBRATE_STOP:
             {
+                system_state.system_flg.calibrate_key_flg = 0;
+                        
+                time_cnt.calibrate_timeout_cnt = 0;
+                time_flg.calibrate_flg = 0;
+
+                memset(ble_send_temp, 0, 20);
+                ble_send_temp[0] = 0xaa;
+                ble_send_temp[1] = 0x13;
+                ble_send_temp[2] = 0xc2;
+                ble_send_temp[3] = 0x02;
+                ble_send_temp[4] = 0x01;
+                
+                sum = 0;
+                for(i=0; i<19; i++){
+                    sum += ble_send_temp[i];
+                }
+                ble_send_temp[19] = sum;
+                
+                send_ble_data(ble_send_temp, 20);
+                
+                set_task(BLUETOOTH, SEND_CALIBRATE_DATA);
+            }
+                break;
+            
+            case CALIBRATE_TIMEOUT:
+            {
+                system_state.system_flg.calibrate_key_flg = 0;
+                        
+                time_cnt.calibrate_timeout_cnt = 0;
+                time_flg.calibrate_flg = 0;
+                
+                calibrate_packet_cnt = 0;
+                free(calibrate_data_p);
+                
+                memset(ble_send_temp, 0, 20);
+                ble_send_temp[0] = 0xaa;
+                ble_send_temp[1] = 0x13;
+                ble_send_temp[2] = 0xc2;
+                ble_send_temp[3] = 0x02;
+                ble_send_temp[4] = 0x02;
+                
+                sum = 0;
+                for(i=0; i<19; i++){
+                    sum += ble_send_temp[i];
+                }
+                ble_send_temp[19] = sum;
+                
+                send_ble_data(ble_send_temp, 20);
+            }
+                break;
+            
+            case SEND_CALIBRATE_DATA:
+            {
+                if(NULL != calibrate_data_p){
+                    for(i=0; i<calibrate_packet_cnt; i++)
+                    {
+                        memset(ble_send_temp, 0, 20);
+                        memcpy(ble_send_temp, calibrate_data_p+i*20, 20);
+                        send_ble_data(ble_send_temp, 20);
+                        ald_delay_ms(60);
+                    }
+                }
+                memset(ble_send_temp, 0, 20);
+                ble_send_temp[0] = 0xaa;
+                ble_send_temp[1] = 0x13;
+                ble_send_temp[2] = 0xc2;
+                ble_send_temp[3] = 0x03;
+                ble_send_temp[4] = 0x01;
+                
+                sum = 0;
+                for(i=0; i<19; i++){
+                    sum += ble_send_temp[i];
+                }
+                ble_send_temp[19] = sum;
+                
+                send_ble_data(ble_send_temp, 20);
+            }
+                break;
+            
+//            case WXID_REQ:
+//            {
 //                tx_temp[0] = 0xaa;
 //                tx_temp[1] = 0x13;
 //                tx_temp[2] = 0xd9;
@@ -100,8 +209,8 @@ uint8_t bluetooth_task(uint8_t prio)
 //                time_cnt.wait_wxid_cnt = 0;
 //                time_flg.wait_wxid_flg = 1;
 //                retry_cnt++;
-            }
-                break;
+//            }
+//                break;
             
             default:
                     break;

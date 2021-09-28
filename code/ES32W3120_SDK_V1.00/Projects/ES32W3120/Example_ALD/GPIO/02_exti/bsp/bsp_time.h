@@ -9,14 +9,18 @@
 #define WAIT_WXID_TIMEOUT    500
 #define RETRY_TIME           2
 
+#define MPU6050_NORMAL_TIMEOUT     5
+#define MPU6050_CALIBRATE_TIMEOUT  2
+
 typedef struct {
     uint32_t time_1s_cnt;
     uint32_t uart_timeout_cnt;
-    uint8_t wxid_req_cnt;
-    uint16_t wait_wxid_cnt;
+//    uint8_t wxid_req_cnt;
+//    uint16_t wait_wxid_cnt;
     uint8_t mpu6050_data_cnt;
     uint16_t adc_check_cnt;
     uint8_t led_twinkle_cnt;
+    uint8_t calibrate_timeout_cnt;
     
 }timer_cnt_t;
 
@@ -25,8 +29,10 @@ typedef struct {
     uint8_t wxid_req_flg      :1;
     uint8_t wait_wxid_flg     :1;
     uint8_t led_twinkle_flg   :1;
+    
     uint8_t at_cmd_flg        :1;
-    uint8_t reserve_flag      :3;
+    uint8_t calibrate_flg     :1;
+    uint8_t reserve_flag      :2;
     
 } timer_flg_t;
 

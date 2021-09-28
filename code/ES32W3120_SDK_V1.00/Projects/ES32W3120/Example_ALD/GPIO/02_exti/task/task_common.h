@@ -41,12 +41,15 @@
 
 #define BLUETOOTH                     5                             //蓝牙任务5
 #define DATA_DECODE                   0                             //蓝牙数据解析
-#define RET_ACK                       1                             //蓝牙数据回执
-#define WXID_REQ                      2                             //向小程序请求wxid
+#define CALIBRATE_START               1                             //扫描开始
+#define CALIBRATE_STOP                2                             //扫描结束
+#define CALIBRATE_TIMEOUT             3                             //扫描超时
+#define SEND_CALIBRATE_DATA           4                             //向小程序发送扫描信息
 
 #define MEM_WRITE                     6                             //flash存储任务6
 #define WRITE_SYSTEM_INFO             0                             //保存系统信息至内部 flash
 #define FLASH_DELETE                  1                             //删除外部 flash 中的数据
+
 #define OTHER                         7                             //其他任务7
 
 

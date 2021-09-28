@@ -18,6 +18,7 @@ timer_clock_config_t g_ad16c4t_clock_config;
 timer_cnt_t time_cnt = {0};
 timer_flg_t time_flg = {0};
 utc_time_t utc_time = {0};
+uint8_t mpu6050_timeout = MPU6050_NORMAL_TIMEOUT;
 
 /* Private Constants --------------------------------------------------------- */
 
@@ -43,6 +44,15 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
     time_cnt.time_1s_cnt++;
     if(100 <= time_cnt.time_1s_cnt){
         /* 1s 定时 */
+        
+        if(1 == time_flg.calibrate_flg){
+            time_cnt.calibrate_timeout_cnt++;
+            if(15 <= time_cnt.calibrate_timeout_cnt){
+                set_task(BLUETOOTH, CALIBRATE_TIMEOUT);
+            }
+        }
+        
+        /* utc时间计算 */
         time_cnt.time_1s_cnt = 0;
         utc_time.utc_s++;
         if(60 <= utc_time.utc_s){
@@ -112,7 +122,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
     if((E_ADV_MODE == system_state.system_mode) || (E_CONNECT_MODE == system_state.system_mode)){
         if(1 == system_state.system_flg.mpu6050_init_flg){
             time_cnt.mpu6050_data_cnt++;
-            if(5 <= time_cnt.mpu6050_data_cnt){
+            if(mpu6050_timeout <= time_cnt.mpu6050_data_cnt){
                 time_cnt.mpu6050_data_cnt = 0;
 //                set_task(MEASURE, ACCE_DATA);
             }
