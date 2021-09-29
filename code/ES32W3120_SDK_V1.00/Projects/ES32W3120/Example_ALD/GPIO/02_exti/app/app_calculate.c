@@ -79,11 +79,10 @@ void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
                     motor_stop();   //πÿ±’Ã·–—
                 }
             }
-            
-            save_accelerometer(ax, ay, az);
         }
         else{
             
         }
+        save_accelerometer(ax, ay, az);
     }
 }

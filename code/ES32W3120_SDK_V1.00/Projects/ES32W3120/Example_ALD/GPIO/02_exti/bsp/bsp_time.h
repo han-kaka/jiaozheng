@@ -9,7 +9,7 @@
 #define WAIT_WXID_TIMEOUT    500
 #define RETRY_TIME           2
 
-#define MPU6050_NORMAL_TIMEOUT     5
+#define MPU6050_NORMAL_TIMEOUT     50
 #define MPU6050_CALIBRATE_TIMEOUT  2
 
 typedef struct {

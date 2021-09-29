@@ -56,7 +56,7 @@ uint8_t bluetooth_task(uint8_t prio)
             case DATA_DECODE:
             {
                 ES_LOG_PRINT("receive data: ");
-                for(i=0; i<g_rx_len; i++)
+                for(i=0; i<20; i++)
                 {
                     ES_LOG_PRINT("%.2x", g_rx_buf[i]);
                 }
@@ -65,7 +65,7 @@ uint8_t bluetooth_task(uint8_t prio)
 //                ble_tx_buf[0] = 0x99;
 //                memcpy(ble_tx_buf+1, g_rx_buf, UART_RX_BUF_LEN);
 //                memset(g_rx_buf, 0, UART_RX_BUF_LEN);
-//                send_ble_data(ble_tx_buf, 21);
+//                send_ble_data(g_rx_buf, 20);
                 memcpy(ble_rx_buf, g_rx_buf, UART_RX_BUF_LEN);
                 memset(g_rx_buf, 0, UART_RX_BUF_LEN);
                 ble_data_decode();

@@ -124,7 +124,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
             time_cnt.mpu6050_data_cnt++;
             if(mpu6050_timeout <= time_cnt.mpu6050_data_cnt){
                 time_cnt.mpu6050_data_cnt = 0;
-//                set_task(MEASURE, ACCE_DATA);
+                set_task(MEASURE, ACCE_DATA);
             }
         }
         if(1 == system_state.system_flg.adc_init_flg){

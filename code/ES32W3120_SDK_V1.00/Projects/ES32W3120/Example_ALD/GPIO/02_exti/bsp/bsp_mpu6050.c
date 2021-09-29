@@ -263,8 +263,8 @@ void mpu_get_accelerometer(uint16_t *ax, uint16_t *ay, uint16_t *az)
     uint8_t buf[6] = {0};
     iic_read_len(MPU_ACCEL_XOUTH_REG, 6, buf);
     
-    *ax = ((uint16_t)buf[0] << 8)|buf[1];
-    *ay = ((uint16_t)buf[2] << 8)|buf[3];
+    *ax = ((uint16_t)buf[2] << 8)|buf[3];
+    *ay = ((uint16_t)buf[0] << 8)|buf[1];
     *az = ((uint16_t)buf[4] << 8)|buf[5];
     
     ES_LOG_PRINT("ax:%.4x, ay:%.4x, az:%.4x,\n", *ax, *ay, *az);
@@ -350,7 +350,6 @@ void mpu6050_set(void)
         ald_delay_ms(100);
         mpu_get_accelerometer(&ax, &ay, &az);
         ES_LOG_PRINT("ax:%u, ay:%u, az:%u\n", ax, ay, az);
-        
     }
     else{
         ES_LOG_PRINT("mpu6050_set err\n");
