@@ -36,6 +36,7 @@
 #include "bsp_dx_bt24_t.h"
 #include "bsp_system.h"
 #include "bsp_power.h"
+#include "bsp_time.h"
 
 #include "app_common.h"
 
@@ -60,7 +61,8 @@ extern uart_handle_t g_h_uart;
 extern adc_handle_t g_h_adc;
 extern uint32_t g_adc_result;
 extern system_state_t system_state;
-
+extern timer_flg_t time_flg;
+extern timer_cnt_t time_cnt;
 
 /* Exported Constants -------------------------------------------------------- */
 
@@ -161,28 +163,18 @@ void SysTick_Handler(void)
 }
 
 /**
-  * @brief  EXTI13 IRQ handler
+  * @brief  EXTI2 IRQ handler
   * @retval None
   */
-void EXTI13_IRQHandler()
+void EXTI2_IRQHandler()
 {
-//    __NVIC_DisableIRQ(EXTI13_IRQn);
-    ald_gpio_exti_clear_flag_status(GPIO_PIN_13);
-}
-
-/**
-  * @brief  EXTI4 IRQ handler
-  * @retval None
-  */
-void EXTI4_IRQHandler()
-{
-    ald_gpio_exti_clear_flag_status(GPIO_PIN_4);
+    ald_gpio_exti_clear_flag_status(GPIO_PIN_2);
     
-    if(1 == ald_gpio_read_pin(BLE_INT_PORT, BLE_INT_PIN)){
-        set_task(SG, CONNECT_MODE);
+    if(1 == ald_gpio_read_pin(CHARGE_Y_PORT, CHARGE_Y_PIN)){
+        system_state.system_flg.charging_flg = 0;
     }
     else{
-        set_task(SG, ADV_MODE);
+        system_state.system_flg.charging_flg = 1;
     }
 }
 
@@ -203,20 +195,42 @@ void EXTI3_IRQHandler()
 }
 
 /**
-  * @brief  EXTI2 IRQ handler
+  * @brief  EXTI4 IRQ handler
   * @retval None
   */
-void EXTI2_IRQHandler()
+void EXTI4_IRQHandler()
 {
-    ald_gpio_exti_clear_flag_status(GPIO_PIN_2);
+    ald_gpio_exti_clear_flag_status(GPIO_PIN_4);
     
-    if(1 == ald_gpio_read_pin(CHARGE_Y_PORT, CHARGE_Y_PIN)){
-        system_state.system_flg.charging_flg = 0;
+    if(1 == ald_gpio_read_pin(BLE_INT_PORT, BLE_INT_PIN)){
+        set_task(SG, CONNECT_MODE);
     }
     else{
-        system_state.system_flg.charging_flg = 1;
+        set_task(SG, ADV_MODE);
     }
 }
+
+/**
+  * @brief  EXTI11 IRQ handler
+  * @retval None
+  */
+void EXTI11_IRQHandler()
+{
+    ald_gpio_exti_clear_flag_status(GPIO_PIN_11);
+    __NVIC_DisableIRQ(EXTI11_IRQn);
+    time_cnt.key_cnt = 0;
+    time_flg.key_flag = 1;
+}
+
+/**
+  * @brief  EXTI13 IRQ handler
+  * @retval None
+  */
+void EXTI13_IRQHandler()
+{
+    ald_gpio_exti_clear_flag_status(GPIO_PIN_13);
+}
+
 
 #ifdef ALD_DMA
 /**

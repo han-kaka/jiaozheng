@@ -171,7 +171,7 @@ void dx_bt24_t_init(void)
     
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
-    x.pupd = GPIO_PUSH_UP_DOWN;
+    x.pupd = GPIO_PUSH_DOWN;
     x.odrv = GPIO_OUT_DRIVE_NORMAL;
     x.flt  = GPIO_FILTER_DISABLE;
     x.type = GPIO_TYPE_CMOS;

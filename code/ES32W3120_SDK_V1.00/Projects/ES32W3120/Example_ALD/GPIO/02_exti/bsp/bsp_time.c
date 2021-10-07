@@ -2,6 +2,7 @@
 #include "bsp_power.h"
 #include "bsp_system.h"
 #include "bsp_led.h"
+#include "bsp_key.h"
 
 #include "app_common.h"
 
@@ -30,7 +31,7 @@ uint8_t mpu6050_timeout = MPU6050_NORMAL_TIMEOUT;
 extern adc_handle_t g_h_adc;
 extern uint8_t g_rx_len;
 extern system_state_t system_state;
-//extern uint8_t retry_cnt;
+extern uint8_t key_click_flg;
 
 /**
   * @brief  ald timer period elapsed callback
@@ -110,7 +111,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
             time_flg.uart_timeout_flg = 0;
             g_rx_len = 0;
             if(1 == system_state.system_flg.dx_bt24_t_init_flg){
-                set_task(BLUETOOTH, DATA_DECODE);
+//                set_task(BLUETOOTH, DATA_DECODE);
             }
             else{
                 time_flg.at_cmd_flg = 1;
@@ -148,32 +149,60 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         }
     }
     
-//    //ble 连上后延迟100ms发送请求包
-//    if(1 == time_flg.wxid_req_flg){
-//        time_cnt.wxid_req_cnt++;
-//        if(WXID_REQ_TIMEOUT <= time_cnt.wxid_req_cnt){
-//            time_flg.wxid_req_flg = 0;
-//            time_cnt.wxid_req_cnt = 0;
-//            set_task(BLUETOOTH, WXID_REQ);  //发送请求包
-//        }
-//    }
-//    
-//    //请求包重发机制
-//    if(1 == time_flg.wait_wxid_flg){
-//        time_cnt.wait_wxid_cnt++;
-//        if(WAIT_WXID_TIMEOUT <= time_cnt.wait_wxid_cnt){
-//            time_flg.wait_wxid_flg = 0;
-//            time_cnt.wait_wxid_cnt = 0;
-//            if(RETRY_TIME >= retry_cnt){
-//                set_task(BLUETOOTH, WXID_REQ);  //请求包重发
-//            }
-//            else{
-//                retry_cnt = 0;
-//                set_task(CONTROL, BLE_DISCON);  //主动断开ble连接
-//            }
-//            
-//        }
-//    }
+    if(1 == time_flg.key_flag){
+        time_cnt.key_cnt++;
+        if(KEY_TIMEOUT == time_cnt.key_cnt){
+            time_flg.key_flag = 0;
+            time_cnt.key_cnt = 0;
+            if(0 == ald_gpio_read_pin(KEY_PORT, GPIO_PIN_11)){
+                if(1 == key_click_flg){
+//                    双击
+                    ES_LOG_PRINT("double key\n");
+                    
+                }
+                else{
+                    time_cnt.long_key_cnt = 0;
+                    time_flg.long_key_flag = 1;
+                }
+                
+            }
+            else{
+                if(1 == key_click_flg){
+                    key_click_flg = 0;
+                }
+                else{
+                    key_click_flg = 1;
+                    time_cnt.double_key_cnt = 0;
+                    time_flg.double_key_flag = 1;
+                }
+                time_cnt.long_key_cnt = 0;
+                time_flg.long_key_flag = 0;
+            }
+            
+            __NVIC_EnableIRQ(EXTI11_IRQn);
+        }
+    }
+    
+    if(1 == time_flg.long_key_flag){
+        time_cnt.long_key_cnt++;
+        if(LONG_KEY_TIMEOUT <= time_cnt.long_key_cnt){
+            time_cnt.long_key_cnt = 0;
+            time_flg.long_key_flag = 0;
+//            3秒长按
+            ES_LOG_PRINT("long key\n");
+        }
+    }
+    
+    if(1 == time_flg.double_key_flag){
+        time_cnt.double_key_cnt++;
+        if(DOUBLE_KEY_TIMEOUT <= time_cnt.double_key_cnt){
+            time_cnt.double_key_cnt = 0;
+            time_flg.double_key_flag = 0;
+            key_click_flg = 0;
+        }
+        
+    }
+    
 }
 
 void time_init(void)

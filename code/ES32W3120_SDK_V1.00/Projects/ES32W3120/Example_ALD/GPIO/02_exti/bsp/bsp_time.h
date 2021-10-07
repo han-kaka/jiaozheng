@@ -5,34 +5,36 @@
 
 #include "bsp_common.h"
 
-#define WXID_REQ_TIMEOUT     10
-#define WAIT_WXID_TIMEOUT    500
-#define RETRY_TIME           2
-
 #define MPU6050_NORMAL_TIMEOUT     50
 #define MPU6050_CALIBRATE_TIMEOUT  2
+
+#define KEY_TIMEOUT          5
+#define LONG_KEY_TIMEOUT     300
+#define DOUBLE_KEY_TIMEOUT   50
 
 typedef struct {
     uint32_t time_1s_cnt;
     uint32_t uart_timeout_cnt;
-//    uint8_t wxid_req_cnt;
-//    uint16_t wait_wxid_cnt;
     uint8_t mpu6050_data_cnt;
     uint16_t adc_check_cnt;
     uint8_t led_twinkle_cnt;
     uint8_t calibrate_timeout_cnt;
+    uint8_t key_cnt;
+    uint8_t double_key_cnt;
+    uint16_t long_key_cnt;
     
 }timer_cnt_t;
 
 typedef struct {
     uint8_t uart_timeout_flg  :1;
-    uint8_t wxid_req_flg      :1;
-    uint8_t wait_wxid_flg     :1;
     uint8_t led_twinkle_flg   :1;
-    
     uint8_t at_cmd_flg        :1;
     uint8_t calibrate_flg     :1;
-    uint8_t reserve_flag      :2;
+    
+    uint8_t key_flag          :1;
+    uint8_t double_key_flag   :1;
+    uint8_t long_key_flag     :1;
+    uint8_t reserve_flag      :1;
     
 } timer_flg_t;
 
