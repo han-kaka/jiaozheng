@@ -119,73 +119,73 @@ int ble_data_decode(void)
         
         case READ_STATE_CMD:
             switch(ble_data->address){
-//                case STATE_INFO:
-//                    memset(ble_tx_buf, 0, 20);
-//                    ble_tx_buf[0] = 0xaa;
-//                    ble_tx_buf[1] = 0x13;
-//                    ble_tx_buf[2] = 0xd4;
-//                    ble_tx_buf[3] = 0x01;
-//                    ble_tx_buf[4] = (g_adc_result - 2900) * 100 / 4200;
-//                    ble_tx_buf[5] = 0x0a;
-//                    ble_tx_buf[6] = system_state.shake_fre;
-//                    ble_tx_buf[7] = system_state.ble_addr[0];
-//                    ble_tx_buf[8] = system_state.ble_addr[1];
-//                    ble_tx_buf[9] = system_state.ble_addr[2];
-//                    ble_tx_buf[10] = system_state.ble_addr[3];
-//                    ble_tx_buf[11] = system_state.ble_addr[4];
-//                    ble_tx_buf[12] = system_state.ble_addr[5];
-//                    ble_tx_buf[13] = 0x00;
-//                    ble_tx_buf[14] = 0x00;
-//                    ble_tx_buf[15] = 0x00;
-//                    ble_tx_buf[16] = 0x00;
-//                    ble_tx_buf[17] = 0x00;
-//                    ble_tx_buf[18] = 0x00;
-//                    
-//                    sum = 0;
-//                    for(i=0; i<19; i++){
-//                        sum += ble_tx_buf[i];
-//                    }
-//                    ble_tx_buf[19] = sum;
-//                    
-//                    send_ble_data(ble_tx_buf, 20);
-//                    break;
-//                
-//                case STATE_SCAN:
-//                    if(0x00 == ble_data->data[0]){
-//                        system_state.system_flg.calibrate_mode_flg = 0;
-//                        system_state.system_flg.calibrate_key_flg = 0;
-//                        
-//                        time_cnt.calibrate_timeout_cnt = 0;
-//                        time_flg.calibrate_flg = 0;
-//                        
-//                        time_cnt.mpu6050_data_cnt = 0;
-//                        mpu6050_timeout = MPU6050_NORMAL_TIMEOUT;
-//                        
-//                        calibrate_packet_cnt = 0;
-//                        free(calibrate_data_p);
-//                    }
-//                    else{
-//                        system_state.system_flg.calibrate_mode_flg = 1;
-//                        
-//                        time_cnt.mpu6050_data_cnt = 0;
-//                        mpu6050_timeout = MPU6050_CALIBRATE_TIMEOUT;
-//                    }
-//                    
-//                    memset(ble_tx_buf, 0, 20);
-//                    ble_tx_buf[0] = 0xaa;
-//                    ble_tx_buf[1] = 0x13;
-//                    ble_tx_buf[2] = 0xc1;
-//                    ble_tx_buf[3] = 0x02;
-//                    ble_tx_buf[4] = 0x01;
-//                    
-//                    sum = 0;
-//                    for(i=0; i<19; i++){
-//                        sum += ble_tx_buf[i];
-//                    }
-//                    ble_tx_buf[19] = sum;
-//                    
-//                    send_ble_data(ble_tx_buf, 20);
-//                    break;
+                case STATE_INFO:
+                    memset(ble_tx_buf, 0, 20);
+                    ble_tx_buf[0] = 0xaa;
+                    ble_tx_buf[1] = 0x13;
+                    ble_tx_buf[2] = 0xd4;
+                    ble_tx_buf[3] = 0x01;
+                    ble_tx_buf[4] = (g_adc_result - 2900) * 100 / 4200;
+                    ble_tx_buf[5] = 0x0a;
+                    ble_tx_buf[6] = system_state.shake_fre;
+                    ble_tx_buf[7] = system_state.ble_addr[0];
+                    ble_tx_buf[8] = system_state.ble_addr[1];
+                    ble_tx_buf[9] = system_state.ble_addr[2];
+                    ble_tx_buf[10] = system_state.ble_addr[3];
+                    ble_tx_buf[11] = system_state.ble_addr[4];
+                    ble_tx_buf[12] = system_state.ble_addr[5];
+                    ble_tx_buf[13] = 0x00;
+                    ble_tx_buf[14] = 0x00;
+                    ble_tx_buf[15] = 0x00;
+                    ble_tx_buf[16] = 0x00;
+                    ble_tx_buf[17] = 0x00;
+                    ble_tx_buf[18] = 0x00;
+                    
+                    sum = 0;
+                    for(i=0; i<19; i++){
+                        sum += ble_tx_buf[i];
+                    }
+                    ble_tx_buf[19] = sum;
+                    
+                    send_ble_data(ble_tx_buf, 20);
+                    break;
+                
+                case STATE_SCAN:
+                    if(0x00 == ble_data->data[0]){
+                        system_state.system_flg.calibrate_mode_flg = 0;
+                        system_state.system_flg.calibrate_key_flg = 0;
+                        
+                        time_cnt.calibrate_timeout_cnt = 0;
+                        time_flg.calibrate_flg = 0;
+                        
+                        time_cnt.mpu6050_data_cnt = 0;
+                        mpu6050_timeout = MPU6050_NORMAL_TIMEOUT;
+                        
+                        calibrate_packet_cnt = 0;
+                        free(calibrate_data_p);
+                    }
+                    else{
+                        system_state.system_flg.calibrate_mode_flg = 1;
+                        
+                        time_cnt.mpu6050_data_cnt = 0;
+                        mpu6050_timeout = MPU6050_CALIBRATE_TIMEOUT;
+                    }
+                    
+                    memset(ble_tx_buf, 0, 20);
+                    ble_tx_buf[0] = 0xaa;
+                    ble_tx_buf[1] = 0x13;
+                    ble_tx_buf[2] = 0xc1;
+                    ble_tx_buf[3] = 0x02;
+                    ble_tx_buf[4] = 0x01;
+                    
+                    sum = 0;
+                    for(i=0; i<19; i++){
+                        sum += ble_tx_buf[i];
+                    }
+                    ble_tx_buf[19] = sum;
+                    
+                    send_ble_data(ble_tx_buf, 20);
+                    break;
                 
                 default:
                     ret = -1;

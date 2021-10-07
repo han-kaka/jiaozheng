@@ -32,13 +32,13 @@ void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     uint8_t sum = 0;
     uint8_t i = 0;
     
-    /* 角度算法 */
-    data[1] = -atan(ay / ax) * 180 / 3.14;
-    data[0] = atan(az / sqrtf(ax * ax + ay * ay)) * 180 / 3.14;
-    data[2] = acos(ax / sqrtf(ax * ax + ay * ay + az * az)) * 180 / 3.14;
-    
     if(1 == system_state.system_flg.calibrate_mode_flg){
         if(1 == system_state.system_flg.calibrate_key_flg){
+            /* 角度算法 */
+            data[1] = -atan(ay / ax) * 180 / 3.14;
+            data[0] = atan(az / sqrtf(ax * ax + ay * ay)) * 180 / 3.14;
+            data[2] = acos(ax / sqrtf(ax * ax + ay * ay + az * az)) * 180 / 3.14;
+            
             memset(save_data_temp, 0, 20);
             save_data_temp[0] = 0xaa;
             save_data_temp[1] = 0x13;
@@ -70,6 +70,11 @@ void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
         }
     }
     else{
+        /* 角度算法 */
+        data[1] = -atan(ay / ax) * 180 / 3.14;
+        data[0] = atan(az / sqrtf(ax * ax + ay * ay)) * 180 / 3.14;
+        data[2] = acos(ax / sqrtf(ax * ax + ay * ay + az * az)) * 180 / 3.14;
+        
         if(65 >= data[2]){
             if((25 <= data[0]) || (10 <= data[1])){
                 motor_start();  //超过阈值，震动提醒
@@ -80,9 +85,7 @@ void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
                 }
             }
         }
-        else{
-            
-        }
+        
         save_accelerometer(ax, ay, az);
     }
 }

@@ -49,7 +49,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         if(1 == time_flg.calibrate_flg){
             time_cnt.calibrate_timeout_cnt++;
             if(15 <= time_cnt.calibrate_timeout_cnt){
-                set_task(BLUETOOTH, CALIBRATE_TIMEOUT);
+                set_task(MEASURE, CALIBRATE_TIMEOUT);
             }
         }
         
@@ -158,7 +158,14 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
                 if(1 == key_click_flg){
 //                    Ë«»÷
                     ES_LOG_PRINT("double key\n");
-                    
+                    if(1 == system_state.system_flg.calibrate_mode_flg){
+                        if(1 == system_state.system_flg.calibrate_key_flg){
+                            set_task(MEASURE, CALIBRATE_STOP);
+                        }
+                        else{
+                            set_task(MEASURE, CALIBRATE_START);
+                        }
+                    }
                 }
                 else{
                     time_cnt.long_key_cnt = 0;

@@ -30,8 +30,11 @@
 #define CONTROL                       1                             //控制任务1
 
 #define MEASURE                       2                             //测量任务2
-#define ACCE_DATA                     0                             //读取6050数据
-#define BATT_VOL                      1                             //测量电池电压
+#define CALIBRATE_START               0                             //扫描开始
+#define CALIBRATE_STOP                1                             //扫描结束
+#define CALIBRATE_TIMEOUT             2                             //扫描超时
+#define ACCE_DATA                     3                             //读取6050数据
+#define BATT_VOL                      4                             //测量电池电压
 
 #define MEM_READ                      3                             //flash读取任务3
 #define FLASH_READ                    0                             //读取flash中的数据
@@ -41,10 +44,7 @@
 
 #define BLUETOOTH                     5                             //蓝牙任务5
 #define DATA_DECODE                   0                             //蓝牙数据解析
-#define CALIBRATE_START               1                             //扫描开始
-#define CALIBRATE_STOP                2                             //扫描结束
-#define CALIBRATE_TIMEOUT             3                             //扫描超时
-#define SEND_CALIBRATE_DATA           4                             //向小程序发送扫描信息
+#define SEND_CALIBRATE_DATA           1                             //向小程序发送扫描信息
 
 #define MEM_WRITE                     6                             //flash存储任务6
 #define WRITE_SYSTEM_INFO             0                             //保存系统信息至内部 flash
