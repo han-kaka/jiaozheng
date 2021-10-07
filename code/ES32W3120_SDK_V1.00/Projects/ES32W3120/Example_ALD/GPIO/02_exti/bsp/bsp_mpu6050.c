@@ -288,6 +288,8 @@ void mpu6050_init(void)
     ald_gpio_init(PWR_6050_PORT, PWR_6050_PIN, &x);
     ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 0);
     
+    ald_delay_ms(10);
+    
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
     x.pupd = GPIO_PUSH_DOWN;

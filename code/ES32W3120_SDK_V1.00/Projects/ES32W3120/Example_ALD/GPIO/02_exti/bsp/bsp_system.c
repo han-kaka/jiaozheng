@@ -51,9 +51,9 @@ void init_system(void)
 
 void start_init_task(void)
 {
-//    if(1 != system_state.system_flg.mpu6050_init_flg){
-//        mpu6050_init();
-//    }
+    if(1 != system_state.system_flg.mpu6050_init_flg){
+        mpu6050_init();
+    }
     if(1 != system_state.system_flg.dx_bt24_t_init_flg){
         dx_bt24_t_init();
     }

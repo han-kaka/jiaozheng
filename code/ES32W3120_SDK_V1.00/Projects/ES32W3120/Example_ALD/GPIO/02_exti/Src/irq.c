@@ -201,7 +201,6 @@ void EXTI3_IRQHandler()
 void EXTI4_IRQHandler()
 {
     ald_gpio_exti_clear_flag_status(GPIO_PIN_4);
-    
     if(1 == ald_gpio_read_pin(BLE_INT_PORT, BLE_INT_PIN)){
         set_task(SG, CONNECT_MODE);
     }

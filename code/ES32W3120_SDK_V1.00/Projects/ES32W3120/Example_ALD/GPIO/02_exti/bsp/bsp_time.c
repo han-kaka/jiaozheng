@@ -111,7 +111,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
             time_flg.uart_timeout_flg = 0;
             g_rx_len = 0;
             if(1 == system_state.system_flg.dx_bt24_t_init_flg){
-//                set_task(BLUETOOTH, DATA_DECODE);
+                set_task(BLUETOOTH, DATA_DECODE);
             }
             else{
                 time_flg.at_cmd_flg = 1;

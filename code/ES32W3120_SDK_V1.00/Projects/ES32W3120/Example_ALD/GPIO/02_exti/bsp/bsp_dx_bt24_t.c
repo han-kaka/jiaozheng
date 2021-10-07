@@ -169,6 +169,8 @@ void dx_bt24_t_init(void)
     ald_gpio_init(PWR_BT_PORT, PWR_BT_PIN, &x);
     ald_gpio_write_pin(PWR_BT_PORT, PWR_BT_PIN, 0);
     
+    ald_delay_ms(10);
+    
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
     x.pupd = GPIO_PUSH_DOWN;
