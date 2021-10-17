@@ -21,6 +21,8 @@
 #define PWR_FLASH_PORT                        GPIOA
 #define PWR_FLASH_PIN                         GPIO_PIN_15
 
+#define FLASH_BUSY_TIMEOUT                    (50)
+
 typedef struct {
     uint8_t shake_fre;
     uint8_t wxid[4];
@@ -36,7 +38,7 @@ int save_system_info(void);
 
 void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az);
 
-//md_status_t flash_write(uint32_t addr, char *buf, uint8_t size);
+ald_status_t flash_write_data(uint32_t addr, char *buf, uint16_t size);
 
 //md_status_t flash_read(uint32_t addr, char *buf, uint16_t size);
 #endif

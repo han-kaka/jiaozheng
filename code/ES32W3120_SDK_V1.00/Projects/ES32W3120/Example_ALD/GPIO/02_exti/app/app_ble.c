@@ -152,6 +152,7 @@ int ble_data_decode(void)
                 
                 case STATE_SCAN:
                     if(0x00 == ble_data->data[0]){
+                        ES_LOG_PRINT("exit calibrate mode\n");
                         system_state.system_flg.calibrate_mode_flg = 0;
                         system_state.system_flg.calibrate_key_flg = 0;
                         
@@ -164,7 +165,8 @@ int ble_data_decode(void)
                         calibrate_packet_cnt = 0;
                         free(calibrate_data_p);
                     }
-                    else{
+                    else if(0x01 == ble_data->data[0]){
+                        ES_LOG_PRINT("enter calibrate mode\n");
                         system_state.system_flg.calibrate_mode_flg = 1;
                         
                         time_cnt.mpu6050_data_cnt = 0;
