@@ -40,7 +40,9 @@ void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az);
 
 ald_status_t flash_write_data(uint32_t addr, char *buf, uint16_t size);
 
-//md_status_t flash_read(uint32_t addr, char *buf, uint16_t size);
+ald_status_t flash_sector_erase(uint32_t addr);
+
+ald_status_t flash_read(uint32_t addr, char *buf, uint16_t size);
 #endif
 
 

@@ -301,95 +301,97 @@ ald_status_t flash_write_data(uint32_t addr, char *buf, uint16_t size)
     return OK;
 }
 
-///**
-//  * @brief  flash sector erase function
-//  * @param  addr: Specific address which sector to be erase.
-//  * @retval Status.
-//  */
-//ald_status_t flash_sector_erase(uint32_t addr)
-//{
-//    uint8_t cmd_buf[4];
-//    uint8_t i = 0U;
+/**
+  * @brief  flash sector erase function
+  * @param  addr: Specific address which sector to be erase.
+  * @retval Status.
+  */
+ald_status_t flash_sector_erase(uint32_t addr)
+{
+    uint8_t cmd_buf[4];
+    uint8_t i = 0U;
 
-//    cmd_buf[0] = FLASH_ERASE;       /* Flash?????? */
-//    cmd_buf[1] = (addr >> 16) & 0xff;   /* 24 bit Flash?? */
-//    cmd_buf[2] = (addr >> 8) & 0xff;
-//    cmd_buf[3] = addr & 0xff;
+    if(flash_wait_busy_timeout(FLASH_BUSY_TIMEOUT)){
+        return BUSY;
+    }
+    
+    if (OK != flash_write_enable()){
+        return ERROR;
+    }
+    
+    cmd_buf[0] = FLASH_ERASE;       /* Flash?????? */
+    cmd_buf[1] = (addr >> 16) & 0xff;   /* 24 bit Flash?? */
+    cmd_buf[2] = (addr >> 8) & 0xff;
+    cmd_buf[3] = addr & 0xff;
 
-//    FLASH_CS_CLR();     /* ????,??Flash */
+    ald_delay_ms(100);
+    FLASH_CS_CLR();
 
-//    if (ald_spi_send_byte_fast(&s_gs_spi, FLASH_WRITE_ENABLE) != OK)  /* ???????? */
-//    {
-//        FLASH_CS_SET();
-//        return ERROR;
-//    }
+    for (i = 0; i < sizeof(cmd_buf); i++)     /* ??????????????Flash?? */
+    {
+        if (ald_spi_send_byte_fast(&s_gs_spi, cmd_buf[i]) != OK)
+        {
+            FLASH_CS_SET();
+            return ERROR;
+        }
+    }
 
-//    FLASH_CS_SET();    /* ????,??Flash */
+    FLASH_CS_SET();
 
-//    delay(100);
-//    FLASH_CS_CLR();
+    return OK;
+}
 
-//    for (i = 0; i < sizeof(cmd_buf); i++)     /* ??????????????Flash?? */
-//    {
-//        if (ald_spi_send_byte_fast(&s_gs_spi, cmd_buf[i]) != OK)
-//        {
-//            FLASH_CS_SET();
-//            return ERROR;
-//        }
-//    }
+/**
+  * @brief  Receive an amount of data in blocking mode.
+  * @param  addr: address of flash where want to read.
+  * @param  buf: Pointer to data buffer
+  * @param  size: Amount of data to be received
+  * @retval Status, see @ref ald_status_t.
+  */
+ald_status_t flash_read(uint32_t addr, char *buf, uint16_t size)
+{
+    uint8_t cmd_buf[4];
+    uint8_t i = 0U;
+    int r_flag = 0;
 
-//    FLASH_CS_SET();
+    if (buf == NULL)
+        return ERROR;
 
-//    return OK;
-//}
+    if(flash_wait_busy_timeout(FLASH_BUSY_TIMEOUT)){
+        return BUSY;
+    }
+    
+    cmd_buf[0] = FLASH_READ;
+    cmd_buf[1] = (addr >> 16) & 0xff;
+    cmd_buf[2] = (addr >> 8) & 0xff;
+    cmd_buf[3] = addr & 0xff;
 
-///**
-//  * @brief  Receive an amount of data in blocking mode.
-//  * @param  addr: address of flash where want to read.
-//  * @param  buf: Pointer to data buffer
-//  * @param  size: Amount of data to be received
-//  * @retval Status, see @ref ald_status_t.
-//  */
-//ald_status_t flash_read(uint32_t addr, char *buf, uint16_t size)
-//{
-//    uint8_t cmd_buf[4];
-//    uint8_t i = 0U;
-//    int r_flag = 0;
+    FLASH_CS_CLR();     /* ????,??Flash */
 
-//    if (buf == NULL)
-//        return ERROR;
+    for (i = 0; i < sizeof(cmd_buf); i++)   /* ????????????Flash?? */
+    {
+        if (ald_spi_send_byte_fast(&s_gs_spi, cmd_buf[i]) != OK)
+        {
+            FLASH_CS_SET();     /* ????,??Flash */
+            return ERROR;
+        }
+    }
 
-//    cmd_buf[0] = FLASH_READ;
-//    cmd_buf[1] = (addr >> 16) & 0xff;
-//    cmd_buf[2] = (addr >> 8) & 0xff;
-//    cmd_buf[3] = addr & 0xff;
+    for (i = 0; i < size; i++)  /* ????????????Flash?? */
+    {
+        buf[i] = ald_spi_recv_byte_fast(&s_gs_spi, &r_flag);
 
-//    FLASH_CS_CLR();     /* ????,??Flash */
+        if (r_flag != OK)
+        {
+            FLASH_CS_SET();
+            return ERROR;
+        }
+    }
 
-//    for (i = 0; i < sizeof(cmd_buf); i++)   /* ????????????Flash?? */
-//    {
-//        if (ald_spi_send_byte_fast(&s_gs_spi, cmd_buf[i]) != OK)
-//        {
-//            FLASH_CS_SET();     /* ????,??Flash */
-//            return ERROR;
-//        }
-//    }
+    FLASH_CS_SET();
 
-//    for (i = 0; i < size; i++)  /* ????????????Flash?? */
-//    {
-//        buf[i] = ald_spi_recv_byte_fast(&s_gs_spi, &r_flag);
-
-//        if (r_flag != OK)
-//        {
-//            FLASH_CS_SET();
-//            return ERROR;
-//        }
-//    }
-
-//    FLASH_CS_SET();
-
-//    return OK;
-//}
+    return OK;
+}
 
 void init_system_info(system_state_t *system_state)
 {
