@@ -28,9 +28,9 @@
 #define CONTROL_SEND_FLASH_DATA     0x05  //上传存储数据
 #define CONTROL_NO_DATA             0x06  //没有离线数据
 
-#define SEND_FLASH_DATA_START       0x01  //上位机通知下位机开始上传数据
-#define SEND_FLASH_DATA_FINISH      0x02  //下位机通知上位机数据已经传输完毕
-#define SEND_FLASH_DATA_DELETE      0x03  //上位机通知下位机可以删除数据
+#define SEND_FLASH_DATA_START       0x00  //上位机通知下位机开始上传数据
+#define SEND_FLASH_DATA_FINISH      0x01  //下位机通知上位机数据已经传输完毕
+#define SEND_FLASH_DATA_DELETE      0x02  //上位机通知下位机可以删除数据
 
 #define SET_SHAKE_FRE               0x01  //震动提醒频率
 

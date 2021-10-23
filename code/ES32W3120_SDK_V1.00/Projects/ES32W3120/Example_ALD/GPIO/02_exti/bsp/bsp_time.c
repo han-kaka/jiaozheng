@@ -49,6 +49,8 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         if(1 == time_flg.calibrate_flg){
             time_cnt.calibrate_timeout_cnt++;
             if(15 <= time_cnt.calibrate_timeout_cnt){
+                time_cnt.calibrate_timeout_cnt = 0;
+                time_flg.calibrate_flg = 1;
                 set_task(MEASURE, CALIBRATE_TIMEOUT);
             }
         }

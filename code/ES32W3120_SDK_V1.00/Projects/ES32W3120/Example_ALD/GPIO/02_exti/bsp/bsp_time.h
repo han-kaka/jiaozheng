@@ -6,7 +6,7 @@
 #include "bsp_common.h"
 
 #define MPU6050_NORMAL_TIMEOUT     50
-#define MPU6050_CALIBRATE_TIMEOUT  2
+#define MPU6050_CALIBRATE_TIMEOUT  20
 
 #define KEY_TIMEOUT          5
 #define LONG_KEY_TIMEOUT     300

@@ -123,7 +123,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>CMSIS_AGDI</Key>
-          <Name>-X"essemi CMSIS-DAP" -U0001A000000A -O206 -S1 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC2000 -FN1 -FF0ESW3120 -FS00 -FL080000 -FP0($$Device:ESW3120NQ$Flash\ESW3120.flm)</Name>
+          <Name>-X"essemi CMSIS-DAP" -U0001A000000A -O206 -S1 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC2000 -FN1 -FF0ESW3120.flm -FS00 -FL080000 -FP0($$Device:ESW3120NQ$Flash\ESW3120.flm)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>

@@ -61,7 +61,7 @@ uint8_t bluetooth_task(uint8_t prio)
                     ES_LOG_PRINT("%.2x", g_rx_buf[i]);
                 }
                 ES_LOG_PRINT("\n");
-//                
+//                ES_LOG_PRINT("receive data: %s\n", g_rx_buf);
 //                send_ble_data(g_rx_buf, 20);
                 memcpy(ble_rx_buf, g_rx_buf, UART_RX_BUF_LEN);
                 memset(g_rx_buf, 0, UART_RX_BUF_LEN);
@@ -77,9 +77,10 @@ uint8_t bluetooth_task(uint8_t prio)
                         memset(ble_send_temp, 0, 20);
                         memcpy(ble_send_temp, calibrate_data_p+i*20, 20);
                         send_ble_data(ble_send_temp, 20);
-                        ald_delay_ms(60);
+                        ald_delay_ms(20);
                     }
                 }
+                ald_delay_ms(50);
                 memset(ble_send_temp, 0, 20);
                 ble_send_temp[0] = 0xaa;
                 ble_send_temp[1] = 0x13;

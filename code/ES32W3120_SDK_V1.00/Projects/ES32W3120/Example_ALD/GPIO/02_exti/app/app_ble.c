@@ -51,6 +51,7 @@ int ble_data_decode(void)
     }
     
     if(sum != ble_data->sum){
+        ES_LOG_PRINT("ble data sum err\n");
         return -1;
     }
     
@@ -81,12 +82,14 @@ int ble_data_decode(void)
                     break;
                 
                 case CONTROL_SEND_FLASH_DATA:
-                    switch(ble_data->address){
+                    switch(ble_data->data[0]){
                         case SEND_FLASH_DATA_START:
+                            ES_LOG_PRINT("SEND_FLASH_DATA_START\n");
                             set_task(MEM_READ, FLASH_DATA_SEND);  //上传数据
                             break;
                         
                         case SEND_FLASH_DATA_DELETE:
+                            ES_LOG_PRINT("SEND_FLASH_DATA_DELETE\n");
                             set_task(MEM_WRITE, FLASH_DELETE);  //删除flash中已上传的数据
                             break;
                         
@@ -108,6 +111,7 @@ int ble_data_decode(void)
         case SET_DATA_CMD:
             switch(ble_data->address){
                 case SET_SHAKE_FRE:
+                    ES_LOG_PRINT("SET_SHAKE_FRE\n");
                     system_state.shake_fre = ble_data->data[0];
                     break;
                 
@@ -120,6 +124,7 @@ int ble_data_decode(void)
         case READ_STATE_CMD:
             switch(ble_data->address){
                 case STATE_INFO:
+                    ES_LOG_PRINT("STATE_INFO\n");
                     memset(ble_tx_buf, 0, 20);
                     ble_tx_buf[0] = 0xaa;
                     ble_tx_buf[1] = 0x13;
@@ -151,6 +156,7 @@ int ble_data_decode(void)
                     break;
                 
                 case STATE_SCAN:
+                    ES_LOG_PRINT("STATE_SCAN\n");
                     if(0x00 == ble_data->data[0]){
                         ES_LOG_PRINT("exit calibrate mode\n");
                         system_state.system_flg.calibrate_mode_flg = 0;
@@ -198,6 +204,7 @@ int ble_data_decode(void)
         case READ_DATA_CMD:
             switch(ble_data->address){
                 case DATA_MONITOR_DATA:
+                    ES_LOG_PRINT("DATA_MONITOR_DATA\n");
                     if(0x00 == ble_data->data[0]){
                         system_state.system_flg.imu_data_flg = 1;
                     }
@@ -215,6 +222,7 @@ int ble_data_decode(void)
         case WRITE_DATA_CMD:
             switch(ble_data->address){
                 case DATA_UTC:
+                    ES_LOG_PRINT("DATA_UTC\n");
                     data_utc = (data_utc_t *)ble_data->data;
                     utc_time.utc_y = data_utc->utc_y;
                     utc_time.utc_m = data_utc->utc_m;
@@ -234,6 +242,7 @@ int ble_data_decode(void)
         case WXID_CMD:
             switch(ble_data->address){
                 case WXID_WRITE:
+                    ES_LOG_PRINT("WXID_WRITE\n");
                     data_wxid = (data_wxid_t *)ble_data->data;
                     if((0x00 == system_state.wxid[0] && 0x00 == system_state.wxid[1] && 0x00 == system_state.wxid[2] && 0x00 == system_state.wxid[3]) ||
                         (0xff == system_state.wxid[0] && 0xff == system_state.wxid[1] && 0xff == system_state.wxid[2] && 0xff == system_state.wxid[3])){   //未绑定状态

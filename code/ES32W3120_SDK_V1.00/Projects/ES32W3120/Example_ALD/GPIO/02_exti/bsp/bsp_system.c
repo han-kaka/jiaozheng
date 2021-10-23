@@ -32,10 +32,10 @@ void init_system(void)
     /* 初始化设备信息 */
     init_system_info(&system_state);
     
-    system_state.wxid[0] = 0;
-    system_state.wxid[1] = 0;
-    system_state.wxid[2] = 0;
-    system_state.wxid[3] = 0;
+//    system_state.wxid[0] = 0;
+//    system_state.wxid[1] = 0;
+//    system_state.wxid[2] = 0;
+//    system_state.wxid[3] = 0;
     
     memset(&system_state.system_flg, 0, sizeof(system_state.system_flg));
 
