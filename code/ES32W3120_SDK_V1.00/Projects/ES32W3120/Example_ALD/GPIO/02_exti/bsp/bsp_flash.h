@@ -23,6 +23,12 @@
 
 #define FLASH_BUSY_TIMEOUT                    (50)
 
+#define FLASH_DATA_PAGE                       0
+#define FLASH_PAGE_LEN                        256
+
+#define FLASH_DATA_START                      1
+#define FLASH_DATA_END                        8191
+
 typedef struct {
     uint8_t shake_fre;
     uint8_t wxid[4];

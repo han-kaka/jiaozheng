@@ -25,6 +25,7 @@
 /* Public Variables ---------------------------------------------------------- */
 static spi_handle_t s_gs_spi;
 uint8_t g_flash_id[4] = {0};
+uint8_t accelerometer_data_temp[256] = {0};
 
 /* Private Constants --------------------------------------------------------- */
 
@@ -319,15 +320,15 @@ ald_status_t flash_sector_erase(uint32_t addr)
         return ERROR;
     }
     
-    cmd_buf[0] = FLASH_ERASE;       /* Flash?????? */
-    cmd_buf[1] = (addr >> 16) & 0xff;   /* 24 bit Flash?? */
+    cmd_buf[0] = FLASH_ERASE;       /* Flash扇区擦除指令 */
+    cmd_buf[1] = (addr >> 16) & 0xff;   /* 24 bit Flash地址 */
     cmd_buf[2] = (addr >> 8) & 0xff;
     cmd_buf[3] = addr & 0xff;
 
     ald_delay_ms(100);
     FLASH_CS_CLR();
 
-    for (i = 0; i < sizeof(cmd_buf); i++)     /* ??????????????Flash?? */
+    for (i = 0; i < sizeof(cmd_buf); i++)     /* 发送扇区擦除指令和3个字节的Flash地址 */
     {
         if (ald_spi_send_byte_fast(&s_gs_spi, cmd_buf[i]) != OK)
         {
@@ -460,6 +461,9 @@ int save_system_info(void)
 void flash_init(void)
 {
     gpio_init_t x;
+    ald_status_t status;
+//    char s_flash_txbuf[32] = "essemi mcu spi flash example!";     /* 长度必须小于一页(256字节) */
+//    char s_flash_rxbuf[32];
     
     memset(&x, 0, sizeof(x));
     
@@ -476,6 +480,47 @@ void flash_init(void)
     ald_delay_ms(20);
     
     spi_init();
+
+    status = flash_read(0, (char *)(&system_state.flash_data), sizeof(flash_data_t));
+    if (status == OK){
+        ES_LOG_PRINT("read OK!flash data page:%u, pack:%u\n", system_state.flash_data.flash_data_current_page, system_state.flash_data.falsh_data_current_pack);
+    }
+    
+    if(0xaa != system_state.flash_data.data_flag){
+        system_state.flash_data.data_flag = 0xaa;
+        system_state.flash_data.flash_data_current_page = 0;
+        system_state.flash_data.falsh_data_current_pack = 0;
+    }
+    else{
+        if(0 != system_state.flash_data.falsh_data_current_pack){
+            status = flash_read(0+system_state.flash_data.flash_data_current_page*FLASH_PAGE_LEN, (char *)(accelerometer_data_temp), system_state.flash_data.falsh_data_current_pack*20);
+            if (status == OK){
+                ES_LOG_PRINT("read flash data OK\n");
+            }
+        }
+    }
+    
+//    status = flash_sector_erase(0);
+//    
+//    if (status == OK)
+//    {
+//        ES_LOG_PRINT("Erase OK!\r\n");
+//    }
+//    
+//    ES_LOG_PRINT("The date written to flash is -> %s\r\n", s_flash_txbuf);
+//    status = flash_write_data(0, s_flash_txbuf, strlen(s_flash_txbuf) + 1);
+//    if (status == OK)
+//    {
+//        ES_LOG_PRINT("Write OK!\r\n");
+//    }
+//    
+//    status = flash_read(0, s_flash_rxbuf, strlen(s_flash_txbuf) + 1); /* 读出写入数据 */
+//    ES_LOG_PRINT("The data read from flash is  -> %s\r\n", s_flash_rxbuf);
+//    
+//    if (!memcmp(s_flash_txbuf, s_flash_rxbuf, strlen(s_flash_txbuf) + 1))   /* 比较写入和读出的数据 */
+//        ES_LOG_PRINT("Read OK!\r\n");
+//    else
+//        ES_LOG_PRINT("Read ERROR!\r\n");
 }
 
 void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
@@ -483,6 +528,7 @@ void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     uint8_t save_data_temp[20];
     uint8_t sum = 0;
     uint8_t i = 0;
+    ald_status_t status;
     
     memset(save_data_temp, 0, 20);
     save_data_temp[0] = 0xaa;
@@ -509,6 +555,28 @@ void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     save_data_temp[19] = sum;
     
     /* 保存至外部flash */
+    memcpy(accelerometer_data_temp+20*system_state.flash_data.falsh_data_current_pack, save_data_temp, 20);
+    system_state.flash_data.falsh_data_current_pack++;
+    if(12 <= system_state.flash_data.falsh_data_current_pack)
+    {
+        status = flash_sector_erase((FLASH_DATA_START+system_state.flash_data.flash_data_current_page)*FLASH_PAGE_LEN);
+        status = flash_write_data((FLASH_DATA_START+system_state.flash_data.flash_data_current_page)*FLASH_PAGE_LEN, (char *)accelerometer_data_temp, 256);
+        if (status == OK){
+            ES_LOG_PRINT("write accelerometer flash data OK!\n");
+            
+            system_state.flash_data.flash_data_current_page++;
+            if(FLASH_DATA_END < system_state.flash_data.flash_data_current_page){
+                system_state.flash_data.flash_data_current_page = 0;
+            }
+            system_state.flash_data.falsh_data_current_pack = 0;
+            
+            status = flash_sector_erase(0);
+            status = flash_write_data(0, (char *)(&system_state.flash_data), sizeof(flash_data_t));
+            if (status == OK){
+                ES_LOG_PRINT("write flash data OK!\n");
+            }
+        }
+    }
     
     if(1 == system_state.system_flg.imu_data_flg){
         send_ble_data(save_data_temp, 20);

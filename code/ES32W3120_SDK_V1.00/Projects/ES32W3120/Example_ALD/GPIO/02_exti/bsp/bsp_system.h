@@ -33,11 +33,19 @@ typedef struct {
 }system_flg_t;
 
 typedef struct {
+    uint8_t data_flag;
+    uint16_t flash_data_current_page;
+    uint8_t falsh_data_current_pack;
+    
+} flash_data_t;
+
+typedef struct {
     system_mode_e system_mode;
     uint8_t shake_fre;
     uint8_t wxid[4];
     system_flg_t system_flg;
     uint8_t ble_addr[6];
+    flash_data_t flash_data;
     
 }system_state_t;
 
