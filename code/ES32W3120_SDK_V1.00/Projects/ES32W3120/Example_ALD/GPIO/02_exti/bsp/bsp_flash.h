@@ -25,6 +25,7 @@
 
 #define FLASH_DATA_PAGE                       0
 #define FLASH_PAGE_LEN                        256
+#define FLASH_BUFF_LEN                        200
 
 #define FLASH_DATA_START                      1
 #define FLASH_DATA_END                        8191
@@ -49,6 +50,8 @@ ald_status_t flash_write_data(uint32_t addr, char *buf, uint16_t size);
 ald_status_t flash_sector_erase(uint32_t addr);
 
 ald_status_t flash_read(uint32_t addr, char *buf, uint16_t size);
+
+int read_accelerometer_data(void);
 #endif
 
 

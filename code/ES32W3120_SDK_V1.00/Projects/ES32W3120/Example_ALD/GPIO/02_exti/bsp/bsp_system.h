@@ -35,7 +35,7 @@ typedef struct {
 typedef struct {
     uint8_t data_flag;
     uint16_t flash_data_current_page;
-    uint8_t falsh_data_current_pack;
+    uint16_t flash_data_send_page;
     
 } flash_data_t;
 

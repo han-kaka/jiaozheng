@@ -28,7 +28,6 @@ uint8_t retry_cnt = 0;
 /* Exported Variables -------------------------------------------------------- */
 extern uint8_t g_rx_buf[UART_RX_BUF_LEN];
 extern uint8_t ble_rx_buf[UART_RX_BUF_LEN];
-extern uint8_t ble_tx_len;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
 extern uint8_t g_rx_len;

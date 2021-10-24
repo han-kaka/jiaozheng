@@ -38,7 +38,6 @@
 
 #define MEM_READ                      3                             //flash读取任务3
 #define FLASH_READ                    0                             //读取flash中的数据
-#define FLASH_DATA_SEND               1                             //上传flash中的数据至上位机
 
 #define COMM                          4                             //NB通讯任务4
 
@@ -51,7 +50,7 @@
 #define FLASH_DELETE                  1                             //删除外部 flash 中的数据
 
 #define OTHER                         7                             //其他任务7
-
+#define FLASH_DATA_SEND               1                             //上传flash中的数据至上位机
 
 typedef struct
 {

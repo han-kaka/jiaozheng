@@ -15,8 +15,6 @@
 
 /* Public Variables ---------------------------------------------------------- */
 uint8_t ble_rx_buf[UART_RX_BUF_LEN];
-uint8_t ble_tx_buf[256];
-uint8_t ble_tx_len;
 
 /* Private Constants --------------------------------------------------------- */
 
@@ -44,7 +42,8 @@ int ble_data_decode(void)
     int ret = 0;
     data_utc_t *data_utc = NULL;
     data_wxid_t *data_wxid = NULL;
-     
+    uint8_t ble_tx_buf[20];
+    
     ble_data = (ble_data_t *)ble_rx_buf;
     for(i=0; i<19; i++){
         sum += ble_rx_buf[i];
@@ -85,12 +84,12 @@ int ble_data_decode(void)
                     switch(ble_data->data[0]){
                         case SEND_FLASH_DATA_START:
                             ES_LOG_PRINT("SEND_FLASH_DATA_START\n");
-                            set_task(MEM_READ, FLASH_DATA_SEND);  //上传数据
+                            set_task(MEM_READ, FLASH_READ);  //上传数据
                             break;
                         
                         case SEND_FLASH_DATA_DELETE:
                             ES_LOG_PRINT("SEND_FLASH_DATA_DELETE\n");
-                            set_task(MEM_WRITE, FLASH_DELETE);  //删除flash中已上传的数据
+//                            set_task(MEM_WRITE, FLASH_DELETE);  //删除flash中已上传的数据
                             break;
                         
                         default:

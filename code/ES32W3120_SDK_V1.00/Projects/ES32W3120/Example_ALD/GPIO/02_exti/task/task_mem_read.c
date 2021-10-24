@@ -1,3 +1,5 @@
+#include "bsp_flash.h"
+
 #include "app_common.h"
 
 #include "task_common.h"
@@ -16,7 +18,12 @@ uint8_t mem_read_task(uint8_t prio)
         {
             case FLASH_READ:
             {
-
+                if(0 != read_accelerometer_data()){
+                    return false;
+                }
+                else{
+                    set_task(OTHER, FLASH_DATA_SEND);
+                }
             }
                 break;
 
