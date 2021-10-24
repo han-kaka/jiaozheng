@@ -3,6 +3,7 @@
 #include "bsp_system.h"
 #include "bsp_led.h"
 #include "bsp_key.h"
+#include "bsp_dx_bt24_t.h"
 
 #include "app_common.h"
 
@@ -30,8 +31,10 @@ uint8_t mpu6050_timeout = MPU6050_NORMAL_TIMEOUT;
 /* Exported Variables -------------------------------------------------------- */
 extern adc_handle_t g_h_adc;
 extern uint8_t g_rx_len;
+extern uint8_t g_data_len;
 extern system_state_t system_state;
 extern uint8_t key_click_flg;
+extern uint8_t g_rx_buf[UART_RX_BUF_LEN];
 
 /**
   * @brief  ald timer period elapsed callback
@@ -111,14 +114,21 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         if(2 <= time_cnt.uart_timeout_cnt){
             time_cnt.uart_timeout_cnt = 0;
             time_flg.uart_timeout_flg = 0;
+            g_data_len = g_rx_len;
             g_rx_len = 0;
-            if(1 == system_state.system_flg.dx_bt24_t_init_flg){
-                set_task(BLUETOOTH, DATA_DECODE);
+            if(0 == system_state.system_flg.dx_bt24_t_poweron_flg){
+                if(NULL != strstr((const char*)g_rx_buf, "Power On")){
+                    system_state.system_flg.dx_bt24_t_poweron_flg = 1;
+                }
             }
             else{
-                time_flg.at_cmd_flg = 1;
+                if(1 == system_state.system_flg.dx_bt24_t_init_flg){
+                    set_task(BLUETOOTH, DATA_DECODE);
+                }
+                else{
+                    time_flg.at_cmd_flg = 1;
+                }
             }
-            
         }
     }
     

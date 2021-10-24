@@ -41,10 +41,10 @@ void init_system(void)
 
     set_task(SG, ADV_MODE);
     
+    time_init();
+    
     /* 开启一些广播模式下的初始任务 */
     start_init_task();
-    
-    time_init();
     
     return;
 }

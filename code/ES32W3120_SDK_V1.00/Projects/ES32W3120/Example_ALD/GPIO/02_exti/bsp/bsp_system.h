@@ -20,14 +20,15 @@ typedef struct {
     uint16_t flash_init_flg        :1;
     uint16_t dx_bt24_t_init_flg    :1;
     
+    uint16_t dx_bt24_t_poweron_flg :1;
     uint16_t adc_init_flg          :1;
     uint16_t motor_start_flg       :1;
     uint16_t charging_flg          :1;
-    uint16_t charge_comp_flg       :1;
     
+    uint16_t charge_comp_flg       :1;
     uint16_t calibrate_mode_flg    :1;
     uint16_t calibrate_key_flg     :1;
-    uint16_t reserve_flag          :6;
+    uint16_t reserve_flag          :5;
     
 }system_flg_t;
 

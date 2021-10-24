@@ -34,10 +34,6 @@ void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     
     if(1 == system_state.system_flg.calibrate_mode_flg){
         if(1 == system_state.system_flg.calibrate_key_flg){
-            /* Ω«∂»À„∑® */
-            data[1] = -atan(ay / ax) * 180 / 3.14;
-            data[0] = atan(az / sqrtf(ax * ax + ay * ay)) * 180 / 3.14;
-            data[2] = acos(ax / sqrtf(ax * ax + ay * ay + az * az)) * 180 / 3.14;
             
             memset(save_data_temp, 0, 20);
             save_data_temp[0] = 0xaa;

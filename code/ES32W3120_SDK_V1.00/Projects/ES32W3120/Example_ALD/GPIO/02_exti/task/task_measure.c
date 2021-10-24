@@ -40,7 +40,7 @@ uint8_t measure_task(uint8_t prio)
     uint8_t ble_send_temp[20];
     uint8_t sum = 0;
     
-    ES_LOG_PRINT("measure_task\n");
+//    ES_LOG_PRINT("measure_task\n");
     
     while(ga_Subtask[prio])
     {
