@@ -23,7 +23,7 @@
 
 #define UARTX                     UART0
 
-#define UART_RX_BUF_LEN           40
+#define UART_RX_BUF_LEN           30
 
 void uart_init(void);
 

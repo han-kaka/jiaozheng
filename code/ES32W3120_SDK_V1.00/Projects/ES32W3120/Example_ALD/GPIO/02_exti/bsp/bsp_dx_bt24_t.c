@@ -10,7 +10,6 @@
 uart_handle_t g_h_uart;
 uint8_t g_rx_buf[UART_RX_BUF_LEN] = {0};
 uint8_t g_rx_len = 0;
-uint8_t g_data_len = 0;
 
 /* Private Constants --------------------------------------------------------- */
 
@@ -104,8 +103,16 @@ static void uart_recv_complete(uart_handle_t *arg)
     time_flg.uart_timeout_flg = 1;
     g_rx_len++;
 
-    if (UART_RX_BUF_LEN <= g_rx_len) {
-        g_rx_len = 0;
+    if(1 == system_state.system_flg.dx_bt24_t_init_flg)
+    {
+        if (20 <= g_rx_len) {
+            g_rx_len = 0;
+        }
+    }
+    else{
+        if (UART_RX_BUF_LEN <= g_rx_len) {
+            g_rx_len = 0;
+        }
     }
     
     ald_uart_recv_by_it(&g_h_uart, g_rx_buf + g_rx_len, 1);

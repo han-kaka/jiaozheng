@@ -31,7 +31,6 @@ uint8_t mpu6050_timeout = MPU6050_NORMAL_TIMEOUT;
 /* Exported Variables -------------------------------------------------------- */
 extern adc_handle_t g_h_adc;
 extern uint8_t g_rx_len;
-extern uint8_t g_data_len;
 extern system_state_t system_state;
 extern uint8_t key_click_flg;
 extern uint8_t g_rx_buf[UART_RX_BUF_LEN];
@@ -114,7 +113,6 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         if(2 <= time_cnt.uart_timeout_cnt){
             time_cnt.uart_timeout_cnt = 0;
             time_flg.uart_timeout_flg = 0;
-            g_data_len = g_rx_len;
             g_rx_len = 0;
             if(0 == system_state.system_flg.dx_bt24_t_poweron_flg){
                 if(NULL != strstr((const char*)g_rx_buf, "Power On")){
@@ -129,6 +127,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
                     time_flg.at_cmd_flg = 1;
                 }
             }
+            
         }
     }
     

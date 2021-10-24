@@ -32,7 +32,6 @@ extern uint8_t ble_tx_len;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
 extern uint8_t g_rx_len;
-extern uint8_t g_data_len;
 extern system_state_t system_state;
 extern uint8_t mpu6050_timeout;
 extern uint8_t *calibrate_data_p;
@@ -57,14 +56,14 @@ uint8_t bluetooth_task(uint8_t prio)
             case DATA_DECODE:
             {
                 ES_LOG_PRINT("receive data: ");
-                for(i=0; i<g_data_len; i++)
+                for(i=0; i<20; i++)
                 {
                     ES_LOG_PRINT("%.2x", g_rx_buf[i]);
                 }
                 ES_LOG_PRINT("\n");
 //                ES_LOG_PRINT("receive data: %s\n", g_rx_buf);
 //                send_ble_data(g_rx_buf, 20);
-                memcpy(ble_rx_buf, g_rx_buf, g_data_len);
+                memcpy(ble_rx_buf, g_rx_buf, UART_RX_BUF_LEN);
                 memset(g_rx_buf, 0, UART_RX_BUF_LEN);
                 ble_data_decode();
             }
