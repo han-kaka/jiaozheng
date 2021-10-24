@@ -8,9 +8,13 @@
 #define MPU6050_NORMAL_TIMEOUT     50
 #define MPU6050_CALIBRATE_TIMEOUT  2
 
-#define KEY_TIMEOUT          5
-#define LONG_KEY_TIMEOUT     300
-#define DOUBLE_KEY_TIMEOUT   50
+#define KEY_TIMEOUT                5
+#define LONG_KEY_TIMEOUT           300
+#define DOUBLE_KEY_TIMEOUT         50
+
+#define LOW_SHAKE_FRE_HIGH         50
+#define LOW_SHAKE_FRE_LOW          100
+
 
 typedef struct {
     uint32_t time_1s_cnt;
@@ -22,6 +26,7 @@ typedef struct {
     uint8_t key_cnt;
     uint8_t double_key_cnt;
     uint16_t long_key_cnt;
+    uint8_t motor_cnt;
     
 }timer_cnt_t;
 
@@ -34,7 +39,7 @@ typedef struct {
     uint8_t key_flag          :1;
     uint8_t double_key_flag   :1;
     uint8_t long_key_flag     :1;
-    uint8_t reserve_flag      :1;
+    uint8_t motor_flag        :1;
     
 } timer_flg_t;
 

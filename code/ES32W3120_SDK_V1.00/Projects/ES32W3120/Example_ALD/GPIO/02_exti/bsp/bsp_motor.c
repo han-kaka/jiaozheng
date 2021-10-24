@@ -1,5 +1,6 @@
 #include "bsp_motor.h"
 #include "bsp_system.h"
+#include "bsp_time.h"
 
 /* Private Macros ------------------------------------------------------------ */
 
@@ -15,6 +16,8 @@
 
 /* Exported Variables -------------------------------------------------------- */
 extern system_state_t system_state;
+extern timer_cnt_t time_cnt;
+extern timer_flg_t time_flg;
 
 void motor_init(void)
 {
@@ -41,6 +44,8 @@ void motor_start(void)
     }
     else if(0x01 == system_state.shake_fre){
         /* µΝΖµΥπ¶― */
+        time_cnt.motor_cnt = 0;
+        time_flg.motor_flag = 1;
         ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
     }
     else if(0x02 == system_state.shake_fre){
@@ -52,6 +57,11 @@ void motor_start(void)
 void motor_stop(void)
 {
     system_state.system_flg.motor_start_flg = 0;
+    
+    if(1 == time_flg.motor_flag){
+        time_flg.motor_flag = 0;
+        time_cnt.motor_cnt = 0;
+    }
     
     ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
 }

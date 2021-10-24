@@ -4,6 +4,7 @@
 #include "bsp_led.h"
 #include "bsp_key.h"
 #include "bsp_dx_bt24_t.h"
+#include "bsp_motor.h"
 
 #include "app_common.h"
 
@@ -108,6 +109,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
 //        ald_adc_normal_start_by_it(&g_h_adc);
     }
     
+//    串口数据读取
     if(1 == time_flg.uart_timeout_flg){
         time_cnt.uart_timeout_cnt++;
         if(2 <= time_cnt.uart_timeout_cnt){
@@ -131,6 +133,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         }
     }
     
+//    6050数据读取和电池电量读取
     if((E_ADV_MODE == system_state.system_mode) || (E_CONNECT_MODE == system_state.system_mode)){
         if(1 == system_state.system_flg.mpu6050_init_flg){
             time_cnt.mpu6050_data_cnt++;
@@ -149,6 +152,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         }
     }
 
+//    led闪烁
     if(1 == time_flg.led_twinkle_flg){
         time_cnt.led_twinkle_cnt++;
         if(50 == time_cnt.led_twinkle_cnt){
@@ -159,6 +163,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
             ald_gpio_write_pin(LED_RUN_PORT, LED_RUN_PIN, 0);
         }
     }
+    
     
     if(1 == time_flg.key_flag){
         time_cnt.key_cnt++;
@@ -179,6 +184,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
                     }
                 }
                 else{
+//                    单击按下
                     time_cnt.long_key_cnt = 0;
                     time_flg.long_key_flag = 1;
                 }
@@ -201,6 +207,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         }
     }
     
+//    长按判断
     if(1 == time_flg.long_key_flag){
         time_cnt.long_key_cnt++;
         if(LONG_KEY_TIMEOUT <= time_cnt.long_key_cnt){
@@ -211,6 +218,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         }
     }
     
+//    双击判断
     if(1 == time_flg.double_key_flag){
         time_cnt.double_key_cnt++;
         if(DOUBLE_KEY_TIMEOUT <= time_cnt.double_key_cnt){
@@ -221,6 +229,17 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
         
     }
     
+//    马达低频震动
+    if(1 == time_flg.motor_flag){
+        time_cnt.motor_cnt++;
+        if(LOW_SHAKE_FRE_HIGH == time_cnt.motor_cnt){
+            ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 0);
+        }
+        else if(LOW_SHAKE_FRE_LOW == time_cnt.motor_cnt){
+            time_cnt.motor_cnt = 0;
+            ald_gpio_write_pin(MOTOR_CTR_PORT, MOTOR_CTR_PIN, 1);
+        }
+    }
 }
 
 void time_init(void)
