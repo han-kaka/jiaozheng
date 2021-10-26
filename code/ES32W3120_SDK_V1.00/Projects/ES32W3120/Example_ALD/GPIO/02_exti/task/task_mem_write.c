@@ -24,6 +24,14 @@ uint8_t mem_write_task(uint8_t prio)
             }
                 break;
             
+            case FLASH_DELETE:
+            {
+                if(0 != save_flash_page_data()){
+                    return false;
+                }
+            }
+                break;
+            
             default:
                 break; 
         }

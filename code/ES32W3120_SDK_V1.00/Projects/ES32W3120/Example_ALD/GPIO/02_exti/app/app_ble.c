@@ -2,6 +2,7 @@
 #include "bsp_system.h"
 #include "bsp_dx_bt24_t.h"
 #include "bsp_motor.h"
+#include "bsp_flash.h"
 
 #include "app_ble.h"
 #include "app_common.h"
@@ -29,7 +30,8 @@ extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
 extern uint32_t g_adc_result;
 extern uint8_t mpu6050_timeout;
-extern uint8_t *calibrate_data_p;
+//extern uint8_t *calibrate_data_p;
+extern uint8_t calibrate_data_p[15000];
 extern uint16_t calibrate_packet_cnt;
 
 //extern uint8_t retry_cnt;
@@ -84,12 +86,67 @@ int ble_data_decode(void)
                     switch(ble_data->data[0]){
                         case SEND_FLASH_DATA_START:
                             ES_LOG_PRINT("SEND_FLASH_DATA_START\n");
-                            set_task(MEM_READ, FLASH_READ);  //上传数据
+                            if(system_state.flash_data.flash_data_send_page < system_state.flash_data.flash_data_current_page){
+                                if(2 <= system_state.flash_data.flash_data_current_page-system_state.flash_data.flash_data_send_page){
+                                    set_task(MEM_READ, FLASH_READ);  //上传数据
+                                }
+                                else{
+                                    memset(ble_tx_buf, 0, 20);
+                                    ble_tx_buf[0] = 0xaa;
+                                    ble_tx_buf[1] = 0x13;
+                                    ble_tx_buf[2] = 0xc2;
+                                    ble_tx_buf[3] = 0x06;
+                                    
+                                    sum = 0;
+                                    for(i=0; i<19; i++){
+                                        sum += ble_tx_buf[i];
+                                    }
+                                    ble_tx_buf[19] = sum;
+                                    
+                                    send_ble_data(ble_tx_buf, 20);
+                                }
+                            }
+                            else if(system_state.flash_data.flash_data_send_page == system_state.flash_data.flash_data_current_page){
+                                memset(ble_tx_buf, 0, 20);
+                                ble_tx_buf[0] = 0xaa;
+                                ble_tx_buf[1] = 0x13;
+                                ble_tx_buf[2] = 0xc2;
+                                ble_tx_buf[3] = 0x06;
+                                
+                                sum = 0;
+                                for(i=0; i<19; i++){
+                                    sum += ble_tx_buf[i];
+                                }
+                                ble_tx_buf[19] = sum;
+                                
+                                send_ble_data(ble_tx_buf, 20);
+                            }
+                            else if(system_state.flash_data.flash_data_send_page > system_state.flash_data.flash_data_current_page){
+                                if(2 <= FLASH_DATA_END-system_state.flash_data.flash_data_send_page+system_state.flash_data.flash_data_current_page-4){
+                                    set_task(MEM_READ, FLASH_READ);  //上传数据
+                                }
+                                else{
+                                    memset(ble_tx_buf, 0, 20);
+                                    ble_tx_buf[0] = 0xaa;
+                                    ble_tx_buf[1] = 0x13;
+                                    ble_tx_buf[2] = 0xc2;
+                                    ble_tx_buf[3] = 0x06;
+                                    
+                                    sum = 0;
+                                    for(i=0; i<19; i++){
+                                        sum += ble_tx_buf[i];
+                                    }
+                                    ble_tx_buf[19] = sum;
+                                    
+                                    send_ble_data(ble_tx_buf, 20);
+                                }
+                            }
                             break;
                         
                         case SEND_FLASH_DATA_DELETE:
                             ES_LOG_PRINT("SEND_FLASH_DATA_DELETE\n");
-//                            set_task(MEM_WRITE, FLASH_DELETE);  //删除flash中已上传的数据
+                            system_state.flash_data.flash_data_send_page += 2;
+                            set_task(MEM_WRITE, FLASH_DELETE);  //删除flash中已上传的数据
                             break;
                         
                         default:
@@ -124,13 +181,22 @@ int ble_data_decode(void)
             switch(ble_data->address){
                 case STATE_INFO:
                     ES_LOG_PRINT("STATE_INFO\n");
+                    
                     memset(ble_tx_buf, 0, 20);
                     ble_tx_buf[0] = 0xaa;
                     ble_tx_buf[1] = 0x13;
                     ble_tx_buf[2] = 0xd4;
                     ble_tx_buf[3] = 0x01;
                     ble_tx_buf[4] = (g_adc_result - 2900) * 100 / 4200;
-                    ble_tx_buf[5] = 0x0a;
+                    if(system_state.flash_data.flash_data_send_page < system_state.flash_data.flash_data_current_page){
+                        ble_tx_buf[5] = (system_state.flash_data.flash_data_current_page - system_state.flash_data.flash_data_send_page)/10;
+                    }
+                    else if(system_state.flash_data.flash_data_send_page == system_state.flash_data.flash_data_current_page){
+                        ble_tx_buf[5] = 0;
+                    }
+                    else if(system_state.flash_data.flash_data_send_page > system_state.flash_data.flash_data_current_page){
+                        ble_tx_buf[5] = (FLASH_DATA_END-system_state.flash_data.flash_data_send_page+system_state.flash_data.flash_data_current_page-4)/10;
+                    }
                     ble_tx_buf[6] = system_state.shake_fre;
                     ble_tx_buf[7] = system_state.ble_addr[0];
                     ble_tx_buf[8] = system_state.ble_addr[1];
@@ -138,12 +204,12 @@ int ble_data_decode(void)
                     ble_tx_buf[10] = system_state.ble_addr[3];
                     ble_tx_buf[11] = system_state.ble_addr[4];
                     ble_tx_buf[12] = system_state.ble_addr[5];
-                    ble_tx_buf[13] = 0x00;
-                    ble_tx_buf[14] = 0x00;
-                    ble_tx_buf[15] = 0x00;
-                    ble_tx_buf[16] = 0x00;
-                    ble_tx_buf[17] = 0x00;
-                    ble_tx_buf[18] = 0x00;
+                    ble_tx_buf[13] = 0xb2;
+                    ble_tx_buf[14] = 21;
+                    ble_tx_buf[15] = 10;
+                    ble_tx_buf[16] = 26;
+                    ble_tx_buf[17] = 01;
+                    ble_tx_buf[18] = 0xef;
                     
                     sum = 0;
                     for(i=0; i<19; i++){
@@ -168,7 +234,7 @@ int ble_data_decode(void)
                         mpu6050_timeout = MPU6050_NORMAL_TIMEOUT;
                         
                         calibrate_packet_cnt = 0;
-                        free(calibrate_data_p);
+//                        free(calibrate_data_p);
                     }
                     else if(0x01 == ble_data->data[0]){
                         ES_LOG_PRINT("enter calibrate mode\n");

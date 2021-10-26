@@ -12,7 +12,8 @@
 /* Private Variables --------------------------------------------------------- */
 
 /* Public Variables ---------------------------------------------------------- */
-uint8_t *calibrate_data_p = NULL;
+//uint8_t *calibrate_data_p = NULL;
+uint8_t calibrate_data_p[15000] = {0};
 uint16_t calibrate_packet_cnt = 0;
 
 /* Private Constants --------------------------------------------------------- */
@@ -59,10 +60,10 @@ void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
             }
             save_data_temp[19] = sum;
             
-            if(NULL != calibrate_data_p){
+//            if(NULL != calibrate_data_p){
                 memcpy(calibrate_data_p+calibrate_packet_cnt*20, save_data_temp, 20);
                 calibrate_packet_cnt++;
-            }
+//            }
         }
     }
     else{

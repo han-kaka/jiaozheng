@@ -25,10 +25,12 @@
 /* Exported Variables -------------------------------------------------------- */
 extern utc_time_t utc_time;
 extern system_state_t system_state;
-extern uint8_t *calibrate_data_p;
+//extern uint8_t *calibrate_data_p;
+extern uint8_t calibrate_data_p[15000];
 extern uint16_t calibrate_packet_cnt;
 extern timer_cnt_t time_cnt;
 extern timer_flg_t time_flg;
+extern uint16_t calibrate_send_packet_cnt;
 
 uint8_t measure_task(uint8_t prio)
 {
@@ -50,9 +52,9 @@ uint8_t measure_task(uint8_t prio)
             case CALIBRATE_START:
             {
                 calibrate_packet_cnt = 0;
-                if(NULL == calibrate_data_p){
-                    calibrate_data_p = (uint8_t *)malloc(15 * 50 * 20);
-                }
+//                if(NULL == calibrate_data_p){
+//                    calibrate_data_p = (uint8_t *)malloc(15 * 50 * 20);
+//                }
 
                 time_cnt.calibrate_timeout_cnt = 0;
                 time_flg.calibrate_flg = 1;
@@ -97,6 +99,7 @@ uint8_t measure_task(uint8_t prio)
                 
                 send_ble_data(ble_send_temp, 20);
                 
+                calibrate_send_packet_cnt = 0;
                 set_task(BLUETOOTH, SEND_CALIBRATE_DATA);
             }
                 break;
@@ -109,7 +112,7 @@ uint8_t measure_task(uint8_t prio)
                 time_flg.calibrate_flg = 0;
                 
                 calibrate_packet_cnt = 0;
-                free(calibrate_data_p);
+//                free(calibrate_data_p);
                 
                 memset(ble_send_temp, 0, 20);
                 ble_send_temp[0] = 0xaa;

@@ -25,9 +25,9 @@
 /* Public Variables ---------------------------------------------------------- */
 static spi_handle_t s_gs_spi;
 uint8_t g_flash_id[4] = {0};
-uint8_t accelerometer_data_temp[FLASH_BUFF_LEN] = {0};
+uint8_t accelerometer_data_temp[FLASH_WRITE_BUFF_LEN] = {0};
 static uint8_t save_pack_temp = 0;
-uint8_t accelerometer_data_send_temp[FLASH_BUFF_LEN] = {0};
+uint8_t accelerometer_data_send_temp[FLASH_READ_BUFF_LEN] = {0};
 uint8_t send_page_temp = 0;
 
 /* Private Constants --------------------------------------------------------- */
@@ -524,6 +524,7 @@ void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     uint8_t save_data_temp[20];
     uint8_t sum = 0;
     uint8_t i = 0;
+//    uint16_t j = 0;
     ald_status_t status;
     
     memset(save_data_temp, 0, 20);
@@ -553,16 +554,26 @@ void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     /* 保存至外部flash */
     memcpy(accelerometer_data_temp+20*save_pack_temp, save_data_temp, 20);
     save_pack_temp++;
-    if(10 <= save_pack_temp)
+    if(50 <= save_pack_temp)
     {
-        status = flash_sector_erase((FLASH_DATA_START+system_state.flash_data.flash_data_current_page)*FLASH_PAGE_LEN);
-        status = flash_write_data((FLASH_DATA_START+system_state.flash_data.flash_data_current_page)*FLASH_PAGE_LEN, (char *)accelerometer_data_temp, FLASH_BUFF_LEN);
+        if(0 == (system_state.flash_data.flash_data_current_page%4)){
+            status = flash_sector_erase((FLASH_DATA_START+system_state.flash_data.flash_data_current_page)*FLASH_PAGE_LEN);
+        }
+        status = flash_write_data((FLASH_DATA_START+system_state.flash_data.flash_data_current_page)*FLASH_PAGE_LEN, (char *)accelerometer_data_temp, FLASH_WRITE_BUFF_LEN);
         if (status == OK){
-            ES_LOG_PRINT("write accelerometer flash data OK!\n");
+            ES_LOG_PRINT("write accelerometer flash data OK, addr%u\n", (FLASH_DATA_START+system_state.flash_data.flash_data_current_page)*FLASH_PAGE_LEN);
             
+            if(system_state.flash_data.flash_data_current_page+1 == system_state.flash_data.flash_data_send_page){
+                if(FLASH_DATA_END == system_state.flash_data.flash_data_send_page){
+                    system_state.flash_data.flash_data_send_page = FLASH_DATA_START;
+                }
+                else{
+                    system_state.flash_data.flash_data_send_page++;
+                }
+            }
             system_state.flash_data.flash_data_current_page++;
             if(FLASH_DATA_END < system_state.flash_data.flash_data_current_page){
-                system_state.flash_data.flash_data_current_page = 0;
+                system_state.flash_data.flash_data_current_page = FLASH_DATA_START;
             }
             save_pack_temp = 0;
             
@@ -583,9 +594,17 @@ int read_accelerometer_data(void)
 {
     ald_status_t status;
     
-    status = flash_read((FLASH_DATA_START+system_state.flash_data.flash_data_send_page+send_page_temp)*FLASH_PAGE_LEN, (char *)(accelerometer_data_send_temp), FLASH_BUFF_LEN);
+    if(4 < send_page_temp){
+        status = flash_read((FLASH_DATA_START+system_state.flash_data.flash_data_send_page+1)*FLASH_PAGE_LEN+(send_page_temp-5)*FLASH_READ_BUFF_LEN, (char *)(accelerometer_data_send_temp), FLASH_READ_BUFF_LEN);
+        ES_LOG_PRINT("addr:%u, page_temp:%u\n", (FLASH_DATA_START+system_state.flash_data.flash_data_send_page+1)*FLASH_PAGE_LEN+(send_page_temp-9)*FLASH_READ_BUFF_LEN, send_page_temp);
+    }
+    else{
+        status = flash_read((FLASH_DATA_START+system_state.flash_data.flash_data_send_page)*FLASH_PAGE_LEN+send_page_temp*FLASH_READ_BUFF_LEN, (char *)(accelerometer_data_send_temp), FLASH_READ_BUFF_LEN);
+        ES_LOG_PRINT("addr:%u, page_temp:%u\n", (FLASH_DATA_START+system_state.flash_data.flash_data_send_page)*FLASH_PAGE_LEN+send_page_temp*FLASH_READ_BUFF_LEN, send_page_temp);
+    }
     if (status == OK){
         ES_LOG_PRINT("read flash data OK\n");
+
         send_page_temp++;
         return 0;
     }
@@ -593,3 +612,16 @@ int read_accelerometer_data(void)
     return -1;
 }
 
+int save_flash_page_data(void)
+{
+    ald_status_t status;
+    
+    status = flash_sector_erase(0);
+    status = flash_write_data(0, (char *)(&system_state.flash_data), sizeof(flash_data_t));
+    if (status == OK){
+        ES_LOG_PRINT("write flash data OK!\n");
+        return 0;
+    }
+    
+    return -1;
+}

@@ -24,11 +24,13 @@
 #define FLASH_BUSY_TIMEOUT                    (50)
 
 #define FLASH_DATA_PAGE                       0
-#define FLASH_PAGE_LEN                        256
-#define FLASH_BUFF_LEN                        200
+#define FLASH_PAGE_LEN                        1024
+#define FLASH_WRITE_BUFF_LEN                  1000
 
-#define FLASH_DATA_START                      1
-#define FLASH_DATA_END                        8191
+#define FLASH_READ_BUFF_LEN                   200
+
+#define FLASH_DATA_START                      4
+#define FLASH_DATA_END                        2047
 
 typedef struct {
     uint8_t shake_fre;
@@ -52,6 +54,8 @@ ald_status_t flash_sector_erase(uint32_t addr);
 ald_status_t flash_read(uint32_t addr, char *buf, uint16_t size);
 
 int read_accelerometer_data(void);
+
+int save_flash_page_data(void);
 #endif
 
 

@@ -11,6 +11,7 @@
 /* Private Variables --------------------------------------------------------- */
 
 /* Public Variables ---------------------------------------------------------- */
+uint8_t send_pack_temp = 0;
 
 /* Private Constants --------------------------------------------------------- */
 
@@ -19,7 +20,7 @@
 /* Private Function ---------------------------------------------------------- */
 
 /* Exported Variables -------------------------------------------------------- */
-extern uint8_t accelerometer_data_send_temp[FLASH_BUFF_LEN];
+extern uint8_t accelerometer_data_send_temp[FLASH_READ_BUFF_LEN];
 extern uint8_t send_page_temp;
 
 uint8_t other_task(uint8_t prio)
@@ -38,10 +39,11 @@ uint8_t other_task(uint8_t prio)
         {
             case FLASH_DATA_SEND:
             {
-                send_ble_data(accelerometer_data_send_temp, 200);
-                send_page_temp++;
+                send_ble_data(accelerometer_data_send_temp, FLASH_READ_BUFF_LEN);
+                ald_delay_ms(60);
                 if(10 <= send_page_temp){
-                    ald_delay_ms(50);
+                    send_page_temp = 0;
+                    
                     memset(send_data_temp, 0, 20);
                     send_data_temp[0] = 0xaa;
                     send_data_temp[1] = 0x13;
