@@ -232,7 +232,9 @@ void dx_bt24_t_init(void)
 void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
 {
     uint8_t i = 0;
-    
+
+    ald_uart_send_by_it(&g_h_uart, tx_buf, tx_len);
+
     ES_LOG_PRINT("send data: ");
     for(i=0; i<tx_len; i++)
     {
@@ -240,9 +242,7 @@ void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
     }
     ES_LOG_PRINT("\n");
     
-    ald_uart_send_by_it(&g_h_uart, tx_buf, tx_len);
-    
-    ald_delay_ms(10);
+    ald_delay_ms(60);
     
     return;
 }
@@ -256,7 +256,6 @@ void ble_test(void)
     data[0] = num >> 8;
     data[1] = num & 0xff;
     send_ble_data(data, 2);
-    ald_delay_ms(60);
     
     return;
 }

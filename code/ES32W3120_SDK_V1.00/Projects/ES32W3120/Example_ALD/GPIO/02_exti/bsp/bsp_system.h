@@ -28,7 +28,9 @@ typedef struct {
     uint16_t charge_comp_flg       :1;
     uint16_t calibrate_mode_flg    :1;
     uint16_t calibrate_key_flg     :1;
-    uint16_t reserve_flag          :5;
+    uint16_t send_flash_data_flg   :1;
+    
+    uint16_t reserve_flag          :4;
     
 }system_flg_t;
 

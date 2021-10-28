@@ -87,10 +87,11 @@ int ble_data_decode(void)
                         case SEND_FLASH_DATA_START:
                             ES_LOG_PRINT("SEND_FLASH_DATA_START\n");
                             if(system_state.flash_data.flash_data_send_page < system_state.flash_data.flash_data_current_page){
-                                if(2 <= system_state.flash_data.flash_data_current_page-system_state.flash_data.flash_data_send_page){
+                                if(2 <= (system_state.flash_data.flash_data_current_page-system_state.flash_data.flash_data_send_page)){
                                     set_task(MEM_READ, FLASH_READ);  //上传数据
                                 }
                                 else{
+                                    ES_LOG_PRINT("no data\n");
                                     memset(ble_tx_buf, 0, 20);
                                     ble_tx_buf[0] = 0xaa;
                                     ble_tx_buf[1] = 0x13;
@@ -145,8 +146,19 @@ int ble_data_decode(void)
                         
                         case SEND_FLASH_DATA_DELETE:
                             ES_LOG_PRINT("SEND_FLASH_DATA_DELETE\n");
-                            system_state.flash_data.flash_data_send_page += 2;
-                            set_task(MEM_WRITE, FLASH_DELETE);  //删除flash中已上传的数据
+                            if(1 == system_state.system_flg.send_flash_data_flg){
+                                system_state.system_flg.send_flash_data_flg = 0;
+                                if(system_state.flash_data.flash_data_send_page+2 >= FLASH_DATA_END+1)
+                                {
+                                    system_state.flash_data.flash_data_send_page = 4;
+                                }
+                                else{
+                                    system_state.flash_data.flash_data_send_page += 2;
+                                }
+                                
+                                set_task(MEM_WRITE, FLASH_DELETE);  //删除flash中已上传的数据
+                            }
+                            
                             break;
                         
                         default:

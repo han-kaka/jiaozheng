@@ -78,7 +78,6 @@ uint8_t bluetooth_task(uint8_t prio)
                         memcpy(ble_send_temp, calibrate_data_p+20*calibrate_send_packet_cnt, 200);
                         send_ble_data(ble_send_temp, 200);
                         calibrate_send_packet_cnt += 10;
-                        ald_delay_ms(30);
                         
                         return false;
                     }
@@ -87,7 +86,6 @@ uint8_t bluetooth_task(uint8_t prio)
                         memcpy(ble_send_temp, calibrate_data_p+20*calibrate_send_packet_cnt, 20*(calibrate_packet_cnt - calibrate_send_packet_cnt));
                         send_ble_data(ble_send_temp, 20*(calibrate_packet_cnt - calibrate_send_packet_cnt));
                         calibrate_send_packet_cnt = calibrate_packet_cnt;
-                        ald_delay_ms(60);
                         
                         memset(ble_send_temp, 0, 20);
                         ble_send_temp[0] = 0xaa;
