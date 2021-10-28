@@ -492,8 +492,8 @@ void flash_init(void)
     
     if(0xaa != system_state.flash_data.data_flag){
         system_state.flash_data.data_flag = 0xaa;
-        system_state.flash_data.flash_data_current_page = 0;
-        system_state.flash_data.flash_data_send_page = 0;
+        system_state.flash_data.flash_data_current_page = 4;
+        system_state.flash_data.flash_data_send_page = 4;
     }
     
 //    status = flash_sector_erase(0);
@@ -531,7 +531,7 @@ void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     save_data_temp[0] = 0xaa;
     save_data_temp[1] = 0x13;
     save_data_temp[2] = 0xd5;
-    save_data_temp[3] = 0x01;
+    save_data_temp[3] = 0x03;
     save_data_temp[4] = ax >> 8;
     save_data_temp[5] = ax & 0xff;
     save_data_temp[6] = ay >> 8;
@@ -586,6 +586,12 @@ void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
     }
     
     if(1 == system_state.system_flg.imu_data_flg){
+        save_data_temp[3] = 0x01;
+        sum = 0;
+        for(i=0; i<19; i++){
+            sum += save_data_temp[i];
+        }
+        save_data_temp[19] = sum;
         send_ble_data(save_data_temp, 20);
     }
 }
