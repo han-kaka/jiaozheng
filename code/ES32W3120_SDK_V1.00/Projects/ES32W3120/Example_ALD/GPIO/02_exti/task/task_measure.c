@@ -35,9 +35,9 @@ extern uint16_t calibrate_send_packet_cnt;
 uint8_t measure_task(uint8_t prio)
 {
     uint8_t m_SYS_SubTask_prio = 0;
-    uint16_t ax = 0;
-    uint16_t ay = 0;
-    uint16_t az = 0;
+    short ax = 0;
+    short ay = 0;
+    short az = 0;
     uint8_t i = 0;
     uint8_t ble_send_temp[20];
     uint8_t sum = 0;

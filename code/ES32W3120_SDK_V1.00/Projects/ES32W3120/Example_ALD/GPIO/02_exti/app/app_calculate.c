@@ -26,7 +26,7 @@ uint16_t calibrate_packet_cnt = 0;
 extern system_state_t system_state;
 extern utc_time_t utc_time;
 
-void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
+void calculate_accelerometer(short ax, short ay, short az)
 {
     uint16_t data[3] = {0};
     uint8_t save_data_temp[20];

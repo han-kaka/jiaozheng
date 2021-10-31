@@ -16,7 +16,7 @@
 #define PWR_6050_PORT                          GPIOB
 #define PWR_6050_PIN                           GPIO_PIN_10
 
-void mpu_get_accelerometer(uint16_t *ax, uint16_t *ay, uint16_t *az);
+void mpu_get_accelerometer(short *ax, short *ay, short *az);
 
 void mpu6050_init(void);
 

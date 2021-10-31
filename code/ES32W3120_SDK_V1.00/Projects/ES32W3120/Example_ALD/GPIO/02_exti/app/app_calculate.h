@@ -3,7 +3,7 @@
 
 #include "global.h"
 
-void calculate_accelerometer(uint16_t ax, uint16_t ay, uint16_t az);
+void calculate_accelerometer(short ax, short ay, short az);
 
 #endif
 

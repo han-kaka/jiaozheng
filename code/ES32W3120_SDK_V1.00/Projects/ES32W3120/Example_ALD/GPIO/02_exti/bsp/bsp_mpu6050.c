@@ -85,22 +85,6 @@ void master_rx_complete(i2c_handle_t *arg)
     return;
 }
 
-static void iic_write_byte(uint8_t reg, uint8_t data)
-{
-    uint8_t g_send_temp[2];
-    
-    g_send_temp[0] = reg;
-    g_send_temp[1] = data;
-    
-    /* send data by interrupt */
-    g_tx_complete = 0;
-    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, g_send_temp, 2);
-    
-    while (g_tx_complete != 1);
-    
-    return;
-}
-
 static uint8_t iic_read_byte(uint8_t reg)
 {
     uint8_t g_send_temp = reg;
@@ -120,6 +104,32 @@ static uint8_t iic_read_byte(uint8_t reg)
     
     return g_recv_temp;
 }
+
+static void iic_write_byte(uint8_t reg, uint8_t data)
+{
+    uint8_t g_send_temp[2];
+    
+    g_send_temp[0] = reg;
+    g_send_temp[1] = data;
+    
+    ES_LOG_PRINT("write reg:%.2x, data:%.2x\n", reg, data);
+    /* send data by interrupt */
+    g_tx_complete = 0;
+    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, g_send_temp, 2);
+    
+    while (g_tx_complete != 1);
+    
+    /* send data by interrupt */
+    g_tx_complete = 0;
+    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, g_send_temp, 2);
+    
+    while (g_tx_complete != 1);
+    
+    ES_LOG_PRINT("read reg:%.2x, data:%.2x\n", reg, iic_read_byte(reg));
+    
+    return;
+}
+
 
 static void iic_write_len(uint8_t reg, uint8_t len, uint8_t *buf)
 {
@@ -179,9 +189,6 @@ static void mpu_set_lpf(uint16_t lpf)
         data=1;
     }
     else if(lpf>=98){
-        data=2;
-    }
-    else if(lpf>=42){
         data=2;
     }
     else if(lpf>=42){
@@ -258,16 +265,17 @@ static void i2c_init(void)
     return;
 }
 
-void mpu_get_accelerometer(uint16_t *ax, uint16_t *ay, uint16_t *az)
+void mpu_get_accelerometer(short *ax, short *ay, short *az)
 {
     uint8_t buf[6] = {0};
+    
     iic_read_len(MPU_ACCEL_XOUTH_REG, 6, buf);
     
     *ax = ((uint16_t)buf[2] << 8)|buf[3];
     *ay = ((uint16_t)buf[0] << 8)|buf[1];
     *az = ((uint16_t)buf[4] << 8)|buf[5];
     
-//    ES_LOG_PRINT("ax:%.4x, ay:%.4x, az:%.4x,\n", *ax, *ay, *az);
+    ES_LOG_PRINT("ax:%d, ay:%d, az:%d\n", *ax, *ay, *az);
 }
 
 void mpu6050_init(void)
@@ -325,9 +333,10 @@ void mpu6050_init(void)
 void mpu6050_set(void)
 {
     uint8_t mpu6050_id = 0;
-    uint16_t ax = 0;
-    uint16_t ay = 0;
-    uint16_t az = 0;
+    short ax = 0;
+    short ay = 0;
+    short az = 0;
+    
     
     iic_write_byte(MPU_PWR_MGMT1_REG, 0x80);//¸´Î»MPU6050
     ald_delay_ms(100);
