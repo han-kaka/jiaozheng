@@ -495,28 +495,6 @@ void flash_init(void)
         system_state.flash_data.flash_data_current_page = 4;
         system_state.flash_data.flash_data_send_page = 4;
     }
-    
-//    status = flash_sector_erase(0);
-//    
-//    if (status == OK)
-//    {
-//        ES_LOG_PRINT("Erase OK!\r\n");
-//    }
-//    
-//    ES_LOG_PRINT("The date written to flash is -> %s\r\n", s_flash_txbuf);
-//    status = flash_write_data(0, s_flash_txbuf, strlen(s_flash_txbuf) + 1);
-//    if (status == OK)
-//    {
-//        ES_LOG_PRINT("Write OK!\r\n");
-//    }
-//    
-//    status = flash_read(0, s_flash_rxbuf, strlen(s_flash_txbuf) + 1); /* 读出写入数据 */
-//    ES_LOG_PRINT("The data read from flash is  -> %s\r\n", s_flash_rxbuf);
-//    
-//    if (!memcmp(s_flash_txbuf, s_flash_rxbuf, strlen(s_flash_txbuf) + 1))   /* 比较写入和读出的数据 */
-//        ES_LOG_PRINT("Read OK!\r\n");
-//    else
-//        ES_LOG_PRINT("Read ERROR!\r\n");
 }
 
 void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)

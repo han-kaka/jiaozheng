@@ -242,7 +242,7 @@ void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
     }
     ES_LOG_PRINT("\n");
     
-    ald_delay_ms(60);
+    ald_delay_ms(100);
     
     return;
 }

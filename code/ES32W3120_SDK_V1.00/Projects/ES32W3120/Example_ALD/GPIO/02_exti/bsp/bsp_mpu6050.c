@@ -119,14 +119,6 @@ static void iic_write_byte(uint8_t reg, uint8_t data)
     
     while (g_tx_complete != 1);
     
-    /* send data by interrupt */
-    g_tx_complete = 0;
-    ald_i2c_master_send_by_it(&g_h_i2c, MPU_ADDR<<1, g_send_temp, 2);
-    
-    while (g_tx_complete != 1);
-    
-    ES_LOG_PRINT("read reg:%.2x, data:%.2x\n", reg, iic_read_byte(reg));
-    
     return;
 }
 
@@ -296,7 +288,7 @@ void mpu6050_init(void)
     ald_gpio_init(PWR_6050_PORT, PWR_6050_PIN, &x);
     ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 0);
     
-    ald_delay_ms(10);
+    ald_delay_ms(1000);
     
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
@@ -320,6 +312,8 @@ void mpu6050_init(void)
     __NVIC_DisableIRQ(EXTI13_IRQn);
     
     i2c_init();
+    
+    ald_delay_ms(20);
     
     mpu6050_set();
     
