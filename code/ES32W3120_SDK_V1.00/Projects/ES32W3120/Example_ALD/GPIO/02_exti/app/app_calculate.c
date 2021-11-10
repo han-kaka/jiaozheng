@@ -6,6 +6,9 @@
 #include "bsp_time.h"
 
 #include "app_calculate.h"
+#include "app_common.h"
+
+#include "task_common.h"
 
 /* Private Macros ------------------------------------------------------------ */
 
@@ -15,6 +18,10 @@
 //uint8_t *calibrate_data_p = NULL;
 uint8_t calibrate_data_p[15000] = {0};
 uint16_t calibrate_packet_cnt = 0;
+short last_ax;
+short last_ay;
+short last_az;
+uint32_t lpw_cnt = 0;
 
 /* Private Constants --------------------------------------------------------- */
 
@@ -32,6 +39,26 @@ void calculate_accelerometer(short ax, short ay, short az)
     uint8_t save_data_temp[20];
     uint8_t sum = 0;
     uint8_t i = 0;
+    
+    if((0==last_ax) && (0==last_ay) && (0==last_az)){
+        last_ax = ax;
+        last_ay = ay;
+        last_az = az;
+    }       
+    else{
+        if((1000>(last_ax>=ax?last_ax-ax:ax-last_ax)) && (1000>(last_ay>=ay?last_ay-ay:ay-last_ay))&& (1000>(last_az>=az?last_az-az:az-last_az))){
+            lpw_cnt++;
+            if(6000<lpw_cnt){
+                set_task(SG, LOW_POWER_MODE);
+            }
+        }
+        else{
+            lpw_cnt = 0;
+            last_ax = ax;
+            last_ay = ay;
+            last_az = az;
+        }
+    }
     
     if(1 == system_state.system_flg.calibrate_mode_flg){
         if(1 == system_state.system_flg.calibrate_key_flg){

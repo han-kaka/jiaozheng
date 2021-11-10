@@ -1,6 +1,7 @@
 #include "bsp_mpu6050.h"
 #include "bsp_time.h"
 #include "bsp_system.h"
+#include "bsp_flash.h"
 
 #define MPU_ADDR    0x68
 
@@ -331,7 +332,6 @@ void mpu6050_set(void)
     short ay = 0;
     short az = 0;
     
-    
     iic_write_byte(MPU_PWR_MGMT1_REG, 0x80);//¸´Î»MPU6050
     ald_delay_ms(100);
     iic_write_byte(MPU_PWR_MGMT1_REG, 0x00);//»½ÐÑMPU6050
@@ -354,6 +354,19 @@ void mpu6050_set(void)
         ES_LOG_PRINT("mpu6050_set ok\n");
         ald_delay_ms(100);
         mpu_get_accelerometer(&ax, &ay, &az);
+        if((0==ax) && (0==ay) && (0==az)){
+            ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 1);
+            
+        }
+        else{
+            if(0 == system_state.mpu6050_correct_flag){
+                system_state.mpu6050_correct_flag = 1;
+                system_state.correct_ax = 0 - ax;
+                system_state.correct_ay = 0 - ay;
+                system_state.correct_az = 16384 - az;
+                save_system_info();
+            }
+        }
     }
     else{
         ES_LOG_PRINT("mpu6050_set err\n");

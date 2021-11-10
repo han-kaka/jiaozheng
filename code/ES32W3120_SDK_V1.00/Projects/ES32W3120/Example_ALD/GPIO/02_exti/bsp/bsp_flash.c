@@ -419,6 +419,15 @@ void init_system_info(system_state_t *system_state)
     system_state->wxid[1] = system_info.wxid[1];
     system_state->wxid[2] = system_info.wxid[2];
     system_state->wxid[3] = system_info.wxid[3];
+    if(system_info.mpu6050_correct_flag){
+        system_state->mpu6050_correct_flag = system_info.mpu6050_correct_flag;
+        system_state->correct_ax = system_info.correct_ax;
+        system_state->correct_ay = system_info.correct_ay;
+        system_state->correct_az = system_info.correct_az;
+    }
+    else{
+        system_state->mpu6050_correct_flag = 0;
+    }
 }
 
 int save_system_info(void)
@@ -432,6 +441,10 @@ int save_system_info(void)
     system_info.wxid[1] = system_state.wxid[1];
     system_info.wxid[2] = system_state.wxid[2];
     system_info.wxid[3] = system_state.wxid[3];
+    system_info.mpu6050_correct_flag = system_state.mpu6050_correct_flag;
+    system_info.correct_ax = system_state.correct_ax;
+    system_info.correct_ay = system_state.correct_ay;
+    system_info.correct_az = system_state.correct_az;
     
     __disable_irq();
 

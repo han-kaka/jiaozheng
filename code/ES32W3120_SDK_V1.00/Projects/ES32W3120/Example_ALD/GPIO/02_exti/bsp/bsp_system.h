@@ -48,6 +48,10 @@ typedef struct {
     system_flg_t system_flg;
     uint8_t ble_addr[6];
     flash_data_t flash_data;
+    uint8_t mpu6050_correct_flag;
+    short correct_ax;
+    short correct_ay;
+    short correct_az;
     
 }system_state_t;
 
