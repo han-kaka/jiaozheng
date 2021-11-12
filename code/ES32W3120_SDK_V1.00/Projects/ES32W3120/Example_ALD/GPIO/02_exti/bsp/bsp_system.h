@@ -57,5 +57,5 @@ typedef struct {
 
 void start_init_task(void);
 void init_system(void);
-
+void lwp_mode_init(void);
 #endif

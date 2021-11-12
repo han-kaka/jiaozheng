@@ -40,7 +40,7 @@ uint8_t sg_task(uint8_t prio)
             
             case LOW_POWER_MODE:
             {
-
+                lwp_mode_init();
             }
                 break;
             

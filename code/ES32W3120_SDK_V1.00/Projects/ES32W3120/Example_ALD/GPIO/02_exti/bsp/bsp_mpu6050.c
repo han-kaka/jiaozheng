@@ -373,5 +373,20 @@ void mpu6050_set(void)
     }
 }
 
+void mpu6050_lwp_set(void)
+{
+    uint8_t mpu6050_id = 0;
+    
+    iic_write_byte(MPU_PWR_MGMT1_REG, 0x80);//¸´Î»MPU6050
+    ald_delay_ms(100);
+    iic_write_byte(MPU_PWR_MGMT1_REG, 0x00);//»½ÐÑMPU6050
+    
+}
 
+void mpu6050_lwp_init(void)
+{
+    mpu6050_lwp_set();
+    
+    __NVIC_EnableIRQ(EXTI13_IRQn);
+}
 

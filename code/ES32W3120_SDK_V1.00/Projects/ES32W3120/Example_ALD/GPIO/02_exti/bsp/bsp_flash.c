@@ -510,6 +510,12 @@ void flash_init(void)
     }
 }
 
+void flash_deinit(void)
+{
+    ald_gpio_write_pin(PWR_FLASH_PORT, PWR_FLASH_PIN, 1);
+    system_state.system_flg.flash_init_flg = 0;
+}
+
 void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)
 {
     uint8_t save_data_temp[20];

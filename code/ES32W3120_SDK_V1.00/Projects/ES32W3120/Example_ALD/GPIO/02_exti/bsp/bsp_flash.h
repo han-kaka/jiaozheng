@@ -45,6 +45,8 @@ typedef struct {
 
 void flash_init(void);
 
+void flash_deinit(void);
+
 void init_system_info(system_state_t *system_state);
 
 int save_system_info(void);

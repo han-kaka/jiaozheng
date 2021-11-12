@@ -71,5 +71,10 @@ void start_init_task(void)
     return;
 }
 
-
+void lwp_mode_init(void)
+{
+    dx_bt24_t_deinit();
+    flash_deinit();
+    mpu6050_lwp_init();
+}
 
