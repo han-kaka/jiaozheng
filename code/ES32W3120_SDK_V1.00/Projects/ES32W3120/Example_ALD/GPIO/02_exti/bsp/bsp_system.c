@@ -75,6 +75,7 @@ void lwp_mode_init(void)
 {
     dx_bt24_t_deinit();
     flash_deinit();
+    led_close();
     mpu6050_lwp_init();
 }
 

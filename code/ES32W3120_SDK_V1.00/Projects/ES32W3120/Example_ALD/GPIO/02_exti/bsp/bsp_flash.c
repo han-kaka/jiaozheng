@@ -16,7 +16,7 @@
 
 #define FLASH_PAGE_SIZE     (256)
 
-#define IAP_DATA_ADDRESS    0x20000
+#define IAP_DATA_ADDRESS    0x10000
 
 /* Private Macros ------------------------------------------------------------ */
 
@@ -402,31 +402,47 @@ void init_system_info(system_state_t *system_state)
     /* 从片内 flash 中读取相关数据 */
     system_info_t system_info = {0};
     
-    __disable_irq();
-
-    if (IAP_FASTPROGRAM(IAP_DATA_ADDRESS, (uint8_t *)&system_info, 128, AUTO_ERASE_TRUE, IAP_FREQUENCE_48M) != RESET){
-        ES_LOG_PRINT("read data success\n");
-        ES_LOG_PRINT("shake_fre: %u\n", system_info.shake_fre);
-        ES_LOG_PRINT("wxid[0]: %u, wxid[1]: %u, wxid[2]: %u, wxid[3]: %u, \n", system_info.wxid[0], system_info.wxid[1], system_info.wxid[2], system_info.wxid[3]);
-    }
-    else{
-        ES_LOG_PRINT("read data fail\n");
-    }
-    __enable_irq();
+    memcpy((void *)(&system_info), (void *)IAP_DATA_ADDRESS, 128);  /* read 0x10000 */
     
-    system_state->shake_fre = system_info.shake_fre;
-    system_state->wxid[0] = system_info.wxid[0];
-    system_state->wxid[1] = system_info.wxid[1];
-    system_state->wxid[2] = system_info.wxid[2];
-    system_state->wxid[3] = system_info.wxid[3];
-    if(system_info.mpu6050_correct_flag){
-        system_state->mpu6050_correct_flag = system_info.mpu6050_correct_flag;
-        system_state->correct_ax = system_info.correct_ax;
-        system_state->correct_ay = system_info.correct_ay;
-        system_state->correct_az = system_info.correct_az;
+//    __disable_irq();
+
+//    if (IAP_FASTPROGRAM(IAP_DATA_ADDRESS, (uint8_t *)&system_info, 128, AUTO_ERASE_TRUE, IAP_FREQUENCE_48M) != RESET){
+//        ES_LOG_PRINT("read data success\n");
+        ES_LOG_PRINT("flag: %x, shake_fre: %u, wxid[0]: %u, wxid[1]: %u, wxid[2]: %u, wxid[3]: %u, correct_flag: %u, correct_ax: %d, correct_ay: %d, correct_az: %d\n",\
+            system_info.data_flag, system_info.shake_fre, system_info.wxid[0], system_info.wxid[1], system_info.wxid[2], system_info.wxid[3], system_info.mpu6050_correct_flag, system_info.correct_ax, system_info.correct_ay, system_info.correct_az);
+//    }
+//    else{
+//        ES_LOG_PRINT("read data fail\n");
+//    }
+//    __enable_irq();
+    
+    if(0xaa == system_info.data_flag){
+        system_state->shake_fre = system_info.shake_fre;
+        system_state->wxid[0] = system_info.wxid[0];
+        system_state->wxid[1] = system_info.wxid[1];
+        system_state->wxid[2] = system_info.wxid[2];
+        system_state->wxid[3] = system_info.wxid[3];
+        if(system_info.mpu6050_correct_flag){
+            system_state->mpu6050_correct_flag = system_info.mpu6050_correct_flag;
+            system_state->correct_ax = system_info.correct_ax;
+            system_state->correct_ay = system_info.correct_ay;
+            system_state->correct_az = system_info.correct_az;
+        }
+        else{
+            system_state->mpu6050_correct_flag = 0;
+        }
     }
     else{
+        ES_LOG_PRINT("flash data init\n");
+        system_state->shake_fre = 0x01;
+        system_state->wxid[0] = 0;
+        system_state->wxid[1] = 0;
+        system_state->wxid[2] = 0;
+        system_state->wxid[3] = 0;
         system_state->mpu6050_correct_flag = 0;
+        system_state->correct_ax = 0;
+        system_state->correct_ay = 0;
+        system_state->correct_az = 0;
     }
 }
 
@@ -436,6 +452,7 @@ int save_system_info(void)
     /* 保存数据至片内 flash */
     system_info_t system_info = {0};
     
+    system_info.data_flag = 0xaa;
     system_info.shake_fre = system_state.shake_fre;
     system_info.wxid[0] = system_state.wxid[0];
     system_info.wxid[1] = system_state.wxid[1];

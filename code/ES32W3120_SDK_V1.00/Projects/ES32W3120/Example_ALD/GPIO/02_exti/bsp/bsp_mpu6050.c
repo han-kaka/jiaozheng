@@ -268,6 +268,10 @@ void mpu_get_accelerometer(short *ax, short *ay, short *az)
     *ay = ((uint16_t)buf[0] << 8)|buf[1];
     *az = ((uint16_t)buf[4] << 8)|buf[5];
     
+    *ax = *ax + system_state.correct_ax;
+    *ay = *ay + system_state.correct_ay;
+    *az = *az + system_state.correct_az;
+    
     ES_LOG_PRINT("ax:%d, ay:%d, az:%d\n", *ax, *ay, *az);
 }
 
@@ -328,9 +332,9 @@ void mpu6050_init(void)
 void mpu6050_set(void)
 {
     uint8_t mpu6050_id = 0;
-    short ax = 0;
-    short ay = 0;
-    short az = 0;
+    short ax[3] = {0};
+    short ay[3] = {0};
+    short az[3] = {0};
     
     iic_write_byte(MPU_PWR_MGMT1_REG, 0x80);//复位MPU6050
     ald_delay_ms(100);
@@ -352,18 +356,22 @@ void mpu6050_set(void)
         iic_write_byte(MPU_PWR_MGMT2_REG, 0x00);//加速度陀螺仪都工作
         mpu_set_rate(50); //设置采样频率50HZ
         ES_LOG_PRINT("mpu6050_set ok\n");
-        ald_delay_ms(100);
-        mpu_get_accelerometer(&ax, &ay, &az);
-        if((0==ax) && (0==ay) && (0==az)){
+        ald_delay_ms(200);
+        mpu_get_accelerometer(&ax[0], &ay[0], &az[0]);
+        ald_delay_ms(20);
+        mpu_get_accelerometer(&ax[1], &ay[1], &az[1]);
+        ald_delay_ms(20);
+        mpu_get_accelerometer(&ax[2], &ay[2], &az[2]);
+        if((0==ax[0]) && (0==ay[0]) && (0==az[0])){
             ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 1);
             
         }
         else{
             if(0 == system_state.mpu6050_correct_flag){
                 system_state.mpu6050_correct_flag = 1;
-                system_state.correct_ax = 0 - ax;
-                system_state.correct_ay = 0 - ay;
-                system_state.correct_az = 16384 - az;
+                system_state.correct_ax = 0 - (ax[0] + ax[1] + ax[2])/3;
+                system_state.correct_ay = 0 - (ay[0] + ay[1] + ay[2])/3;
+                system_state.correct_az = 16384 - (az[0] + az[1] + az[2])/3;
                 save_system_info();
             }
         }

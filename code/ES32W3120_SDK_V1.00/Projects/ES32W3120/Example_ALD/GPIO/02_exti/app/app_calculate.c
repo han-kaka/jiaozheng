@@ -18,9 +18,9 @@
 //uint8_t *calibrate_data_p = NULL;
 uint8_t calibrate_data_p[15000] = {0};
 uint16_t calibrate_packet_cnt = 0;
-short last_ax;
-short last_ay;
-short last_az;
+short last_ax = 0;
+short last_ay = 0;
+short last_az = 0;
 uint32_t lpw_cnt = 0;
 
 /* Private Constants --------------------------------------------------------- */
@@ -48,7 +48,8 @@ void calculate_accelerometer(short ax, short ay, short az)
     else{
         if((1000>(last_ax>=ax?last_ax-ax:ax-last_ax)) && (1000>(last_ay>=ay?last_ay-ay:ay-last_ay))&& (1000>(last_az>=az?last_az-az:az-last_az))){
             lpw_cnt++;
-            if(6000<lpw_cnt){
+            ES_LOG_PRINT("lpw_cnt: %u", lpw_cnt);
+            if(120<lpw_cnt){
                 set_task(SG, LOW_POWER_MODE);
             }
         }

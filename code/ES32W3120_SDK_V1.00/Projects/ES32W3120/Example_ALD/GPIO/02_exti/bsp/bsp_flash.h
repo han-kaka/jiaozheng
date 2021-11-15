@@ -33,13 +33,14 @@
 #define FLASH_DATA_END                        2047
 
 typedef struct {
+    uint8_t data_flag;
     uint8_t shake_fre;
     uint8_t wxid[4];
     uint8_t mpu6050_correct_flag;
     short correct_ax;
     short correct_ay;
     short correct_az;
-    uint8_t reserve[116];
+    uint8_t reserve[114];
     
 } system_info_t;
 
