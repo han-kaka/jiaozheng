@@ -146,6 +146,7 @@ void ald_timer_period_elapsed_callback(struct timer_handle_s *arg)
             time_cnt.adc_check_cnt++;
             if(30000 <= time_cnt.adc_check_cnt){
                 time_cnt.adc_check_cnt = 0;
+                ald_gpio_write_pin(PWR_ADC_PORT, PWR_ADC_PIN, 0);
                 /* Start normal convert, enable interrupt */
                 ald_adc_normal_start_by_it(&g_h_adc);
             }

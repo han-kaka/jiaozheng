@@ -45,6 +45,20 @@ static void gpio_pin_config()
 
 void adc_init(void)
 {
+    gpio_init_t x;
+    
+    memset(&x, 0, sizeof(x));
+    
+    x.mode = GPIO_MODE_OUTPUT;
+    x.odos = GPIO_PUSH_PULL;
+    x.pupd = GPIO_PUSH_UP;
+    x.odrv = GPIO_OUT_DRIVE_NORMAL;
+    x.flt  = GPIO_FILTER_DISABLE;
+    x.type = GPIO_TYPE_CMOS;
+    x.func = GPIO_FUNC_1;
+    ald_gpio_init(PWR_ADC_PORT, PWR_ADC_PIN, &x);
+    ald_gpio_write_pin(PWR_ADC_PORT, PWR_ADC_PIN, 0);
+    
     /* Enable interrupt */
     ald_mcu_irq_config(ADC_IRQn, 1, 1, ENABLE);
 

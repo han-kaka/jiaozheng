@@ -48,7 +48,7 @@ void calculate_accelerometer(short ax, short ay, short az)
     else{
         if((1000>(last_ax>=ax?last_ax-ax:ax-last_ax)) && (1000>(last_ay>=ay?last_ay-ay:ay-last_ay))&& (1000>(last_az>=az?last_az-az:az-last_az))){
             lpw_cnt++;
-            ES_LOG_PRINT("lpw_cnt: %u", lpw_cnt);
+            ES_LOG_PRINT("lpw_cnt: %u\n", lpw_cnt);
             if(120<lpw_cnt){
                 set_task(SG, LOW_POWER_MODE);
             }
