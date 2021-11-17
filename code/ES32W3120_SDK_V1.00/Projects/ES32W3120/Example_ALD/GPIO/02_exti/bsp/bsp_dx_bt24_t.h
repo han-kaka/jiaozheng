@@ -29,6 +29,8 @@ void uart_init(void);
 
 void dx_bt24_t_init(void);
 
+void dx_bt24_t_quick_init(void);
+
 void dx_bt24_t_deinit(void);
 
 void send_ble_data(uint8_t *tx_buf, uint8_t tx_len);

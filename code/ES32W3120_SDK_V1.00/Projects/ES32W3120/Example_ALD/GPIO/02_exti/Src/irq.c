@@ -228,6 +228,8 @@ void EXTI11_IRQHandler()
 void EXTI13_IRQHandler()
 {
     ald_gpio_exti_clear_flag_status(GPIO_PIN_13);
+    system_state.system_flg.device_init_flg = 0x01;
+    set_task(SG, ADV_MODE);
 }
 
 

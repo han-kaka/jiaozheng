@@ -1,3 +1,5 @@
+#include "md_rmu.h"
+
 #include "bsp_mpu6050.h"
 #include "bsp_time.h"
 #include "bsp_system.h"
@@ -5,18 +7,24 @@
 
 #define MPU_ADDR    0x68
 
-#define MPU_PWR_MGMT1_REG 0x6b
-#define MPU_PWR_MGMT2_REG 0x6c
-#define MPU_INT_EN_REG 0x38
-#define MPU_USER_CTRL_REG 0x6a
-#define MPU_FIFO_EN_REG 0x23
-#define MPU_INTBP_CFG_REG 0x37
-#define MPU_DEVICE_ID_REG 0x75
-#define MPU_GYRO_CFG_REG 0x1b
-#define MPU_ACCEL_CFG_REG 0x1c
-#define MPU_CFG_REG 0x1a
 #define MPU_SAMPLE_RATE_REG 0x19
+#define MPU_CFG_REG         0x1a
+#define MPU_GYRO_CFG_REG    0x1b
+#define MPU_ACCEL_CFG_REG   0x1c
+#define MPU_FF_THR_REG      0x1d
+#define MPU_FF_DUR_REG      0x1e
+
+#define MPU_FIFO_EN_REG     0x23
+
+#define MPU_INTBP_CFG_REG   0x37
+#define MPU_INT_EN_REG      0x38
 #define MPU_ACCEL_XOUTH_REG 0x3b
+
+#define MPU_USER_CTRL_REG   0x6a
+#define MPU_PWR_MGMT1_REG   0x6b
+#define MPU_PWR_MGMT2_REG   0x6c
+
+#define MPU_DEVICE_ID_REG   0x75
 
 /* Private Macros ------------------------------------------------------------ */
 
@@ -322,10 +330,6 @@ void mpu6050_init(void)
     
     mpu6050_set();
     
-    time_cnt.mpu6050_data_cnt = 0;
-    
-    system_state.system_flg.mpu6050_init_flg = 1;
-    
     return;
 }
 
@@ -364,7 +368,7 @@ void mpu6050_set(void)
         mpu_get_accelerometer(&ax[2], &ay[2], &az[2]);
         if((0==ax[0]) && (0==ay[0]) && (0==az[0])){
             ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 1);
-            
+            md_rmu_reset();
         }
         else{
             if(0 == system_state.mpu6050_correct_flag){
@@ -379,21 +383,33 @@ void mpu6050_set(void)
     else{
         ES_LOG_PRINT("mpu6050_set err\n");
     }
+    
+    time_cnt.mpu6050_data_cnt = 0;
+    
+    system_state.system_flg.mpu6050_init_flg = 1;
 }
 
-void mpu6050_lwp_set(void)
+void mpu6050_quick_init(void)
 {
-    uint8_t mpu6050_id = 0;
+    __NVIC_DisableIRQ(EXTI13_IRQn);
     
-    iic_write_byte(MPU_PWR_MGMT1_REG, 0x80);//¸´Î»MPU6050
-    ald_delay_ms(100);
-    iic_write_byte(MPU_PWR_MGMT1_REG, 0x00);//»½ÐÑMPU6050
-    
+    mpu6050_set();
 }
 
-void mpu6050_lwp_init(void)
+void mpu6050_int_set(void)
 {
-    mpu6050_lwp_set();
+    iic_write_byte(MPU_FF_THR_REG, 0x25);
+    iic_write_byte(MPU_FF_THR_REG, 0x14);
+    iic_write_byte(MPU_CFG_REG, 0x04);
+    iic_write_byte(MPU_ACCEL_CFG_REG, 0x1c);
+    iic_write_byte(MPU_INTBP_CFG_REG, 0x1c);
+    iic_write_byte(MPU_INT_EN_REG, 0x40);
+}
+
+void mpu6050_int_init(void)
+{
+    system_state.system_flg.mpu6050_init_flg = 0;
+    mpu6050_int_set();
     
     __NVIC_EnableIRQ(EXTI13_IRQn);
 }

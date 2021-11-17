@@ -20,11 +20,13 @@ void mpu_get_accelerometer(short *ax, short *ay, short *az);
 
 void mpu6050_init(void);
 
+void mpu6050_quick_init(void);
+
 void mpu6050_set(void);
 
-void mpu6050_lwp_set(void);
+void mpu6050_int_set(void);
 
-void mpu6050_lwp_init(void);
+void mpu6050_int_init(void);
 #endif
 
 

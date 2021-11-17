@@ -67,7 +67,7 @@ void start_init_task(void)
     motor_init();
     led_init();
     key_init();
-    
+    system_state.system_flg.device_init_flg = 0x00;
     return;
 }
 
@@ -76,6 +76,6 @@ void lwp_mode_init(void)
     dx_bt24_t_deinit();
     flash_deinit();
     led_close();
-    mpu6050_lwp_init();
+    mpu6050_int_init();
 }
 

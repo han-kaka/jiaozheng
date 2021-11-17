@@ -1,5 +1,8 @@
 #include "bsp_system.h"
 #include "bsp_led.h"
+#include "bsp_mpu6050.h"
+#include "bsp_dx_bt24_t.h"
+#include "bsp_flash.h"
 
 #include "app_common.h"
 
@@ -40,20 +43,29 @@ uint8_t sg_task(uint8_t prio)
             
             case LOW_POWER_MODE:
             {
-                lwp_mode_init();
                 system_state.system_mode = E_LOW_POWER_MODE;
+                lwp_mode_init();
             }
                 break;
             
             case ADV_MODE:
             {
-                system_state.system_mode = E_ADV_MODE;
+                if(0x01 == system_state.system_flg.device_init_flg){
+                    if(0x01 != system_state.system_flg.mpu6050_init_flg){
+                        mpu6050_set();
+                    }
+                    if(0x01 != system_state.system_flg.dx_bt24_t_init_flg){
+                        dx_bt24_t_quick_init();
+                    }
+                    if(0x01 != system_state.system_flg.flash_init_flg){
+                        flash_quick_init();
+                    }
+                    system_state.system_flg.device_init_flg = 0x00;
+                }
                 system_state.system_flg.imu_data_flg = 0;
                 /* 蓝灯闪烁 */
                 led_twinkle();
-                
-//                /* 开启一些广播模式下的初始任务 */
-//                start_init_task();
+                system_state.system_mode = E_ADV_MODE;
             }
                 break;
             

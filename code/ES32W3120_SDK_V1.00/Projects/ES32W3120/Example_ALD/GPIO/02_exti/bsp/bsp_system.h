@@ -30,7 +30,8 @@ typedef struct {
     uint16_t calibrate_key_flg     :1;
     uint16_t send_flash_data_flg   :1;
     
-    uint16_t reserve_flag          :4;
+    uint16_t device_init_flg       :1;
+    uint16_t reserve_flag          :3;
     
 }system_flg_t;
 

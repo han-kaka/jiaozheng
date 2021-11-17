@@ -266,8 +266,6 @@ static void spi_init(void)
     id = flash_read_id();
     ES_LOG_PRINT("Manufacturer ID is %02x & Device ID is %02x %02x\n", (uint8_t)(id >> 16), (uint8_t)(id >> 8), (uint8_t)id);
     
-    system_state.system_flg.flash_init_flg = 1;
-    
     return;
 }
 
@@ -525,12 +523,41 @@ void flash_init(void)
         system_state.flash_data.flash_data_current_page = 4;
         system_state.flash_data.flash_data_send_page = 4;
     }
+    
+    system_state.system_flg.flash_init_flg = 1;
 }
+
+void flash_quick_init(void)
+{
+    ald_status_t status;
+    
+    ald_gpio_write_pin(PWR_FLASH_PORT, PWR_FLASH_PIN, 0);
+    ald_delay_ms(20);
+
+    status = flash_read(0, (char *)(&system_state.flash_data), sizeof(flash_data_t));
+    if (status == OK){
+        ES_LOG_PRINT("read OK!flash data page:%u, send data page:%u\n", system_state.flash_data.flash_data_current_page, system_state.flash_data.flash_data_send_page);
+    }
+    if(0xaa != system_state.flash_data.data_flag){
+        system_state.flash_data.data_flag = 0xaa;
+        system_state.flash_data.flash_data_current_page = 4;
+        system_state.flash_data.flash_data_send_page = 4;
+    }
+    
+    if(0xaa != system_state.flash_data.data_flag){
+        system_state.flash_data.data_flag = 0xaa;
+        system_state.flash_data.flash_data_current_page = 4;
+        system_state.flash_data.flash_data_send_page = 4;
+    }
+    
+    system_state.system_flg.flash_init_flg = 1;
+}
+
 
 void flash_deinit(void)
 {
-    ald_gpio_write_pin(PWR_FLASH_PORT, PWR_FLASH_PIN, 1);
     system_state.system_flg.flash_init_flg = 0;
+    ald_gpio_write_pin(PWR_FLASH_PORT, PWR_FLASH_PIN, 1);
 }
 
 void save_accelerometer(uint16_t ax, uint16_t ay, uint16_t az)

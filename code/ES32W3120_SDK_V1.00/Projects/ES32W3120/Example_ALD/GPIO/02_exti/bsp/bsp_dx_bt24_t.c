@@ -229,11 +229,19 @@ void dx_bt24_t_init(void)
     return;
 }
 
+void dx_bt24_t_quick_init(void)
+{
+    ald_gpio_write_pin(PWR_BT_PORT, PWR_BT_PIN, 0);
+    ald_delay_ms(10);
+    __NVIC_EnableIRQ(EXTI4_IRQn);
+    system_state.system_flg.dx_bt24_t_init_flg = 1;
+}
+
 void dx_bt24_t_deinit(void)
 {
+    system_state.system_flg.dx_bt24_t_init_flg = 0;
     __NVIC_DisableIRQ(EXTI4_IRQn);
     ald_gpio_write_pin(PWR_BT_PORT, PWR_BT_PIN, 1);
-    system_state.system_flg.dx_bt24_t_init_flg = 0;
 }
 
 void send_ble_data(uint8_t *tx_buf, uint8_t tx_len)
