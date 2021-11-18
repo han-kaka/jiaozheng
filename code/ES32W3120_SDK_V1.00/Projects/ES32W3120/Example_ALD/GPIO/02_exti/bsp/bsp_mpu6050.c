@@ -291,17 +291,17 @@ void mpu6050_init(void)
     memset(&exti, 0, sizeof(exti));
     memset(&x, 0, sizeof(x));
     
-    x.mode = GPIO_MODE_OUTPUT;
-    x.odos = GPIO_PUSH_PULL;
-    x.pupd = GPIO_PUSH_UP;
-    x.odrv = GPIO_OUT_DRIVE_NORMAL;
-    x.flt  = GPIO_FILTER_DISABLE;
-    x.type = GPIO_TYPE_CMOS;
-    x.func = GPIO_FUNC_1;
-    ald_gpio_init(PWR_6050_PORT, PWR_6050_PIN, &x);
-    ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 0);
-    
-    ald_delay_ms(1000);
+//    x.mode = GPIO_MODE_OUTPUT;
+//    x.odos = GPIO_PUSH_PULL;
+//    x.pupd = GPIO_PUSH_UP;
+//    x.odrv = GPIO_OUT_DRIVE_NORMAL;
+//    x.flt  = GPIO_FILTER_DISABLE;
+//    x.type = GPIO_TYPE_CMOS;
+//    x.func = GPIO_FUNC_1;
+//    ald_gpio_init(PWR_6050_PORT, PWR_6050_PIN, &x);
+//    ald_gpio_write_pin(PWR_6050_PORT, PWR_6050_PIN, 0);
+//    
+//    ald_delay_ms(1000);
     
     x.mode = GPIO_MODE_INPUT;
     x.odos = GPIO_PUSH_PULL;
@@ -322,13 +322,13 @@ void mpu6050_init(void)
     /* Configure interrupt */
     ald_gpio_exti_interrupt_config(MPU6050_INT_PIN, EXTI_TRIGGER_RISING_EDGE, ENABLE);
 
-    __NVIC_DisableIRQ(EXTI13_IRQn);
+    __NVIC_EnableIRQ(EXTI13_IRQn);
     
-    i2c_init();
-    
-    ald_delay_ms(20);
-    
-    mpu6050_set();
+//    i2c_init();
+//    
+//    ald_delay_ms(20);
+//    
+//    mpu6050_set();
     
     return;
 }

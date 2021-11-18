@@ -29,17 +29,12 @@ system_state_t system_state;
 
 void init_system(void)
 {
-    /* 初始化设备信息 */
-    init_system_info(&system_state);
-    
-//    system_state.wxid[0] = 0;
-//    system_state.wxid[1] = 0;
-//    system_state.wxid[2] = 0;
-//    system_state.wxid[3] = 0;
-    
-    memset(&system_state.system_flg, 0, sizeof(system_state.system_flg));
+//    /* 初始化设备信息 */
+//    init_system_info(&system_state);
+//    
+//    memset(&system_state.system_flg, 0, sizeof(system_state.system_flg));
 
-    set_task(SG, ADV_MODE);
+//    set_task(SG, ADV_MODE);
     
     time_init();
     
@@ -54,20 +49,20 @@ void start_init_task(void)
     if(1 != system_state.system_flg.mpu6050_init_flg){
         mpu6050_init();
     }
-    if(1 != system_state.system_flg.dx_bt24_t_init_flg){
-        dx_bt24_t_init();
-    }
-    if(1 != system_state.system_flg.flash_init_flg){
-        flash_init();
-    }
-    if(1 != system_state.system_flg.adc_init_flg){
-        adc_init();
-    }
-    charge_init();
-    motor_init();
-    led_init();
-    key_init();
-    system_state.system_flg.device_init_flg = 0x00;
+//    if(1 != system_state.system_flg.dx_bt24_t_init_flg){
+//        dx_bt24_t_init();
+//    }
+//    if(1 != system_state.system_flg.flash_init_flg){
+//        flash_init();
+//    }
+//    if(1 != system_state.system_flg.adc_init_flg){
+//        adc_init();
+//    }
+//    charge_init();
+//    motor_init();
+//    led_init();
+//    key_init();
+//    system_state.system_flg.device_init_flg = 0x00;
     return;
 }
 
